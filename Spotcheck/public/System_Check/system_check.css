@@ -1,0 +1,238 @@
+/* =========================================================
+   LAYOUT TONG THE
+========================================================= */
+.container {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  padding: 8px 0;
+}
+
+
+/* =========================================================
+   MAIN PANEL: PLATE + IMAGE
+========================================================= */
+.main-panel {
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+
+  align-items: stretch;
+}
+
+
+/* =========================================================
+   PLATE FULL SIZE
+========================================================= */
+.plate {
+  flex: 1;
+  width: 100%;
+  min-height: 400px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: var(--container-bg);
+  padding: 16px;
+  border-radius: 8px;
+
+  height: calc(100vh - 220px);   /* header + footer */
+}
+
+
+/* Wrapper chua scan beam + table */
+#tableWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: var(--container-bg);
+}
+
+
+/* =========================================================
+   WELL TABLE
+========================================================= */
+#wellTable {
+  width: 100%;
+  height: 100%;
+
+  table-layout: fixed;
+  border-collapse: separate;
+
+  background: #041d312a;
+}
+
+
+/* =========================================================
+   WELL CELL
+========================================================= */
+#wellGrid td {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+
+  background: var(--container-bg);
+  overflow: hidden;
+
+  transition: 0.15s ease;
+}
+
+#wellGrid td:hover {
+  background: #1c60a0;
+  transform: scale(0.98);
+}
+
+
+/* Noi dung ben trong well */
+#wellGrid .well {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffffffd8;
+}
+
+
+/* =========================================================
+   WELL STATUS
+========================================================= */
+#wellGrid td.well-ok {
+  background: #53a80d !important;
+  color: #ffffff !important;
+}
+
+#wellGrid td.well-err {
+  background: #e04343 !important;
+  color: #ffffff !important;
+}
+
+
+/* =========================================================
+   IMAGE PANEL
+========================================================= */
+.image-panel {
+  flex: 1.7;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: var(--container-bg);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.image-box {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: var(--container-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.image-box img {
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+
+  object-fit: contain;
+}
+
+
+/* =========================================================
+   FOOTER CONTENT
+========================================================= */
+.footer-content {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+
+/* =========================================================
+   STATUS PANEL
+========================================================= */
+.side-panel {
+  width: 100%;
+}
+
+.status-panel {
+  padding: 12px;
+
+  text-align: center;
+  font-weight: 600;
+
+  background: #07d4f41a;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #00e5fa;
+}
+
+.status-panel.ok {
+  color: #80d517;
+}
+
+.status-panel.error {
+  color: rgb(247, 56, 56);
+}
+
+.status-panel.warning {
+  color: #ffde06;
+}
+
+
+/* =========================================================
+   SCAN BEAM
+========================================================= */
+#scanBeam {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 40px;
+  height: 100%;
+
+  pointer-events: none;
+  display: none;
+  z-index: 20;
+
+  background: linear-gradient(
+    90deg,
+    rgba(120, 20, 20, 0.1) 0%,
+    rgba(210, 60, 60, 0.9) 50%,
+    rgba(120, 20, 20, 0.1) 100%
+  );
+
+  filter: blur(8px);
+  transition: transform 420ms cubic-bezier(0.22, 0.9, 0.32, 1);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 1024px) {
+  .main-panel {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,437 @@
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+
+/* =========================================================
+   WELL PLATE AREA
+========================================================= */
+.plate {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Well plate table */
+.plate table {
+  width: 100%;
+  height: 100%;
+
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 1px;
+
+  background: var(--container-bg);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Table header & cell */
+th,
+td {
+  border: 1px solid #303f5fe2;
+  text-align: center;
+  vertical-align: middle;
+  font-weight: bold;
+  aspect-ratio: 1 / 1;
+  transition: 0.15s;
+}
+
+/* Header */
+th {
+  background: #1f2c46;
+  color: #00bfff;
+}
+
+/* Cell */
+td {
+  background: #232c3e;
+}
+
+
+/* =========================================================
+   WELL ITEM
+========================================================= */
+.well {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.well:hover {
+  background: #1c60a0;
+}
+
+.well.active {
+  outline: 3px solid #00bfff;
+}
+
+.well.filled {
+  background: #12bec1f4;
+}
+
+
+/* =========================================================
+   SIDE PANEL
+========================================================= */
+.side-panel {
+  flex: 1;
+  height: 100%;
+  min-width: 0;
+
+  background: var(--container-bg);
+  padding: 14px;
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  overflow-x: hidden;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+}
+
+
+/* =========================================================
+   TITLE BAR
+========================================================= */
+.side-panel .title-bar {
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 12px;
+
+  background: #05d4c3;
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 600;
+
+  box-shadow: 0 4px 12px rgba(58, 190, 188, 0.25);
+}
+
+
+/* =========================================================
+   INPUT FIELD BLOCK
+========================================================= */
+.naming {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.naming label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-main);
+  opacity: 0.9;
+}
+
+.naming input {
+  width: 100%;
+  padding: 12px;
+
+  border-radius: 8px;
+  border: 1px solid var(--container-border-color);
+
+  background: #ffffff0a;
+  color: var(--input-text);
+}
+
+.naming input:focus {
+  border-color: var(--gradient-end);
+  box-shadow: 0 0 6px rgba(31, 71, 250, 0.45);
+}
+
+
+/* =========================================================
+   BUTTON GROUP
+========================================================= */
+.btn-group-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-group-row button {
+  flex: 1;
+  padding: 10px 0;
+
+  border-radius: 10px;
+  border: none;
+
+  background: var(--button-bg);
+  color: var(--text-main);
+  font-weight: 500;
+
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.btn-group-row button:hover {
+  background: var(--button-hover);
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   CREATE BUTTON
+========================================================= */
+.save-btn-container {
+  margin-top: 4px;
+}
+
+.create-btn {
+  width: 100%;
+  padding: 10px 0;
+
+  border-radius: 12px;
+  border: none;
+
+  font-size: 1rem;
+  font-weight: 500;
+
+  background: var(--button-bg);
+  color: var(--text-main);
+
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.create-btn:hover {
+  background: var(--button-hover);
+  transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   FILE PANEL
+========================================================= */
+.file-panel {
+  flex: 2;
+  width: 100%;
+  min-width: 0;
+
+  background: var(--container-bg);
+  padding: 16px;
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-x: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* Panel header */
+.panel-header {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Panel body */
+.panel-body {
+  flex: 5;
+  min-height: 200px;
+  max-height: 500px;
+
+  background: #14202c;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e057;
+
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+
+/* =========================================================
+   FILE GRID
+========================================================= */
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 4px;
+
+  width: 100%;
+  min-width: 0;
+}
+
+/* File item */
+.result-item {
+  padding: 8px 2px;
+  border-radius: 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+
+  transition: 0.15s;
+}
+
+.result-item:hover {
+  background: rgba(255, 255, 255, 0.053);
+}
+
+/* Icon */
+.folder-icon i {
+  font-size: 1.5rem;
+  color: #61c589;
+}
+
+/* Name */
+.folder-name {
+  max-width: 120px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #ffffff;
+  word-break: break-word;
+}
+
+/* Selected */
+.result-item.selected {
+  background: rgba(4, 255, 217, 0.24);
+}
+
+.result-item.selected .folder-name {
+  color: #34fcff;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   PANEL FOOTER BUTTONS
+========================================================= */
+.panel-footer {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.panel-footer button {
+  flex: 1;
+  padding: 12px;
+
+  font-size: 1rem;
+  font-weight: 500;
+
+  border-radius: 10px;
+  border: none;
+
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+/* Load */
+#load-btn {
+  background: var(--button-bg);
+  color: var(--text-main);
+}
+
+#load-btn:hover {
+  background: #3277ec;
+}
+
+/* Delete */
+#delete-btn,
+#deleteall-btn {
+  background: var(--button-bg);
+  color: var(--text-main);
+}
+
+#delete-btn:hover,
+#deleteall-btn:hover {
+  background: var(--button-hover);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+/* Phone portrait */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .plate {
+    height: auto;
+    overflow: visible;
+  }
+
+  th,
+  td {
+    min-width: 18vw;
+    min-height: 18vw;
+  }
+
+  .side-panel,
+  .file-panel {
+    height: auto;
+    overflow: visible;
+  }
+
+  .panel-body {
+    max-height: 500px;
+    overflow-y: visible;
+  }
+}
+
+/* Phone landscape */
+@media (max-height: 480px) {
+  .container {
+    flex-direction: row;
+    height: 100%;
+  }
+
+  .plate {
+    flex: 1;
+    overflow: auto;
+  }
+
+  .file-panel {
+    flex: 1;
+    max-height: 100vh;
+  }
+
+  .panel-body {
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+}

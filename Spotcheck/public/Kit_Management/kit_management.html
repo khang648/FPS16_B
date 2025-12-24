@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPS16_B - Spotcheck</title>
+
+  <link rel="stylesheet" href="../assets/fontawesome-7.1.0/css/all.min.css">
+  <link rel="stylesheet" href="./kit_management.css">
+  <link rel="stylesheet" href="../general_style.css">
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="titlebar-top">
+      <span class="titlebar-version">SPOTCHECK</span>
+    </div>
+
+    <div class="titlebar-bottom">
+      <span class="titlebar-page">
+        <i class="fa-solid fa-gear"></i> KIT MANAGEMENT
+      </span>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main>
+    <div class="container">
+
+      <!-- ===== LEFT PANEL ===== -->
+      <div class="left-panel">
+
+        <!-- KIT INFORMATION -->
+        <div class="section">
+          <label class="section-title">Kit Information</label>
+
+          <div class="form-group">
+            <label for="kitName">Kit name</label>
+            <input
+              type="text"
+              id="kitName"
+              placeholder="Enter kit name"
+            >
+          </div>
+        </div>
+
+        <!-- STANDARD CURVE DATA -->
+        <div class="section">
+          <label class="section-title">Standard Curve Data</label>
+
+          <table class="std-table">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Concentration</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+
+            <tbody id="tableBody">
+              <tr>
+                <td class="row-label">1</td>
+                <td><input type="number"></td>
+                <td><input type="number"></td>
+              </tr>
+
+              <tr>
+                <td class="row-label">2</td>
+                <td><input type="number"></td>
+                <td><input type="number"></td>
+              </tr>
+
+              <tr>
+                <td class="row-label">3</td>
+                <td><input type="number"></td>
+                <td><input type="number"></td>
+              </tr>
+
+              <tr>
+                <td class="row-label">4</td>
+                <td><input type="number"></td>
+                <td><input type="number"></td>
+              </tr>
+
+              <tr>
+                <td class="row-label">5</td>
+                <td><input type="number"></td>
+                <td><input type="number"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- N-VALUE -->
+        <div class="section">
+          <label class="section-title">N-Value</label>
+
+          <div class="n-value">
+            <div class="n-value-item">
+              <label for="nLow">N-High</label>
+              <input type="number" id="nLow">
+            </div>
+
+            <div class="n-value-item">
+              <label for="nHigh">N-Low</label>
+              <input type="number" id="nHigh">
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="button-bar">
+          <button id="saveBtn" onclick="Save_Clicked()">Save</button>
+          <!-- <button id="deleteBtn" onclick="Delete_Clicked()">Delete</button> -->
+          <button id="clearBtn" onclick="Clear_Clicked()">Clear</button>
+        </div>
+
+      </div>
+
+      <!-- ===== FILE PANEL ===== -->
+      <div class="file-panel">
+
+        <div class="panel-header">
+          <h2>Available Kits</h2>
+        </div>
+
+        <div class="panel-body">
+          <div id="result-grid" class="result-grid">
+            <!-- Items will be created in JavaScript -->
+          </div>
+        </div>
+
+        <div class="panel-footer">
+          <!-- <button id="load-btn" class="load-btn">Load</button> -->
+          <button id="delete-btn" class="delete-btn">Delete</button>
+          <button id="deleteall-btn" class="deleteall-btn">Delete All</button>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <button
+      id="backBtn"
+      type="button"
+      onclick="Back_Clicked()"
+    >
+      Back
+    </button>
+    <!-- <button id="nextBtn" type="button" onclick="Next_Clicked()">Next</button> -->
+  </footer>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../Navigation/nav.js"></script>
+  <script src="kit_management.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+</body>
+</html>

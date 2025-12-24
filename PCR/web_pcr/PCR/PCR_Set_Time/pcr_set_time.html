@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>PCR Mode</title>
+  <link rel="stylesheet" href="../PCR_Elements/style.css">
+  <link rel="stylesheet" href="pcr_set_time.css">
+  <link rel="stylesheet" href="../PCR_Elements/Create_UI.css">
+</head>
+<body>
+  <main class="pcr-main">
+    <div class="pcr-container">
+          <div class="Set-Time-container">
+            <div class= "Time-show-container">
+              <div class="title-label" id="system-time">- Date & Time system -</div>
+              <div class="time-label" id="system-date"></div>
+            </div>  
+            <button class="time-btn" onclick="Click_Btn_Enter_Date_Time()">Enter date & time</button>
+          </div>
+          
+          <div id="control-panel-set-time"    class="tool-container"></div>
+    </div>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/components/header.js"></script> 
+  
+  <script src="../../Websocket/Websocket_ID.js"></script>
+  <script type="module" src="../../Websocket/Websocket.js"></script>
+
+  <script src="../PCR_Elements/Package.js"></script>
+  <script src="../PCR_Elements/Convert.js"></script>
+  <script src="../PCR_Elements/Handle.js"></script>
+  <script src="../PCR_Elements/Data_config.js"></script>
+  <script src="../PCR_Elements/Create_UI.js"></script>
+  <script src="../PCR_Set_Time/pcr_set_time.js"></script>
+  
+</body>
+</html>

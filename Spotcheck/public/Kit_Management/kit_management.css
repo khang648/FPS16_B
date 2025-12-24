@@ -1,0 +1,443 @@
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+.container {
+  width: 100%;
+  height: 100%;
+  padding: 8px 0;
+
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+/* =========================================================
+   LEFT PANEL
+   ========================================================= */
+.left-panel {
+  flex: 1.5;
+  min-width: 0;
+  padding: 16px;
+
+  background: var(--container-bg);
+  border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.section-title {
+  margin-bottom: 4px;
+
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-align: center;
+
+  background: #19516f79;
+}
+
+/* =========================================================
+   FORM GROUP
+   ========================================================= */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+}
+
+.left-panel label {
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.left-panel input {
+  width: 100%;
+  padding: 8px;
+
+  border-radius: 8px;
+  border: 1px solid var(--container-border-color);
+
+  background: #ffffff0a;
+  color: var(--input-text);
+}
+
+.left-panel input:focus {
+  border-color: var(--gradient-end);
+  box-shadow: 0 0 6px rgba(31, 71, 250, 0.4);
+}
+
+/* =========================================================
+   STANDARD TABLE
+   ========================================================= */
+.std-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.std-table th,
+.std-table td {
+  padding: 8px 10px;
+}
+
+.std-table th {
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.row-label {
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 400;
+}
+
+.std-table td input {
+  width: 100%;
+  padding: 8px;
+
+  border-radius: 6px;
+  border: 1px solid var(--container-border-color);
+
+  background: #ffffff0a;
+  color: var(--input-text);
+}
+
+/* =========================================================
+   N VALUE
+   ========================================================= */
+.n-value {
+  display: flex;
+  gap: 16px;
+}
+
+.n-value-item {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.n-value-item label {
+  font-size: 0.85rem;
+}
+
+/* =========================================================
+   BUTTON BAR
+   ========================================================= */
+.button-bar {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.button-bar button {
+  flex: 1;
+  padding: 12px 0;
+
+  border: none;
+  border-radius: 10px;
+
+  background: var(--button-bg);
+  color: var(--text-main);
+
+  font-size: inherit;
+  font-weight: 500;
+
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.button-bar button:hover {
+  background: var(--button-hover);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   FILE PANEL
+   ========================================================= */
+.file-panel {
+  flex: 1;
+  min-width: 0;
+  padding: 16px;
+
+  background: var(--container-bg);
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-x: hidden;
+}
+
+/* =========================================================
+   FILE PANEL HEADER
+   ========================================================= */
+.panel-header {
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.panel-header h2 {
+  margin: 0;
+
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* =========================================================
+   FILE PANEL BODY
+   ========================================================= */
+.panel-body {
+  flex: 5;
+  min-height: 200px;
+  max-height: 500px;
+  padding: 8px;
+
+  background: #14202c;
+  border: 1px solid #e0e0e057;
+  border-radius: 8px;
+
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+/* =========================================================
+   RESULT GRID
+   ========================================================= */
+.result-grid {
+  width: 100%;
+  min-width: 0;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 4px;
+}
+
+/* =========================================================
+   RESULT ITEM
+   ========================================================= */
+.result-item {
+  padding: 8px 2px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  text-align: center;
+  user-select: none;
+  cursor: pointer;
+
+  border-radius: 10px;
+  transition: 0.15s;
+}
+
+.result-item:hover {
+  background: rgba(255, 255, 255, 0.053);
+}
+
+/* =========================================================
+   RESULT ITEM CONTENT
+   ========================================================= */
+.folder-icon i {
+  font-size: 2.5rem;
+  color: #00c8ff;
+}
+
+.folder-name {
+  width: 100%;
+  max-width: 120px;
+
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #ffffff;
+
+  word-break: break-word;
+}
+
+/* =========================================================
+   RESULT ITEM STATE
+   ========================================================= */
+.result-item.selected {
+  background: rgba(4, 255, 217, 0.24);
+}
+
+.result-item.selected .folder-name {
+  color: #34fcff;
+  font-weight: 600;
+}
+
+/* =========================================================
+   FILE PANEL FOOTER
+   ========================================================= */
+.panel-footer {
+  margin-top: 8px;
+
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.panel-footer button {
+  flex: 1;
+  padding: 12px;
+
+  font-size: 1rem;
+  font-weight: 500;
+
+  border: none;
+  border-radius: 10px;
+
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+/* =========================================================
+   FILE PANEL BUTTONS
+   ========================================================= */
+#load-btn {
+  background: var(--button-bg);
+  color: var(--text-main);
+}
+
+#load-btn:hover {
+  background: #3277ec;
+}
+
+#delete-btn,
+#deleteall-btn {
+  margin-top: 12px;
+
+  background: var(--button-bg);
+  color: var(--text-main);
+}
+
+#delete-btn:hover,
+#deleteall-btn:hover {
+  background: var(--button-hover);
+}
+
+/* =========================================================
+   GLOBAL RESPONSIVE FIX
+   ========================================================= */
+html,
+body {
+  height: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+/* main and container overflow protection */
+main,
+.container,
+.tab-panel,
+.note-panel,
+.tab-content {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* =========================================================
+   TABLET AND MOBILE LANDSCAPE
+   ========================================================= */
+@media (max-width: 1024px) {
+  html,
+  body {
+    overflow-y: auto;
+  }
+
+  main,
+  .container {
+    width: 100%;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+  }
+}
+
+/* =========================================================
+   MOBILE PORTRAIT
+   ========================================================= */
+@media (max-width: 768px) {
+  main,
+  .container {
+    width: 100%;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .left-panel,
+  .right-panel {
+    width: 100%;
+  }
+
+  .titlebar-version {
+    font-size: 0.95rem;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+@media (max-width: 480px) {
+  .titlebar {
+    padding: 8px 12px;
+  }
+
+  .titlebar-version {
+    padding: 5px 12px;
+    font-size: 0.9rem;
+  }
+
+  .button-bar button {
+    padding: 8px 0;
+    font-size: 0.9rem;
+  }
+
+  footer button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+}
+
+/* =========================================================
+   BODY SCROLL
+   ========================================================= */
+body {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* =========================================================
+   REMOVE NUMBER INPUT SPINNER
+   ========================================================= */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}

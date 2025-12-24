@@ -1,0 +1,73 @@
+.ctrl-btn {
+    width: 25%;              
+    height: 70%;
+    font-size: 14px;
+    font-family: 'Noto Serif', serif;
+    border-radius: 8px;
+    background-color: #57a6beff;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    border-width: 0;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    box-shadow: 3px 3px 3px #c0c0c0;  
+
+    display: flex;               
+    flex-direction: column;     
+    justify-content: center;   
+    align-items: center;        
+
+    /* gap: 6px; */
+    white-space: nowrap;      
+    text-align: center;
+} 
+
+
+.ctrl-btn:active {
+  background-color: #57a6beff;
+  transform: none;
+  transition: transform 0.1s ease, background-color 0.1s ease;
+}
+
+.time-display {
+    width: 100%;                    
+    height: 70%;
+    display: flex;            /* bật flex */
+
+    text-align: center;
+    justify-content: center;  /* canh giữa ngang */
+    align-items: center;      /* canh giữa dọc */
+
+    font-family: 'Noto Serif', serif;
+    font-size: 18px;
+    font-family: 'Noto Serif', serif;
+    color: rgb(0, 0, 0);
+    border-radius: 8px;
+    background-color: #57a6beff;
+    padding: 0;
+    border-width: 0;
+    box-shadow: 4px 4px 4px #c0c0c0;  
+}
+
+.back-btn {
+    width: 100%;                 /* mỗi nút chiếm 1 phần */
+    height: 70%;
+    /* min-height: 50px; */
+    font-size: 14px;
+    font-family: 'Noto Serif', serif;
+    border-width: 0;
+    border-radius: 8px;
+    background-color: #57a6beff;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    box-shadow: 3px 3px 3px #c0c0c0; 
+
+    display: flex;               /* bật flex */
+    flex-direction: row;      /* xếp dọc icon + chữ */
+    justify-content: center;     /* căn giữa dọc */
+    align-items: center;         /* căn giữa ngang */
+}
+
+.back-btn i {
+    margin-right: 5px;  /* khoảng cách icon và chữ */
+}

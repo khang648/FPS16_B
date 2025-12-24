@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPS16_B - Spotcheck</title>
+
+  <!-- ================= STYLES ================= -->
+  <link rel="stylesheet" href="../assets/fontawesome-7.1.0/css/all.min.css">
+  <link rel="stylesheet" href="wifi_setting.css">
+  <link rel="stylesheet" href="../Elements/Popup/Popup.css">
+  <link rel="stylesheet" href="../general_style.css">
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="titlebar-top">
+      <span class="titlebar-version">SPOTCHECK</span>
+    </div>
+
+    <div class="titlebar-bottom">
+      <span class="titlebar-page">
+        <i class="fa-solid fa-wifi"></i>
+        WIFI
+      </span>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main>
+
+    <div class="wifi-main">
+
+      <!-- ===== LEFT PANEL : WIFI FORM ===== -->
+      <div class="wifi-left">
+
+        <!-- wifi status -->
+        <div class="wifi-status">
+          <span id="wifi-status-label">Checking...</span>
+        </div>
+
+        <div class="wifi-container">
+
+          <!-- ssid -->
+          <div class="wifi-group">
+            <label for="wifi-ssid">SSID</label>
+            <input
+              type="text"
+              id="wifi-ssid"
+              placeholder="Enter SSID"
+            >
+          </div>
+
+          <!-- password -->
+          <div class="wifi-group">
+            <label for="wifi-password">Password</label>
+
+            <div class="wifi-pass-wrapper">
+              <input
+                type="password"
+                id="wifi-password"
+                placeholder="Enter Password"
+                autocomplete="new-password"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+              >
+
+              <label class="showpass-row">
+                <input type="checkbox" id="showPass">
+                <span>Show password</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- connect button -->
+          <div class="wifi-buttons">
+            <button id="btnConnect" type="button">Connect</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===== RIGHT PANEL : WIFI LIST ===== -->
+      <div class="wifi-right">
+
+        <div class="wifi-list-header">
+          <span id="wifi-list-label">Available WiFi Networks</span>
+        </div>
+
+        <div class="wifi-list-body">
+          <ul id="wifi-list">
+            <!-- wifi list items -->
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- popup container -->
+    <div id="popupContainer"></div>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <button id="btnBack" type="button">Back</button>
+  </footer>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../Navigation/nav.js"></script>
+  <script src="wifi_setting.js"></script>
+  <script src="../Elements/Popup/Popup.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,404 @@
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
+.container {
+  width: 100%;
+  max-width: 1400px;
+  height: 100%;
+  padding: 8px 0;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 12px;
+}
+
+/* =========================================================
+   WELL PLATE AREA
+========================================================= */
+.plate {
+  flex: 1;
+  padding: 0;
+
+  background: var(--panel-bg);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+table {
+  width: 100%;
+  height: 100%;
+  border-spacing: 2px;
+  background-color: var(--container-bg);
+}
+
+th,
+td {
+  width: 120px;
+  height: 120px;
+  text-align: center;
+  font-weight: bold;
+}
+
+th {
+  background: var(--container-bg);
+  color: #ffffff;
+}
+
+td {
+  background: #232c3e;
+}
+
+/* =========================================================
+   WELL
+========================================================= */
+.well {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  cursor: pointer;
+}
+
+.well.na {
+  background: #777;
+  color: #dddddd;
+}
+
+.well:hover {
+  background: #1c60a0;
+  border-radius: 8px;
+}
+
+.well.active {
+  outline: 3px solid #00bfff;
+}
+
+.well.filled {
+  background: #12bfb6f4;
+}
+
+/* =========================================================
+   FILE DIALOG
+========================================================= */
+.file-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.file-dialog-content {
+  width: 90%;
+  max-width: 800px;
+  max-height: 80%;
+  padding: 16px;
+
+  background: var(--panel-bg);
+  border-radius: 12px;
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.file-grid {
+  flex: 1;
+  padding-right: 6px;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+
+  overflow-y: auto;
+}
+
+.file-item {
+  padding: 10px;
+
+  background: #1f2c46;
+  border-radius: 8px;
+
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.file-item:hover {
+  background: #2c3b57;
+}
+
+/* =========================================================
+   FILE PANEL
+========================================================= */
+.file-panel {
+  flex: 1;
+  width: 100%;
+  padding: 16px;
+  min-width: 0;
+
+  background: var(--container-bg);
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Header */
+.panel-header {
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.panel-header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Body */
+.panel-body {
+  flex: 5;
+  min-height: 200px;
+  max-height: 500px;
+  padding: 8px;
+
+  background: #14202c;
+  border: 1px solid #e0e0e057;
+  border-radius: 8px;
+
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+/* =========================================================
+   RESULT GRID
+========================================================= */
+.result-grid {
+  width: 100%;
+  min-width: 0;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 4px;
+}
+
+/* =========================================================
+   RESULT ITEM
+========================================================= */
+.result-item {
+  padding: 8px 2px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  text-align: center;
+  user-select: none;
+  cursor: pointer;
+
+  border-radius: 10px;
+  transition: 0.15s;
+}
+
+.result-item:hover {
+  background: rgba(255, 255, 255, 0.053);
+}
+
+/* Icon */
+.folder-icon i {
+  font-size: 1.5rem;
+  color: #61c589;
+}
+
+/* Name */
+.folder-name {
+  width: 100%;
+  max-width: 120px;
+
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #ffffff;
+
+  word-break: break-word;
+}
+
+/* Selected */
+.result-item.selected {
+  background: rgba(4, 255, 217, 0.24);
+}
+
+.result-item.selected .folder-name {
+  color: #34fcff;
+  font-weight: 600;
+}
+
+/* =========================================================
+   PANEL FOOTER
+========================================================= */
+.panel-footer {
+  margin-top: 12px;
+
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.panel-footer button {
+  flex: 1;
+  padding: 12px;
+
+  font-size: 1rem;
+  font-weight: 500;
+
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+
+  transition: 0.15s;
+}
+
+/* Create */
+#btnCreate {
+  background: var(--button-bg);
+  color: var(--text-main);
+}
+
+#btnCreate:hover {
+  background: var(--button-hover);
+}
+
+/* =========================================================
+   EMAIL DIALOG
+========================================================= */
+.email-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  padding: 16px;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.email-dialog-content {
+  width: 100%;
+  max-width: 500px;
+  padding: 20px 24px;
+
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.email-dialog-content h3 {
+  margin: 0;
+
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  color: #222222;
+}
+
+/* Input */
+#email-input {
+  width: 100%;
+  padding: 10px 12px;
+
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+  font-size: 14px;
+
+  outline: none;
+  transition: 0.2s;
+}
+
+#email-input:focus {
+  border-color: #4c9aff;
+  box-shadow: 0 0 0 3px rgba(76, 154, 255, 0.3);
+}
+
+/* Buttons */
+.email-dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.email-dialog-buttons button {
+  width: 100px;
+  padding: 10px 0;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+/* Cancel */
+#email-cancel {
+  background: #e5e5e5;
+  color: #333333;
+}
+
+#email-cancel:hover {
+  background: #d2d2d2;
+}
+
+/* OK */
+#email-ok {
+  background: #4c9aff;
+  color: #ffffff;
+}
+
+#email-ok:hover {
+  background: #1f78ff;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 720px) {
+  .container {
+    flex-direction: column;
+    height: auto;
+    align-items: center;
+  }
+
+  .plate {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .button-group button {
+    padding: 8px 0;
+    font-size: 0.9rem;
+  }
+}

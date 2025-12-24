@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>PCR Mode</title>
+  <link rel="stylesheet" href="../PCR_Elements/style.css">
+  <link rel="stylesheet" href="/PCR/PCR_Base/pcr_base.css">
+</head>
+<body>
+  <main class="pcr-main">
+    <button class="pcr-btn" onclick="OpenTab('SAVED')">
+      <img src="../../assets/PCR_SAVED.png" alt="SAVED" class="btn-icon">
+      SAVED PROTOCOL
+    </button>    
+    <button class="pcr-btn" onclick="OpenTab('NEW')">
+      <img src="../../assets/PCR_NEW.png" alt="NEW" class="btn-icon">
+      NEW PROTOCOL
+    </button>
+    <button class="pcr-btn" onclick="OpenTab('HISTORY')">
+      <img src="../../assets/PCR_HISTORY.png" alt="HISTORY" class="btn-icon">
+      HISTORY
+    </button>
+    <button class="pcr-btn" onclick="OpenTab('ADMIN')">
+      <img src="../../assets/PCR_ADMIN.png" alt="ADMIN" class="btn-icon">
+      ADMIN
+    </button>
+  
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/components/header.js"></script>
+  <script src="/PCR/PCR_Base/pcr_base.js"></script>
+  <script src="../../Websocket/Websocket_ID.js"></script>
+  <script type="module" src="../../Websocket/Websocket.js"></script>
+
+  <script src="/PCR/PCR_Elements/Package.js"></script>
+  <script src="/PCR/PCR_Elements/Convert.js"></script>
+  <script src="/PCR/PCR_Elements/Handle.js"></script>
+  <script src="/PCR/PCR_Elements/Data_config.js"></script>
+  <script src="/PCR/PCR_Elements/Create_UI.js"></script>
+</body>
+</html>

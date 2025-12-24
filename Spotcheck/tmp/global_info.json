@@ -1,0 +1,39 @@
+{
+  "sensitivity": null,
+  "kit_value_a": null,
+  "kit_value_b": null,
+  "kit_selected": null,
+  "session_info": [
+    "",
+    "",
+    ""
+  ],
+  "samplefile_create_direct": 0,
+  "session_createtime": "",
+  "samplename_list": [
+    "N/A",
+    "N/A",
+    "N/A",
+    "N/A",
+    "N/A",
+    "N/A",
+    "N/A",
+    "N/A",
+    "N/A",
+    "N/A",
+    "N/A",
+    "N/A",
+    "N/A",
+    "N/A",
+    "N/A",
+    "N/A"
+  ],
+  "email": "",
+  "appPass": "",
+  "automail": 0,
+  "recipient": "",
+  "resultfile_name": null,
+  "lasttime_check": "1111-11-11 11:11:11",
+  "samplefile_name": "hihi",
+  "famfolder_name": "Optical (2025-12-20_13-35-08)"
+}

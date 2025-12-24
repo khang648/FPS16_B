@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>PCR Mode</title>
+  <link rel="stylesheet" href="../PCR_Elements/style.css">
+  <link rel="stylesheet" href="pcr_history.css">
+  <link rel="stylesheet" href="../PCR_Elements/Create_UI.css">
+</head>
+<body>
+  <main class="pcr-main">
+    <div class="pcr-container">
+          <div id="pcr-history-list-preview"  class="history-list-preview-container"></div>
+          <div id="control-panel-history"     class="tool-container"></div>
+    </div>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/components/header.js"></script> 
+   <script src="../PCR_History/pcr_history.js"></script>
+  <script src="../../Websocket/Websocket_ID.js"></script>
+  <script type="module" src="../../Websocket/Websocket.js"></script>
+
+  <script src="../PCR_Elements/Package.js"></script>
+  <script src="../PCR_Elements/Convert.js"></script>
+  <script src="../PCR_Elements/Handle.js"></script>
+  <script src="../PCR_Elements/Data_config.js"></script>
+  <script src="../PCR_Elements/Create_UI.js"></script>  
+
+</body>
+</html>

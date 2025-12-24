@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPS16_B - Spotcheck</title>
+
+  <link rel="stylesheet" href="../assets/fontawesome-7.1.0/css/all.min.css">
+  <link rel="stylesheet" href="fam.css">
+  <link rel="stylesheet" href="../general_style.css">
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="titlebar-top">
+      <span class="titlebar-version">SPOTCHECK</span>
+    </div>
+
+    <div class="titlebar-bottom">
+      <span class="titlebar-page">
+        <i class="fa-solid fa-vials"></i> OPTICAL INSPECTION
+      </span>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main>
+    <div class="container">
+
+      <!-- ===== RESULT PANEL ===== -->
+      <div class="result-panel">
+
+        <!-- WELL PLATE -->
+        <div class="plate">
+          <table id="wellTable" class="well-table">
+            <thead id="wellHead"></thead>
+            <tbody id="wellGrid"></tbody>
+          </table>
+        </div>
+
+        <!-- IMAGE DISPLAY -->
+        <div class="image-panel">
+          <div class="image-box">
+            <img id="resultImage" src="" alt="No image yet">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===== CONTROL PANEL ===== -->
+      <div class="control-panel">
+        <button id="selectall-btn" class="delete-btn">Select All</button>
+        <button id="deselectall-btn" class="deleteall-btn">Deselect All</button>
+        <button id="check-btn" class="check-btn">Check</button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <button id="btnBack" type="button">Back</button>
+  </footer>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../Navigation/nav.js"></script>
+  <script src="fam.js"></script>
+
+</body>
+</html>

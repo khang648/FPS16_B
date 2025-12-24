@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="google" content="notranslate">
+  <title>PCR Mode</title>
+  <link rel="stylesheet" href="../PCR_Elements/style.css">
+  <link rel="stylesheet" href="pcr_wifi_config.css">
+  <link rel="stylesheet" href="../PCR_Elements/Create_UI.css">
+</head>
+<body>
+  <!-- <main class="pcr-main">
+    <div class="pcr-container">
+      <div class="wifi-config-container">
+          <div class="wifi-container">
+              <div class="wifi-header">WIFI CONFIG</div>
+              <div class="wifi-content" id="wifi-content">
+
+                <div class="wifi-field">
+                  <label for="wifi-ssid">Wifi SSID Internet:</label>
+                  <input type="text" id="wifi-ssid" placeholder="Enter SSID">
+                </div>
+                <div class="wifi-field">
+                  <label for="wifi-password">Wifi PASS Internet:</label>
+                  <input type="password" id="wifi-password" placeholder="Enter Pass">             
+                </div>
+
+                <div class="show-pass-field">
+                  <input type="checkbox" id="show-password-checkbox">
+                  <label for="show-password-checkbox">Show password</label>
+                </div>
+
+              </div>
+          </div>
+      </div>
+      <div id="control-panel-wifi-config"    class="tool-container"></div>
+    </div>
+  </main> -->
+
+  <main class="pcr-main">
+    <div class="pcr-container">
+      <div class="wifi-main">
+        <!-- LEFT: WiFi form -->
+        <div class="wifi-left">
+          <div class="wifi-status">
+            <span id="wifi-status-label">Checking...</span>
+          </div>
+
+          <div class="wifi-container">
+
+            <div class="wifi-group">
+              <label for="ssid">SSID</label>
+              <input type="text" id="wifi-ssid" placeholder="Enter SSID">
+            </div>
+
+            <div class="wifi-group">
+              <label for="password">Password</label>
+              <div class="wifi-pass-wrapper">
+                <input type="password" 
+                      id="wifi-password" 
+                      placeholder="Enter Password"
+                      autocomplete="new-password"
+                      autocorrect="off"
+                      autocapitalize="off"
+                      spellcheck="false">
+                <label class="showpass-row">
+                  <input type="checkbox" id="showPass">
+                  <span>Show password</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="wifi-buttons">
+              <button id="btnConnect" type="button">Connect</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: WiFi scan list -->
+        <div class="wifi-right">
+          <div>
+            <span id="wifi-list-label">Available WiFi Networks</span>
+          </div>
+          <div>
+            <ul id="wifi-list">
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div id="control-panel-wifi-config"    class="tool-container"></div>
+    </div>
+  </main>
+
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/components/header.js"></script> 
+  
+  <script src="../../Websocket/Websocket_ID.js"></script>
+  <script type="module" src="../../Websocket/Websocket.js"></script>
+
+  <script src="../PCR_Elements/Package.js"></script>
+  <script src="../PCR_Elements/Convert.js"></script>
+  <script src="../PCR_Elements/Handle.js"></script>
+  <script src="../PCR_Elements/Data_config.js"></script>
+  <script src="../PCR_Elements/Create_UI.js"></script>
+  <script src="../PCR_Wifi_Config/pcr_wifi_config.js"></script>
+  
+</body>
+</html>

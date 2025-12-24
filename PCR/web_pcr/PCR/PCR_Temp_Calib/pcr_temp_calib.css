@@ -1,0 +1,200 @@
+/* html, body {
+  height: 100%;
+  overflow: hidden;  
+  margin: 0;
+  padding: 0;
+} */
+
+
+.pcr-main {
+  flex: 1 1 auto;       
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(255, 255, 255); 
+}
+
+.pcr-container {     
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(255, 255, 255); 
+  height: 100%;
+  width: 96%;
+  max-width: 700px;
+  min-width: 250px;
+}
+
+.temp-calib-container{
+  height: 80%;
+  width: 100%;
+  background-color: rgb(255, 255, 255);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+
+
+#pel_img{
+  background-color: #ffffff;
+  height: 80px;
+  width: 240px;
+  /* padding-top: 10px;
+  padding-bottom: 6px; */
+}
+
+
+.Block-Para-container {
+  background-color: #ffffff;
+  display: flex;       
+  flex-direction: column;     
+  justify-content: center;      
+  align-items: center;       
+  width: 50%;   
+  height: 50%;               
+}
+
+.value-input {
+  width: 6ch;                
+  text-align: center;        
+  border: 1px solid #000;   
+  border-radius: 4px;       
+  font-size: 16px;           
+  font-family: "Times New Roman", serif;
+  padding: 1px 0;
+  outline: none;             
+  transition: border 0.2s;
+}
+
+.value-input:focus {
+  border: 1px solid #0078ff;  
+}
+
+
+.Para-container h3{
+  margin: 0px;              
+  font-family: "Times New Roman", serif;
+  font-size: 16px;
+  white-space: pre;
+}
+
+.history-header{
+  font-size: 16px;
+}
+
+.Para-container p{
+  font-size: 16px;       
+  font-family: "Times New Roman", serif;
+  margin: 6px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: pre;
+}
+
+.tool-container{
+  height: 10%;  
+  width:  100%;  
+  background-color: rgb(255, 255, 255);
+}
+
+.temp-container {
+  height: 40%;
+  background-color: #fdfdfd;
+  width: 100%;
+  display: flex;
+  flex-direction: column;   /* sắp xếp theo cột */
+  justify-content: space-between; /* từ trên xuống */
+  align-items: center;      /* căn giữa theo ngang */
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+
+.Block-Para-container {
+  height: 50%;
+  width: 100%;
+  background-color: #f3f3f3;
+  border: 1px solid #000;      
+  border-radius: 5px; 
+  flex-direction: column;   
+  justify-content: center; 
+  align-items: center;    
+  text-align: center;  
+  box-sizing: border-box; 
+  box-shadow: 4px 4px 4px #c0c0c0;  
+}
+
+/*Khối Peltier - Heating */
+.Block-Para-container:first-child {
+  padding-left:  10px; 
+  padding-right: 10px; 
+  box-sizing: border-box; 
+}
+
+/*Khối Heating - Cooling */
+.Block-Para-container:last-child {
+  padding-left:  10px; 
+  padding-right: 30px; 
+  box-sizing: border-box; 
+}
+
+.Para-container {
+  display: flex;               /* bật flex */
+  flex-direction: row;         /* các phần tử con nằm ngang */
+  align-items: center;         /* căn giữa theo chiều cao */
+  justify-content: space-between; /* các phần tử sát bên trái */
+  width: 100%;                  /* chiếm gần hết chiều ngang */
+}
+
+.img-container{
+  height: 20%;
+  width: 100%;
+  background-color: #0078ff;
+}
+
+.system-container{
+  height: 39%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  border: 1px solid #000;
+}
+
+.system-header {
+  height: 15%;
+  width: 100%;
+  background-color: #57a6be;
+  color: #000000;
+  font-size: 16px;
+  display: flex;
+  align-items: center;      /* canh giữa theo chiều cao */
+  justify-content: center;  /* canh giữa theo chiều ngang */
+  border-bottom: 1px solid #000;
+  box-sizing: border-box;
+}
+
+.system-content {
+  /* height: 85%; */
+  height: 250px;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  font-size: 16px;
+  text-align: left;
+  background-color: #ffffff;
+  white-space: pre-wrap;    
+  word-break: break-word;    
+  padding: 10px;
+}

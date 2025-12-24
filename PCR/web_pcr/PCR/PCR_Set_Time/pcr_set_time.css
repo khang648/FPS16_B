@@ -1,0 +1,97 @@
+html, body {
+  height: 100%;
+  overflow: hidden;  /* Ẩn cả scroll ngang và dọc trên toàn trang */
+  margin: 0;
+  padding: 0;
+}
+
+
+.pcr-main {
+  flex: 1 1 auto;       
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(255, 255, 255); 
+}
+
+.pcr-container {     
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(255, 255, 255); 
+  height: 100%;
+  width: 96%;
+  max-width: 700px;
+  min-width: 400px;
+}
+
+.Set-Time-container{
+  height: 90%;
+  width: 100%;
+  background-color: rgb(255, 255, 255);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.Time-show-container {     
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(243, 243, 243); 
+  height: 80px;
+  width: 200px;
+  border-radius: 10px;
+  border: 1px solid #000000;   /* viền dày 1px */
+  margin-bottom: 20px;
+  box-shadow: 4px 4px 4px #c0c0c0;
+}
+
+.title-label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #000000;
+  margin-bottom: 8px;
+}
+
+.time-label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #000000;
+  border-radius: 8;
+  border-width: 1px;
+}
+
+.time-btn {
+  background-color: #57a6beff;
+  color: rgb(0, 0, 0);
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: serif;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  box-shadow: 4px 4px 4px #c0c0c0;
+
+  height: 40px;
+  width: 200px;
+}
+
+.time-btn:hover {
+  background-color: rgb(170, 235, 255);
+  transform: scale(1.05);
+}
+
+
+.tool-container{
+  height: 10%;  
+  min-height: 60px; 
+  width:  100%;  
+  background-color: rgb(255, 255, 255);
+}

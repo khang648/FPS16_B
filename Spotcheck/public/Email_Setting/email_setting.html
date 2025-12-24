@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPS16_B - Spotcheck</title>
+
+  <link rel="stylesheet" href="../assets/fontawesome-7.1.0/css/all.min.css">
+  <link rel="stylesheet" href="./email_setting.css">
+  <link rel="stylesheet" href="../Elements/Popup/Popup.css">
+  <link rel="stylesheet" href="../general_style.css">
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="titlebar-top">
+      <span class="titlebar-version">SPOTCHECK</span>
+    </div>
+
+    <div class="titlebar-bottom">
+      <span class="titlebar-page">
+        <i class="fa-solid fa-envelope"></i> EMAIL
+      </span>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main>
+    <div class="email-container">
+      <div class="email-center">
+
+        <!-- ===== STATUS ===== -->
+        <div class="email-status">
+          <span id="email-status-label">LOGIN</span>
+        </div>
+
+        <!-- ===== INFO ===== -->
+        <div class="email-info">
+
+          <!-- EMAIL ADDRESS -->
+          <div class="email-info-group">
+            <label for="email-addr-input">Email</label>
+            <input
+              type="text"
+              id="email-addr-input"
+              placeholder="Enter email address"
+            >
+          </div>
+
+          <!-- EMAIL PASSWORD -->
+          <div class="email-info-group">
+            <label for="email-pass-input">Password</label>
+
+            <div class="email-pass-wrapper">
+              <input
+                type="password"
+                id="email-pass-input"
+                placeholder="Enter email password"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+              >
+
+              <label class="showpass-label">
+                <input type="checkbox" id="showpass-checkbox">
+                <span>Show password</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- ACTION BUTTON -->
+          <div class="email-buttons">
+            <button id="btnLogin" type="button">Login</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= POPUP ================= -->
+    <div id="popup-container"></div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <button id="btnBack" type="button">Back</button>
+  </footer>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../Navigation/nav.js"></script>
+  <script src="email_setting.js"></script>
+  <script src="../Elements/Popup/Popup.js"></script>
+
+</body>
+</html>

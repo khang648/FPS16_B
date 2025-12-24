@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPS16_B - Spotcheck</title>
+
+  <!-- ================= STYLES ================= -->
+  <link rel="stylesheet" href="../assets/fontawesome-7.1.0/css/all.min.css">
+  <link rel="stylesheet" href="./system_check.css">
+  <link rel="stylesheet" href="../general_style.css">
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="titlebar-top">
+      <span class="titlebar-version">SPOTCHECK</span>
+    </div>
+
+    <div class="titlebar-bottom">
+      <span class="titlebar-page">
+        <i class="fa-solid fa-list-check"></i>
+        SYSTEM CHECK
+      </span>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main>
+    <div class="container">
+
+      <!-- ===== MAIN PANEL ===== -->
+      <div class="main-panel">
+
+        <!-- well plate and scan beam -->
+        <div class="plate">
+
+          <!-- table wrapper -->
+          <div
+            id="tableWrapper"
+            style="position: relative; display: inline-block;"
+          >
+
+            <!-- well table -->
+            <table id="wellTable" class="well-table">
+              <thead id="wellHead"></thead>
+              <tbody id="wellGrid"></tbody>
+            </table>
+
+            <!-- scan beam -->
+            <div id="scanBeam"></div>
+
+          </div>
+        </div>
+
+        <!-- image display panel -->
+        <div class="image-panel">
+          <div class="image-box">
+            <img
+              id="resultImage"
+              src=""
+              alt="No image yet"
+            >
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===== STATUS PANEL ===== -->
+      <div class="side-panel">
+
+        <!-- status text -->
+        <div class="status-panel">
+          <div class="status-text" id="statusText">
+            Processing...
+          </div>
+        </div>
+
+        <!-- progress bar (reserved) -->
+        <!--
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar"></div>
+          <span class="progress-label" id="progressLabel">0%</span>
+        </div>
+        -->
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <div class="footer-content">
+      <p>&copy; Phusabiochem - FPS16</p>
+    </div>
+  </footer>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../Navigation/nav.js"></script>
+  <script src="system_check.js"></script>
+
+</body>
+</html>

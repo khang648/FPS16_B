@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPS16_B - Spotcheck</title>
+
+  <link rel="stylesheet" href="../assets/fontawesome-7.1.0/css/all.min.css">
+  <link rel="stylesheet" href="analysis.css">
+  <link rel="stylesheet" href="../general_style.css">
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="titlebar-top">
+      <span class="titlebar-version">SPOTCHECK</span>
+    </div>
+
+    <div class="titlebar-bottom">
+      <span class="titlebar-page">
+        <i class="fa-solid fa-magnifying-glass-chart"></i> ANALYSIS
+      </span>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main>
+    <div class="container">
+
+      <!-- ===== LEFT PANEL: TAB SECTION ===== -->
+      <div class="tab-panel">
+
+        <!-- TAB BUTTONS -->
+        <div class="tab-header">
+          <button class="tab-btn" data-tab="tab1">Result</button>
+          <button class="tab-btn" data-tab="tab2">Sub-Result</button>
+          <button class="tab-btn" data-tab="tab-image">Image</button>
+        </div>
+
+        <!-- TAB CONTENT AREA -->
+        <div class="tab-content">
+          <p class="tab-placeholder">Tab content...</p>
+        </div>
+
+      </div>
+
+      <!-- ===== RIGHT PANEL: NOTES ===== -->
+      <div class="note-panel">
+
+        <!-- NOTE HEADER -->
+        <div class="note-reference">
+          Reference
+        </div>
+
+        <div class="note-row note-header">
+          <div class="note-cell">Value</div>
+          <div class="note-cell">CT</div>
+        </div>
+
+        <!-- NOTE ROWS -->
+        <div class="note-row">
+          <div class="note-cell negative">0</div>
+          <div class="note-cell negative">-</div>
+        </div>
+
+        <div class="note-row">
+          <div class="note-cell lowcopy">1-50</div>
+          <div class="note-cell lowcopy">&gt;37</div>
+        </div>
+
+        <div class="note-row">
+          <div class="note-cell mediumcopy">51-500</div>
+          <div class="note-cell mediumcopy">33-37</div>
+        </div>
+
+        <div class="note-row">
+          <div class="note-cell mediumcopy">501-1000</div>
+          <div class="note-cell mediumcopy">30-32</div>
+        </div>
+
+        <div class="note-row">
+          <div class="note-cell positive">1001-10000</div>
+          <div class="note-cell positive">27-29</div>
+        </div>
+
+        <div class="note-row">
+          <div class="note-cell positive">&gt;10000</div>
+          <div class="note-cell positive">&lt;26</div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer id="footerArea">
+    <div id="footerLoading" class="footer-loading">
+      <div class="footer-spinner-text">
+        <div class="spinner"></div>
+        <span class="processing-text">Processing</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../Navigation/nav.js"></script>
+  <script src="analysis.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script> -->
+  <script src="../assets/html2canvas-1.4.1/html2canvas.min.js"></script>
+
+
+</body>
+</html>

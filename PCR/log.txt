@@ -1,0 +1,6 @@
+[PCR Server] Go_To_Page_Web  PCR/PCR_Saved/pcr_saved.html none
+[PCR Server] Go_To_Page_Web  PCR/PCR_Saved/pcr_saved.html none
+[PCR Server] Web to uart:  [ 247, 6, 0, 195, 146 ]
+[PCR Server] Go_To_Page_Web  PCR/PCR_Saved/pcr_saved.html none
+[PCR Server] Go_To_Page_Web  PCR/PCR_Saved/pcr_saved.html none
+[PCR Server] Web to uart:  [ 247, 6, 0, 195, 146 ]

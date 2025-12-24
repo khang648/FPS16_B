@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="google" content="notranslate">
+  <title>PCR Mode</title>
+  <link rel="stylesheet" href="../PCR_Elements/style.css">
+  <link rel="stylesheet" href="pcr_temp_calib.css">
+  <link rel="stylesheet" href="../PCR_Elements/Create_UI.css">
+</head>
+<body>
+  <main class="pcr-main">
+    <div class="pcr-container">
+        <div class="temp-calib-container">     
+          <img id="pel_img" src = "../../assets/PCR_PELTIER.png"; alt="PCR Image">
+          <div class="temp-container">
+            <div class="Block-Para-container">
+              <!-- Peltier 1 -->
+              <div class="Para-container">
+                <h3>Peltier 1:        </h3>
+                <p>95°C ----- <input type="text" id="Pel1_Hi" class="value-input">°C   50°C ----- <input type="text" id="Pel1_Lo" class="value-input">°C</p>
+              </div>
+
+              <!-- Peltier 2 -->
+              <div class="Para-container">
+                <h3>Peltier 2:        </h3>
+                <p>95°C ----- <input type="text" id="Pel2_Hi" class="value-input">°C   50°C ----- <input type="text" id="Pel2_Lo"  class="value-input">°C</p>
+              </div>
+
+              <!-- Heat Block -->
+              <div class="Para-container">
+                <h3>Heat block:  </h3>
+                <p>100°C ----- <input type="text" id="HeatBlock_Hi" class="value-input">°C   50°C ----- <input type="text" id="HeatBlock_Lo" class="value-input">°C</p>
+              </div>
+            </div>
+
+            <div class="Block-Para-container">
+              <!-- Heating process -->
+              <div class="Para-container">
+                <h3>Heating process:   </h3>
+                <p>10°C → 100°C ----- <input type="text" id="Heating_Val" class="value-input"></p>
+              </div>
+
+              <!-- Cooling process -->
+              <div class="Para-container">
+                <h3>Cooling process:   </h3>
+                <p>10°C → 100°C ----- <input type="text"  id="Cooling_Val" class="value-input"></p>
+              </div>
+              
+              <!-- Time out -->
+              <div class="Para-container">
+                <h3>Time out:               </h3>
+                <p>Second -------------- <input type="text"  id="Time_out_Val" class="value-input"></p>
+              </div>
+            </div>
+
+          </div>
+          <div class="system-container">
+              <div class="system-header">SYSTEM LOG</div>
+              <div class="system-content" id="system-content"></div>
+          </div>
+        </div>
+      <div id="control-panel-temp-calib"    class="tool-container"></div>
+    </div>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/components/header.js"></script> 
+  
+  <script src="../../Websocket/Websocket_ID.js"></script>
+  <script type="module" src="../../Websocket/Websocket.js"></script>
+
+  <script src="../PCR_Elements/Package.js"></script>
+  <script src="../PCR_Elements/Convert.js"></script>
+  <script src="../PCR_Elements/Handle.js"></script>
+  <script src="../PCR_Elements/Data_config.js"></script>
+  <script src="../PCR_Elements/Create_UI.js"></script>
+  <script src="../PCR_Temp_Calib/pcr_temp_calib.js"></script>
+  
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPS16_B - Spotcheck</title>
+
+  <link rel="stylesheet" href="../assets/fontawesome-7.1.0/css/all.min.css">
+  <link rel="stylesheet" href="./kit_selection.css">
+  <link rel="stylesheet" href="../general_style.css">
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="titlebar-top">
+      <span class="titlebar-version">SPOTCHECK</span>
+    </div>
+
+    <div class="titlebar-bottom">
+      <span class="titlebar-page">
+        <i class="fa-solid fa-magnifying-glass-chart"></i> KIT SELECTION
+      </span>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main>
+    <div class="container">
+
+      <!-- ===== LEFT PANEL ===== -->
+      <div class="left-panel">
+        <h3>Available Kits</h3>
+        <div id="fileList" class="file-list"></div>
+      </div>
+
+      <!-- ===== RIGHT PANEL ===== -->
+      <div class="right-panel">
+        <h3>Kit Information</h3>
+
+        <div class="info-box">
+
+          <div class="kit-name">
+            <label>Kit Name:</label>
+            <input type="text" id="kitName" readonly>
+          </div>
+
+          <div class="kit-details" id="kitDetails">
+            <!-- JSON content will be rendered here -->
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <button id="btnBack">Back</button>
+    <button id="btnNext">Next</button>
+  </footer>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../Navigation/nav.js"></script>
+  <script src="kit_selection.js"></script>
+
+</body>
+</html>
