@@ -142,10 +142,6 @@ function Parsing_Data(id, func, data)
              {
                 PCR_UI.Update_Saved_Tab(PCR_REG.REQUEST_SAVED_PROTOCOL);
                 Hide_Loading();
-                
-                // Reset_Data_PCR(); // Reset dữ liệu và gửi thông tin xuống PCR
-                // DATA_TX_LENGHT = Pack_Protocol(DATA_TX);
-                // Pack_Data(DEVICE.PCR_ID, PCR_REG.SAVED_UI, DATA_TX, DATA_TX_LENGHT, "Web_PCR");   // Lưu Thông tin đang mở dưới PCR 
              }
              //console.log(saved_cnt, saved_total);
              break;
@@ -157,10 +153,6 @@ function Parsing_Data(id, func, data)
              {
                 PCR_UI.Update_Saved_Tab(PCR_REG.REQUEST_HISTORY_PROTOCOL);
                 Hide_Loading();
-                //console.log("Nhận history");
-                // Reset_Data_PCR(); // Reset dữ liệu và gửi thông tin xuống PCR
-                // DATA_TX_LENGHT = Pack_Protocol(DATA_TX);
-                // Pack_Data(DEVICE.PCR_ID, PCR_REG.SAVED_UI, DATA_TX, DATA_TX_LENGHT, "Web_PCR");   // Lưu Thông tin đang mở dưới PCR
              }
              //console.log(history_cnt, history_total);
              break;

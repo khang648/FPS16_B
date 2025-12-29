@@ -1,29 +1,29 @@
 
 function Update_Chart_Temp(newValue) {
 
-  window.Temp_Buf.push(newValue);
-  window.Temp_Buf.shift(); 
+  // window.Temp_Buf.push(newValue);
+  // window.Temp_Buf.shift(); 
 
-  if (ui_tempChart) 
-  {
-      ui_tempChart.data.datasets[0].data = [...window.Temp_Buf];
-      ui_tempChart.update();
-  }
+  // if (ui_tempChart) 
+  // {
+  //     ui_tempChart.data.datasets[0].data = [...window.Temp_Buf];
+  //     ui_tempChart.update();
+  // }
 }
 
 function Update_Request_Chart_Buf(data) {
 
-    for (let i = 0; i < Chart_Buf_Size; i++)
-    {
-        window.Temp_Buf[i] = data[i];
-    }
+    // for (let i = 0; i < Chart_Buf_Size; i++)
+    // {
+    //     window.Temp_Buf[i] = data[i];
+    // }
 
-    // Cập nhật chart nếu có
-    if (ui_tempChart)
-    {
-        ui_tempChart.data.datasets[0].data = [...window.Temp_Buf];
-        ui_tempChart.update();
-    }
+    // // Cập nhật chart nếu có
+    // if (ui_tempChart)
+    // {
+    //     ui_tempChart.data.datasets[0].data = [...window.Temp_Buf];
+    //     ui_tempChart.update();
+    // }
 }
 
 
@@ -52,7 +52,7 @@ function Update_Protocol_name(name)
 }
 
 /*==================================================================*/
-let Time_Update_Char = 1; // 1 giây cập nhận biểu đồ 1 lần
+let Time_Update_Char = 3; // 3 giây cập nhận biểu đồ 1 lần
 let block_temp_prev = 0;  // Nhiệt độ lóc trên trước đó
 let Time_count_prev = 0;  // Thời gian giữ trước đó
 let lid_temp_prev = 0;    // Nhiệt độ lóc trên trước đó

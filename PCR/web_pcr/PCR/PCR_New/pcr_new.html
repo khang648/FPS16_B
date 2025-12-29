@@ -15,8 +15,23 @@
       <div id="new-progam-chart"    class="new-progam-chart-container">
           <div id="pcr-new-list"    class="steps-container"></div> 
           <div id="pcr-chart"       class="chart-container">
-              <div class="chart-scroll"> 
-                <canvas id="Temp-Chart"></canvas> 
+    
+              <div class="chart-label">
+                  <span class="label-text">Sample Temp: 30°C</span>
+                  <div class="zoom-group">
+                      <button id="zoom-in" class="zoom-btn">
+                          <img src="../../assets/ZOOM_IN.png" class="zoom-icon" />
+                      </button>
+                      <button id="zoom-out" class="zoom-btn">
+                          <img src="../../assets/ZOOM_OUT.png" class="zoom-icon" />
+                      </button>
+                  </div>
+              </div>
+              
+              <div class="chart-row">
+                  <div class="chart-scroll"> 
+                     <div id="Temp-Chart"></div> 
+                  </div>
               </div>
           </div>
       </div>
@@ -24,8 +39,12 @@
     </div>
   </main>
 
+  <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+  <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+  <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+
   <script src="/socket.io/socket.io.js"></script>
-  <script src="../../libs/chart.umd.min.js"></script>
+  <!-- <script src="../../libs/chart.umd.min.js"></script> -->
   <script src="/components/header.js"></script> 
   <script src="/components/program.js"></script> 
   
