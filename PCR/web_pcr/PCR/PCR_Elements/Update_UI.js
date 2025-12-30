@@ -1,29 +1,39 @@
-
 function Update_Chart_Temp(newValue) {
 
-  // window.Temp_Buf.push(newValue);
-  // window.Temp_Buf.shift(); 
+    const series = window.Temp_Series;      // series toàn cục
+    const BUFFER_SIZE = Chart_Buf.length;
 
-  // if (ui_tempChart) 
-  // {
-  //     ui_tempChart.data.datasets[0].data = [...window.Temp_Buf];
-  //     ui_tempChart.update();
-  // }
+    // ===== CẬP NHẬT BUFFER =====
+    Chart_Buf.push(newValue);
+    if (Chart_Buf.length > BUFFER_SIZE) 
+    {
+        Chart_Buf.shift(); 
+    }
+
+    // ===== CHUYỂN BUFFER THÀNH DỮ LIỆU CHO SERIES =====
+    const chartData = Chart_Buf.map((v, i) => 
+    ({
+        // x: (i + 1) * 2,
+        x: -((Chart_Buf_Size - 1 - i) * 2), 
+        value: v
+    }));
+
+    series.data.setAll(chartData); 
 }
 
-function Update_Request_Chart_Buf(data) {
+function Update_Chart(data) {
 
-    // for (let i = 0; i < Chart_Buf_Size; i++)
-    // {
-    //     window.Temp_Buf[i] = data[i];
-    // }
+    const series = window.Temp_Series;
+    if (!series) return;
 
-    // // Cập nhật chart nếu có
-    // if (ui_tempChart)
-    // {
-    //     ui_tempChart.data.datasets[0].data = [...window.Temp_Buf];
-    //     ui_tempChart.update();
-    // }
+    const chartData = data.map((v, i) => 
+    ({
+        // x: (i + 1) * 2,  
+        x: -((Chart_Buf_Size - 1 - i) * 2), 
+        value: v
+    }));
+
+    series.data.setAll(chartData);
 }
 
 
@@ -52,7 +62,7 @@ function Update_Protocol_name(name)
 }
 
 /*==================================================================*/
-let Time_Update_Char = 3; // 3 giây cập nhận biểu đồ 1 lần
+let Time_Update_Char = 2; // 2 giây cập nhận biểu đồ 1 lần
 let block_temp_prev = 0;  // Nhiệt độ lóc trên trước đó
 let Time_count_prev = 0;  // Thời gian giữ trước đó
 let lid_temp_prev = 0;    // Nhiệt độ lóc trên trước đó
@@ -87,8 +97,8 @@ function Update_Start_Protocol(data)
 
     if(block_temp != block_temp_prev) 
     { 
-        ui_tempChart.options.plugins.title.text = 'Sample Temp: ' + block_temp + '°C';
-        ui_tempChart.update();
+        let label = document.querySelector(".label-Sample-Temp");
+        label.textContent = `Sample Temp: ${Math.round(block_temp)}°C`;
         block_temp_prev = block_temp;
     }
     if(lid_temp != lid_temp_prev)     { ui_LidTemp.value = lid_temp;       lid_temp_prev = lid_temp; }                                               // Cập nhật lid_Temp    
@@ -214,10 +224,10 @@ function Update_Wait_Screen(data)
     let idx = 0;
     let block_temp = data[idx]; // lấy nhiệt độ block
 
-    if(block_temp != block_temp_prev && ui_tempChart != null) 
+    if(block_temp != block_temp_prev) 
     { 
-        ui_tempChart.options.plugins.title.text = 'Sample Temp: ' + block_temp + '°C';
-        ui_tempChart.update();
+        let label = document.querySelector(".label-Sample-Temp");
+        label.textContent = `Sample Temp: ${Math.round(block_temp)}°C`;
         block_temp_prev = block_temp;
     }
 
@@ -250,6 +260,25 @@ function Get_Saved_Protocol(data, Save_cnt, Save_total, infor, Setpoint) {
     Setpoint[Save_cnt.value][1][i] = (high << 8) | low;
   }
 }
+
+function Get_Chart_Buf(data, Chart_buf_cnt, Chart_buf_total, Chart_Buf) {
+  let idx = 0;
+
+  Chart_buf_cnt.value   = data[idx++];  
+  Chart_buf_total.value = data[idx++];
+
+  const PACK_SIZE = 200;
+  const offset = Chart_buf_cnt.value * PACK_SIZE;
+
+  // ===== Copy 200 mẫu =====
+  for (let i = 0; i < PACK_SIZE; i++) 
+  {
+      if (idx >= data.length) break;
+      
+      Chart_Buf[offset + i] = data[idx++];
+  }
+}
+
 function Update_Saved_Tab(Tab_type)
 {
   switch(Tab_type)
@@ -398,7 +427,8 @@ export default {
   Update_Date_Time,
   Update_System_log,
   Update_Save_Calib,
-  Update_Request_Chart_Buf,
+  Get_Chart_Buf,
+  Update_Chart,
 
   Get_Saved_Protocol,
   Get_Saved_Calib,

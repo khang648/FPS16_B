@@ -28,7 +28,7 @@ let System = {
 
 //*================================ lẤY DỮ LIỆU BIỂU ĐỒ NHIỆT ========================================*//
 
-const Chart_Buf_Size   = 50; // Saved
+const Chart_Buf_Size   = 4000; // Saved
 const Saved_Buf_Size   = 20; // Saved
 const History_Buf_Size = 10; // History
 const Calib_Buf_Size   = 6;  // Callib
@@ -48,6 +48,8 @@ let Calib_Val_Saved = Array.from(
   () => new Array(64).fill(0)
 );
 
+let Chart_Buf = new Array(Chart_Buf_Size).fill(0);
+
 // Các biến nhận điều khiển
 let saved_calib_total = { value: 0 };  // Biến đếm tổng protocol đã lưu
 let saved_calib_cnt   = { value: 0 }; // Biến đếm số protocol đã lưu
@@ -57,6 +59,9 @@ let saved_cnt   = { value: 0 };
 
 let history_total =  { value: 0};
 let history_cnt   =  { value: 0};
+
+let chart_buf_total =  { value: 0};
+let chart_buf_cnt   =  { value: 0};
 
 const save_new = 1;
 const save_old = 2;

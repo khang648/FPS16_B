@@ -157,6 +157,16 @@ function Parsing_Data(id, func, data)
              //console.log(history_cnt, history_total);
              break;
 
+        case PCR_REG.REQUEST_CHART_UI: // Nhận được Saved hiện tại 
+            PCR_UI.Get_Chart_Buf(data, chart_buf_cnt , chart_buf_total, Chart_Buf);  // Nhận các mảng đã đã lưu
+            if ((chart_buf_cnt.value == (chart_buf_total.value - 1) && chart_buf_cnt.value > 0) || chart_buf_cnt.value == 0) // nếu nhận đủ mảng
+            {
+                PCR_UI.Update_Chart(Chart_Buf);
+                //Hide_Loading(); 
+            }
+            //console.log(chart_buf_cnt);
+            break;
+
         case PCR_REG.SAVE_OK_PROTOCOL: // Nhận lệch save thành công
              //console.log("Nhận lệnh save thành công");
              Hide_Loading();
@@ -239,9 +249,7 @@ function Parsing_Data(id, func, data)
           Pack_Data(DEVICE.PCR_ID, PCR_REG.REQUEST_CHART_UI, null, 0, "Web_PCR");  // yêu cầu mảng buf
           break;
 
-    case PCR_REG.REQUEST_CHART_UI: // Nhận được Saved hiện tại
-          PCR_UI.Update_Request_Chart_Buf(data); // Lấy giá trị
-          break;
+
 
         default:
             console.log("Sai địa chỉ Func", func);
