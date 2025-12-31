@@ -11,7 +11,6 @@ let INPUT_CYCLES_RUNNING = new Array(PCR_LOOP).fill(null);
 
 let ui_LidTemp        = null;
 let ui_Liquid         = null;
-let ui_tempChart      = null;  
 let ui_BtnStart       = null;
 let ui_BtnEdit        = null;
 let ui_BtnSave        = null;
@@ -60,8 +59,6 @@ async function Show_Loading()
   loading_Start = Date.now(); 
   loading = await Show_Notification("Loading...", "Loading");
 }
-
-
 
 /*==================== Tạo notificacation==================================*/
 function Show_Notification(message, type = "Yes_No") {
@@ -958,79 +955,315 @@ function createStepBox(widthPercent, index) {
   return stepBox;
 }
 
+
 function Render_Chart_Temp() {
-    const canvas = document.getElementById('Temp-Chart');
-    if (!canvas)
-    {
-     setTimeout(Render_Chart_Temp, 100);
-     return;
+    const container = document.getElementById("Temp-Chart");
+    if (!container) return;
+
+    if (window.TempChartRoot) {
+        window.TempChartRoot.dispose();
     }
 
-    const ctx = canvas.getContext('2d');
-
-
-    if (!window.Temp_Buf) window.Temp_Buf = new Array(Chart_Buf_Size).fill(0);
-      const labels = window.Temp_Buf.map(() => "");
-      
-    if (ui_tempChart) return; 
-
-    ui_tempChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [
-            {
-                //label: 'Sample Temp °C',
-                data: [...window.Temp_Buf],
-                borderColor: 'red',
-                backgroundColor: 'rgba(255,0,0,0.2)',
-                fill: true,
-                tension: 0.3,
-                pointRadius: 1,
-                pointHoverRadius: 4
-            },
-          ]
-        },
-        options: {
-            animation: {
-              duration: 500  // tốc độ animation 50ms
-            },
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { 
-              title: 
-              {
-                display: true,                  
-                text: 'Sample Temp: ' + System.BlockTemp + '°C',  
-                color: '#000',                 
-                font: { family: 'Noto Serif', size: 16, weight: '400'}, 
-                align: 'center'                   
-              },
-              legend: 
-              {
-                display: false,
-                labels: 
-                {
-                  color: '#000',                // chữ màu đen
-                  font: { family: 'Noto Serif', size: 14 } // font Noto Serif
-                }
-              },
-              tooltip: 
-              {
-                enabled: true,
-                titleColor: '#000',
-                bodyColor: '#000',
-                titleFont: { family: 'Noto Serif', size: 14 },
-                bodyFont: { family: 'Noto Serif', size: 14 }
-              }            
-            },
-            scales: {
-                y: { min: 0, max: 100 },
-                x: { ticks: { display: false }, grid: { color: "#ccc" } }
-            }
-        }
+    const root = am5.Root.new(container, {
+        useSafeResolution: false
     });
+
+    // Tắt logo
+    if (root._logo) {
+      root._logo.dispose();
+    }
+
+    window.TempChartRoot = root;
+
+    // ================= FONT =================
+    root.setThemes([am5themes_Animated.new(root)]);
+    root.container.setAll({
+        width: am5.percent(100),
+        height: am5.percent(100),
+        fontFamily: "'Noto Serif', serif", 
+        fontSize: 16
+    });
+
+    // ================= CHART =================
+    const chart = root.container.children.push(
+        am5xy.XYChart.new(root, {
+            width: am5.percent(100),
+            height: am5.percent(100),
+            panX: true,
+            panY: false,
+            wheelX: "panX",
+            wheelY: "zoomX",
+            pinchZoomX: true
+        })
+    );
+
+    // ================= X AXIS =================
+    // const xAxis = chart.xAxes.push(
+    //     am5xy.ValueAxis.new(root, {
+    //         min: 0,
+    //         max: 8000,
+    //         strictMinMax: true,
+    //         renderer: am5xy.AxisRendererX.new(root, {
+    //             minGridDistance: 80
+    //         })
+    //     })
+    // );
+
+    // xAxis.get("renderer").labels.template.setAll({
+    //     fontFamily: "'Noto Serif', serif",
+    //     fontSize: 14
+    // });
+
+    // xAxis.get("renderer").labels.template.adapters.add("text", (text, target) => {
+    //     const v = target.dataItem?.get("value");
+    //     return v != null ? v + " s" : text;
+    // });
+
+    // ================= X AXIS =================
+    const xAxis = chart.xAxes.push(
+        am5xy.ValueAxis.new(root, {
+            min: -8000,   // quá khứ
+            max: 0,       // NOW
+            strictMinMax: true,
+            renderer: am5xy.AxisRendererX.new(root, {
+                minGridDistance: 80
+            })
+        })
+    );
+
+    xAxis.get("renderer").labels.template.setAll({
+        fontFamily: "'Noto Serif', serif",
+        fontSize: 14
+    });
+
+    xAxis.get("renderer").labels.template.adapters.add("text", (text, target) => {
+        const v = target.dataItem?.get("value");
+        if (v == null) return text;
+
+        return formatTimeByScale(v, xAxis, true);
+    });
+
+
+    // ================= Y AXIS =================
+    const yAxis = chart.yAxes.push(
+        am5xy.ValueAxis.new(root, {
+            min: 0,
+            max: 100,
+            strictMinMax: true,
+            maxPrecision: 0,
+            extraTooltipPrecision: 0,
+            renderer: am5xy.AxisRendererY.new(root, {
+                minGridDistance: 15
+            })
+        })
+    );
+
+    yAxis.set("gridCount", 11);
+
+    yAxis.get("renderer").labels.template.setAll({
+        fontFamily: "'Noto Serif', serif",
+        fontSize: 14
+    });
+
+    yAxis.get("renderer").labels.template.adapters.add("text", (text, target) => {
+        const v = target.dataItem?.get("value");
+        return v != null ? v + " °C" : text;
+    });
+
+    // ================= SERIES =================
+    const series = chart.series.push(
+        am5xy.LineSeries.new(root, {
+            xAxis,
+            yAxis,
+            valueXField: "x",
+            valueYField: "value",
+            stroke: am5.color(0xff0000),
+            tooltip: am5.Tooltip.new(root, {
+                //labelText: "{valueY.formatNumber('#.0')} °C\n{valueX.formatNumber('0')} s",
+                getFillFromSprite: false,   
+                getStrokeFromSprite: false,
+                autoTextColor: false       
+            })
+        })
+    );
+
+    const Tooltip = series.get("tooltip");
+    Tooltip.label.adapters.add("text", (text, target) => {
+        const dataItem = target.dataItem;
+        if (!dataItem) return text;
+
+        const y = dataItem.get("valueY");
+        const x = dataItem.get("valueX");
+
+        return `${y.toFixed(1)} °C\n${formatTimeByScale(x, xAxis)}`;
+    });
+
+    series.set("fill", am5.color(0xff0000)); // màu nền phủ
+
+    window.Temp_Series = series;
+    window.Temp_XAxis = xAxis;
+
+    series.strokes.template.set("strokeWidth", 2);
+    series.fills.template.setAll({
+        visible: true,
+        fillOpacity: 0.3,
+     });
+
+    const tooltip = series.get("tooltip");
+    tooltip.set("background", am5.RoundedRectangle.new(root, {
+        fill: am5.color(0xD1D1D1),   // nền xám
+        fillOpacity: 0.9,
+        strokeOpacity: 0,
+        cornerRadiusTL: 5,
+        cornerRadiusTR: 5,
+        cornerRadiusBL: 5,
+        cornerRadiusBR: 5,
+        
+    }));
+
+    tooltip.label.setAll({
+        fill: am5.color(0x000000),   // chữ đen
+        fontFamily: "'Noto Serif', serif",
+        fontSize: 14
+    });
+
+    // ================= Mảng nhiệt độ=================
+    window.Temp_Buf = new Array(Chart_Buf_Size).fill(0);
+    const initialData = window.Temp_Buf.map((v, i) => 
+    ({
+        x: -((Chart_Buf_Size - 1 - i) * 2), 
+        value: v
+    }));
+    series.data.setAll(initialData);
+
+    // ================= TAP HIỂN THỊ NHIỆT ĐỘ =================
+
+    const cursor = chart.set("cursor",
+        am5xy.XYCursor.new(root, {
+            behavior: "none",
+            xAxis: xAxis
+        })
+    );
+
+    cursor.lineY.set("visible", false);
+    cursor.lineX.set("visible", true);
+
+    const valueLabel = am5.Label.new(root, {
+        text: "",
+        visible: false,
+    });
+
+
+    chart.plotContainer.children.push(valueLabel);
+
+    // Khi chạm / di chuyển trong chart
+    cursor.events.on("cursorpositionchanged", () => {
+        const positionX = cursor.getPrivate("positionX");
+        if (positionX == null) return;
+
+        const xValue = xAxis.positionToValue(positionX);
+        const dataItem = series.getDataItemByX(xValue);
+        if (!dataItem) return;
+
+        const yValue = dataItem.get("valueY");
+
+        valueLabel.setAll({
+            text: yValue.toFixed(1) + " °C",
+            x: cursor.get("point").x,
+            y: cursor.get("point").y - 30,
+            visible: true
+        });
+    });
+
+    // Khi mất focus / nhả tay
+    cursor.events.on("cursorhidden", () => {
+        valueLabel.set("visible", false);
+    });
+
+    cursor.lineX.setAll({
+        strokeWidth: 3,          
+        stroke: am5.color(0x4D4D4D),  
+        strokeOpacity: 0.8
+    });
+
+  //=================PHẦN ZOOM IN ZOOM OUT===============
+  chart.zoomOutButton.set("forceHidden", true); // ẩn nút - mặc định trong thư viện
+   xAxis.animate({ key: "start", to: 0.92, duration: 300, easing: am5.ease.out(am5.ease.cubic) }); // Khi khởi tạo hiện chart cuối cùng bên phải
+  // ================= ANIMATION =================
+  chart.appear(600, 100);
+
+
+
+  // ================== NÚT ZOOM IN/OUT NGOÀI CHART ==================
+  // ================== NÚT ZOOM IN/OUT NGOÀI CHART ==================
+  const zoomInBtn = document.getElementById("zoom-in");
+  const zoomOutBtn = document.getElementById("zoom-out");
+
+  const ZOOM_STEP = 0.25; // 25% biểu đồ mỗi lần zoom
+
+  zoomInBtn.addEventListener("click", () => {
+      const start = xAxis.get("start") ?? 0;
+      const end = xAxis.get("end") ?? 1;
+      const range = end - start;
+
+      // thu hẹp 10% giữ trung tâm
+      let newStart = start + ZOOM_STEP * range / 2;
+      let newEnd   = end - ZOOM_STEP * range / 2;
+
+      // hạn chế quá zoom
+      if (newEnd - newStart < 0.001) { 
+          const mid = (start + end) / 2;
+          newStart = mid - 0.001;
+          newEnd = mid + 0.001;
+      }
+
+      xAxis.animate({ key: "start", to: newStart, duration: 300, easing: am5.ease.out(am5.ease.cubic) });
+      xAxis.animate({ key: "end",   to: newEnd,   duration: 300, easing: am5.ease.out(am5.ease.cubic) });
+  });
+
+  zoomOutBtn.addEventListener("click", () => {
+      const start = xAxis.get("start") ?? 0;
+      const end = xAxis.get("end") ?? 1;
+      const range = end - start;
+
+      // mở rộng 10% giữ trung tâm
+      let newStart = start - ZOOM_STEP * range / 2;
+      let newEnd   = end + ZOOM_STEP * range / 2;
+
+      // hạn chế vượt ra ngoài 0→1
+      if (newStart < 0) newStart = 0;
+      if (newEnd > 1)   newEnd = 1;
+
+      xAxis.animate({ key: "start", to: newStart, duration: 300, easing: am5.ease.out(am5.ease.cubic) });
+      xAxis.animate({ key: "end",   to: newEnd,   duration: 300, easing: am5.ease.out(am5.ease.cubic) });
+  });
+
+
+    function formatTimeByScale(xValue, xAxis, isAxis = false) {
+        if (xValue === 0) {
+            return isAxis ? "Now" : "Hiện tại";
+        }
+
+        const range = Math.abs(
+            xAxis.getPrivate("selectionMax") -
+            xAxis.getPrivate("selectionMin")
+        );
+
+        const abs = Math.abs(xValue);
+        const sign = "-"; 
+
+        if (range <= 720) {
+            return `${sign}${abs.toFixed(1)} s`;
+        }
+        else if (range <= 7200) {
+            return `${sign}${(abs / 60).toFixed(1)} m`;
+        }
+        else {
+            return `${sign}${(abs / 3600).toFixed(1)} h`;
+        }
+    }
 }
+
 
 function Render_Tool(Panel_ID, option = "new") {
     const container = document.getElementById(Panel_ID)
@@ -1426,7 +1659,7 @@ function Render_Saved_Obj(parentElement, Protocol_name, index)
       color: "#000000ff",
       cursor: "pointer",
       fontSize: "14px",
-      fontFamily: "Noto Serif",
+      fontFamily: "'Noto Serif', 'Serif'",
       transition: "0.2s",
 
       //Thêm các thuộc tính sau để hiển thị 1 dòng với "..."

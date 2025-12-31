@@ -4,10 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <meta name="google" content="notranslate">
-  <title>PCR Mode</title>
+  <title>FPS16B_PCR</title>
+  <link rel="apple-touch-icon"      sizes="32x32" href="../../assets/ICON.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/ICON.png">
+
   <link rel="stylesheet" href="../PCR_Elements/style.css">
   <link rel="stylesheet" href="pcr_new.css">
   <link rel="stylesheet" href="../PCR_Elements/Create_UI.css">
+
 </head>
 <body>
   <main class="pcr-main">
@@ -15,8 +19,23 @@
       <div id="new-progam-chart"    class="new-progam-chart-container">
           <div id="pcr-new-list"    class="steps-container"></div> 
           <div id="pcr-chart"       class="chart-container">
-              <div class="chart-scroll"> 
-                <canvas id="Temp-Chart"></canvas> 
+    
+              <div class="chart-label">
+                  <span class="label-Sample-Temp">Sample Temp: 30°C</span>
+                  <div class="zoom-group">
+                    <button id="zoom-in" class="zoom-btn">
+                          <img src="../../assets/ZOOM_IN.png" class="zoom-icon" />
+                    </button>
+                    <button id="zoom-out" class="zoom-btn">
+                          <img src="../../assets/ZOOM_OUT.png" class="zoom-icon" />
+                    </button>
+                  </div>
+              </div>
+              
+              <div class="chart-row">
+                  <div class="chart-scroll"> 
+                     <div id="Temp-Chart"></div> 
+                  </div>
               </div>
           </div>
       </div>
@@ -24,8 +43,11 @@
     </div>
   </main>
 
+  <script src="../../libs/amcharts5/index.js"></script>
+  <script src="../../libs/amcharts5/xy.js"></script>
+  <script src="../../libs/amcharts5/themes/Animated.js"></script>
+
   <script src="/socket.io/socket.io.js"></script>
-  <script src="../../libs/chart.umd.min.js"></script>
   <script src="/components/header.js"></script> 
   <script src="/components/program.js"></script> 
   
