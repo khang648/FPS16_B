@@ -73,7 +73,7 @@ let time_run_prev = 0;   // Nhiệt độ lóc trên trước đó
 let state_system_prev  = 0; // trạng thái máy
 let state_system = 0;  
 let Update_Chart_Cnt = 0;   // Biến đếm số lần cập nhật màn hình
-
+let Fist_Reload_Page = true;
 /*==================================================================*/
 function Update_Start_Protocol(data)
 {
@@ -87,6 +87,8 @@ function Update_Start_Protocol(data)
     for (let i = 0; i < PCR_LOOP; i++)
     {
       cycles_pcr[i] = data[idx++];
+
+      if(cycles_pcr[i] == 0) {cycles_pcr[i] = 1;} // tránh trường hợp cycles = 0
     }
     let pcr_loop_index = data[idx++]; // lấy vị trí vòng pcr hiện tại
     let step_setpoint  = data[idx++]; // lấy step hiện tại
@@ -125,6 +127,21 @@ function Update_Start_Protocol(data)
         PANEL_STEP_RUNNING[step_setpoint].style.background = "#F5F34C";
     }
 
+    if(Fist_Reload_Page == true) // Chỉnh lại lần đầu các protocol đang chạy
+    {
+      for (let i = 0; i < PCR_LOOP_CNT; i++) // chạy từ 0 đến 3
+      {
+          if (LABEL_CYCLES_RUNNING[i] == null) continue;
+
+          if (cycles_pcr[i] !== cycles_pcr_prev[i])
+          {
+              LABEL_CYCLES_RUNNING[i].textContent = Format_Cycles_Topic(cycles_pcr[i], Cycles_setpoint[i]);
+              cycles_pcr_prev[i] = cycles_pcr[i];
+          }
+      }
+      Fist_Reload_Page = false;
+    }
+
     if(cycles_pcr[pcr_loop_index] != cycles_pcr_prev[pcr_loop_index] && PCR_LOOP_CNT > 0) // cycles tăng lên và có vòng PCR mới cập nhật
     {
         if(LABEL_CYCLES_RUNNING[pcr_loop_index] != null) // Nếu tồn tại mới cập nhật
@@ -133,6 +150,7 @@ function Update_Start_Protocol(data)
           cycles_pcr_prev[pcr_loop_index] = cycles_pcr[pcr_loop_index];
         }
     }
+    console.log(cycles_pcr);
     
     if(time_run != time_run_prev) { ui_TimeProgram.textContent = Format_time_setpoint(time_run, ' '); time_run_prev = time_run; }              // Cập nhật thời gian chạy chương trình
 
