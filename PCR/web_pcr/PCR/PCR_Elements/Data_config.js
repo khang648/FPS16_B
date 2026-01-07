@@ -83,7 +83,7 @@ function Reset_Data_PCR()
   HOLD_START_CNT = 1;
   PCR_LOOP_CNT = 1;
   STEP_PCR_CNT = [2, 3, 4];
-  Cycles_setpoint = [35, 4, 5];
+  Cycles_setpoint = [35, 35, 35];
   HOLD_END_CNT = 1;
   PROTOCOL_NAME = "none";
 }
