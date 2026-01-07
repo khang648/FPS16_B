@@ -1241,7 +1241,7 @@ function Render_Chart_Temp() {
 
     function formatTimeByScale(xValue, xAxis, isAxis = false) {
         if (xValue === 0) {
-            return isAxis ? "Now" : "Hiện tại";
+            return isAxis ? "Now" : "Now";
         }
 
         const range = Math.abs(

@@ -18,7 +18,10 @@ function Update_Chart_Temp(newValue) {
         value: v
     }));
 
-    series.data.setAll(chartData); 
+    if(series)
+    {
+     series.data.setAll(chartData); 
+    }
 }
 
 function Update_Chart(data) {
@@ -98,7 +101,10 @@ function Update_Start_Protocol(data)
     if(block_temp != block_temp_prev) 
     { 
         let label = document.querySelector(".label-Sample-Temp");
-        label.textContent = `Sample Temp: ${Math.round(block_temp)}°C`;
+        if(label)
+        {
+          label.textContent = `Sample Temp: ${Math.round(block_temp)}°C`;
+        }
         block_temp_prev = block_temp;
     }
     if(lid_temp != lid_temp_prev)     { ui_LidTemp.value = lid_temp;       lid_temp_prev = lid_temp; }                                               // Cập nhật lid_Temp    
@@ -227,7 +233,10 @@ function Update_Wait_Screen(data)
     if(block_temp != block_temp_prev) 
     { 
         let label = document.querySelector(".label-Sample-Temp");
-        label.textContent = `Sample Temp: ${Math.round(block_temp)}°C`;
+        if(label)
+        {
+          label.textContent = `Sample Temp: ${Math.round(block_temp)}°C`;
+        }
         block_temp_prev = block_temp;
     }
 
