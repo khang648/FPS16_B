@@ -174,8 +174,6 @@ async function Click_Btn_Edit(Btn_Name) // Người dùng nhấn nút Stop
               PCR_LOOP_CNT   = newData.PCR_LOOP_CNT;
               STEP_PCR_CNT   = newData.STEP_PCR_CNT;
               HOLD_END_CNT   = newData.HOLD_END_CNT;
-              Cycles_setpoint = [30, 30, 30]; // Tự động cho số cycles
-
               Render_PCR_Program(); // Render lại giao diện Program
           }
       });
