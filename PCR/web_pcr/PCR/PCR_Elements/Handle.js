@@ -81,7 +81,8 @@ async function Click_Btn_Edit(Btn_Name) // Người dùng nhấn nút Stop
               HOLD_START_CNT: HOLD_START_CNT,
               PCR_LOOP_CNT:    PCR_LOOP_CNT,
               STEP_PCR_CNT:    STEP_PCR_CNT,
-              HOLD_END_CNT:    HOLD_END_CNT
+              HOLD_END_CNT:    HOLD_END_CNT,
+              CYCLES_PCR_CNT: Cycles_setpoint
           },
           onSave: (newData) => // khi nhấn lưu
           {
@@ -109,7 +110,8 @@ async function Click_Btn_Edit(Btn_Name) // Người dùng nhấn nút Stop
                   let Step_PCR_Total = STEP_PCR_CNT.slice(0, oldPCR_LOOP_CNT).reduce((a,b)=>a+b,0);
                   for (let i = oldPCR_LOOP_CNT; i < newData.PCR_LOOP_CNT; i++) 
                   {
-                      let steps = newData.STEP_PCR_CNT[i] || 2;
+                      let steps = newData.STEP_PCR_CNT[i] || 2;                
+                      newData.CYCLES_PCR_CNT[i] = 30;
                       Modify_Step("insert", HOLD_START_CNT + Step_PCR_Total, steps);
                       Step_PCR_Total += steps;
                   }
@@ -174,8 +176,6 @@ async function Click_Btn_Edit(Btn_Name) // Người dùng nhấn nút Stop
               PCR_LOOP_CNT   = newData.PCR_LOOP_CNT;
               STEP_PCR_CNT   = newData.STEP_PCR_CNT;
               HOLD_END_CNT   = newData.HOLD_END_CNT;
-              Cycles_setpoint = [30, 30, 30]; // Tự động cho số cycles
-
               Render_PCR_Program(); // Render lại giao diện Program
           }
       });
