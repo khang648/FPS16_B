@@ -1,4 +1,4 @@
-// Ðây là file dùng d? t?i thu vi?n c?u hình I/O....
+// ï¿½ï¿½y lï¿½ file dï¿½ng d? t?i thu vi?n c?u hï¿½nh I/O....
 // L?nh ch?y 
 // sudo node server_setup.js
 
@@ -22,7 +22,7 @@ const commands = [
     'sudo systemctl start avahi-daemon'              // B?t mDNS
 ];
 
-// -------- B?T UART SERIAL T? Ð?NG --------
+// -------- B?T UART SERIAL T? ï¿½?NG --------
 function Enable_Serial() {
      try 
      {
@@ -31,24 +31,24 @@ function Enable_Serial() {
         if (!content.includes('enable_uart=1')) 
         {
             fs.appendFileSync(CONFIG_FILE, '\nenable_uart=1\n', 'utf8');
-            console.log('[UART] enable_uart=1 dã thêm vào config.txt');
+            console.log('[UART] enable_uart=1 dï¿½ thï¿½m vï¿½o config.txt');
         } 
         else 
         {
-            console.log('[UART] UART dã b?t tru?c dó trong config.txt');
+            console.log('[UART] UART dï¿½ b?t tru?c dï¿½ trong config.txt');
         }
 
-        // Disable console login trên UART
+        // Disable console login trï¿½n UART
         execSync('sudo systemctl disable serial-getty@ttyAMA0.service', { stdio: 'inherit' });
-        console.log('[UART] Console login trên UART dã b? disable');
+        console.log('[UART] Console login trï¿½n UART dï¿½ b? disable');
 
-        // Thêm user vào nhóm dialout
+        // Thï¿½m user vï¿½o nhï¿½m dialout
         execSync('sudo usermod -a -G dialout $USER', { stdio: 'inherit' });
-        console.log('[UART] User dã du?c thêm vào nhóm dialout');
+        console.log('[UART] User dï¿½ du?c thï¿½m vï¿½o nhï¿½m dialout');
     } 
     catch (err) 
     {
-        console.error('[ERR] Không b?t du?c UART:', err.message);
+        console.error('[ERR] Khï¿½ng b?t du?c UART:', err.message);
     }
 }
 
@@ -64,21 +64,21 @@ function Disnable_BLE() {
             if (!content.includes('dtoverlay=pi4-disable-bt'))  
             {
                 fs.appendFileSync(CONFIG_FILE, '\ndtoverlay=pi4-disable-bt\n', 'utf8');
-                console.log('[OK] Bluetooth dã du?c t?t.');
+                console.log('[OK] Bluetooth dï¿½ du?c t?t.');
             } 
             else 
             {
-                console.log('[INFO] Bluetooth dã b? t?t tru?c dó, b? qua.');
+                console.log('[INFO] Bluetooth dï¿½ b? t?t tru?c dï¿½, b? qua.');
             }
         } 
         else 
         {
-            console.error('[ERR] Không tìm th?y file config.txt:', CONFIG_FILE);
+            console.error('[ERR] Khï¿½ng tï¿½m th?y file config.txt:', CONFIG_FILE);
         }
     } 
     catch (err) 
     {
-        console.error('[ERR] Không th? ch?nh s?a config.txt:', err.message);
+        console.error('[ERR] Khï¿½ng th? ch?nh s?a config.txt:', err.message);
     }
 }
 
@@ -97,28 +97,28 @@ function Install_Lib()
         {
             // console.error(`[ERROR] L?nh th?t b?i: ${cmd}`);
             // console.error(err.message);
-            // console.log('[WARN] B? qua l?i và ti?p t?c...');
+            // console.log('[WARN] B? qua l?i vï¿½ ti?p t?c...');
         }
     }
 
-    console.log('[DONE] Ðã t?i xong toàn b? thu vi?n');
+    console.log('[DONE] ï¿½ï¿½ t?i xong toï¿½n b? thu vi?n');
 }
 
 //--------- C?P NH?T HOST NAME & DNS --------
 function Update_Host_Name() {
     try 
     {
-        console.log(`[INFO] Ðang d?i hostname thành "${HOSTNAME}"...`);
+        console.log(`[INFO] ï¿½ang d?i hostname thï¿½nh "${HOSTNAME}"...`);
 
-        execSync(`sudo hostnamectl set-hostname ${HOSTNAME}`, { stdio: 'inherit' });      // Ð?i hostname
-        console.log('[OK] Hostname dã du?c d?i.');
+        execSync(`sudo hostnamectl set-hostname ${HOSTNAME}`, { stdio: 'inherit' });      // ï¿½?i hostname
+        console.log('[OK] Hostname dï¿½ du?c d?i.');
 
         execSync('sudo systemctl restart avahi-daemon', { stdio: 'inherit' });
-        console.log('[OK] Avahi-daemon dã restart.');
+        console.log('[OK] Avahi-daemon dï¿½ restart.');
 
         if (!fs.existsSync(HOSTS_FILE)) 
         {
-            console.error('[ERR] Không tìm th?y file /etc/hosts');
+            console.error('[ERR] Khï¿½ng tï¿½m th?y file /etc/hosts');
             return;
         }
 
@@ -127,14 +127,14 @@ function Update_Host_Name() {
         if (!content.includes(`127.0.1.1       ${HOSTNAME}`)) 
         {
             fs.appendFileSync(HOSTS_FILE, `\n127.0.1.1       ${HOSTNAME}\n`, 'utf8');
-            console.log('[OK] Dòng 127.0.1.1 dã du?c thêm vào /etc/hosts');
+            console.log('[OK] Dï¿½ng 127.0.1.1 dï¿½ du?c thï¿½m vï¿½o /etc/hosts');
         }
         else 
         {
-            console.log('[INFO] /etc/hosts dã có dòng này, b? qua.');
+            console.log('[INFO] /etc/hosts dï¿½ cï¿½ dï¿½ng nï¿½y, b? qua.');
         }
 
-        console.log('[DONE] Hoàn t?t d?i hostname và c?p nh?t hosts.');
+        console.log('[DONE] Hoï¿½n t?t d?i hostname vï¿½ c?p nh?t hosts.');
     }
     catch (err) 
     {
@@ -142,7 +142,7 @@ function Update_Host_Name() {
     }
 }
 
-// ----------------- T?O SYSTEMD SERVICE - CH? KH?I Ð?NG XONG WIFI M?I CH?Y SERVER -----------------
+// ----------------- T?O SYSTEMD SERVICE - CH? KH?I ï¿½?NG XONG WIFI M?I CH?Y SERVER -----------------
 function Auto_Start_Server() {
     try {
         const serviceContent = `
@@ -160,7 +160,7 @@ User=root
 Environment=NODE_ENV=production
 WorkingDirectory=/home/pi/FPS16_B
 
-# ---- Hi?n th? log ra console và luu vào journal ----
+# ---- Hi?n th? log ra console vï¿½ luu vï¿½o journal ----
 StandardOutput=journal+console
 StandardError=journal+console
 SyslogIdentifier=server_app
@@ -177,10 +177,10 @@ WantedBy=multi-user.target
         execSync('sudo systemctl enable server_app.service');
         execSync('sudo systemctl restart server_app.service');
 
-        console.log('[OK] Service server_app.js dã du?c c?u hình d? hi?n th? log ra console.');
+        console.log('[OK] Service server_app.js dï¿½ du?c c?u hï¿½nh d? hi?n th? log ra console.');
     } 
     catch (err) {
-        console.error('[ERR] Không th? t?o service:', err.message);
+        console.error('[ERR] Khï¿½ng th? t?o service:', err.message);
     }
 }
 
@@ -188,7 +188,7 @@ WantedBy=multi-user.target
 function Reboot_Device() {
     try 
     {
-        console.log('[INFO] Reboot thi?t b? trong 5 giây d? áp d?ng các thay d?i...');
+        console.log('[INFO] Reboot thi?t b? trong 5 giï¿½y d? ï¿½p d?ng cï¿½c thay d?i...');
         setTimeout(() => 
         {
             execSync('sudo reboot');
@@ -196,7 +196,7 @@ function Reboot_Device() {
     } 
     catch (err) 
     {
-        console.error('[ERR] Không th? reboot thi?t b?:', err.message);
+        console.error('[ERR] Khï¿½ng th? reboot thi?t b?:', err.message);
     }
 }
 
@@ -213,28 +213,28 @@ function Create_Spotcheck_Folders() {
             'Global'
         ];
 
-        // T?o thu m?c g?c Spotcheck n?u chua có
+        // T?o thu m?c g?c Spotcheck n?u chua cï¿½
         if (!fs.existsSync(BASE_DIR)) {
             fs.mkdirSync(BASE_DIR, { recursive: true });
-            console.log('[OK] Ðã t?o thu m?c:', BASE_DIR);
+            console.log('[OK] ï¿½ï¿½ t?o thu m?c:', BASE_DIR);
         } else {
-            console.log('[INFO] Thu m?c Spotcheck dã t?n t?i.');
+            console.log('[INFO] Thu m?c Spotcheck dï¿½ t?n t?i.');
         }
 
-        // T?o các thu m?c con
+        // T?o cï¿½c thu m?c con
         for (const dir of subDirs) {
             const fullPath = `${BASE_DIR}/${dir}`;
             if (!fs.existsSync(fullPath)) {
                 fs.mkdirSync(fullPath, { recursive: true });
-                console.log(`[OK] Ðã t?o thu m?c: ${fullPath}`);
+                console.log(`[OK] ï¿½ï¿½ t?o thu m?c: ${fullPath}`);
             } else {
-                console.log(`[INFO] Ðã t?n t?i: ${fullPath}`);
+                console.log(`[INFO] ï¿½ï¿½ t?n t?i: ${fullPath}`);
             }
         }
 
-        console.log('[DONE] Hoàn t?t ki?m tra & t?o thu m?c Spotcheck.');
+        console.log('[DONE] Hoï¿½n t?t ki?m tra & t?o thu m?c Spotcheck.');
     } catch (err) {
-        console.error('[ERR] Không th? t?o thu m?c Spotcheck:', err.message);
+        console.error('[ERR] Khï¿½ng th? t?o thu m?c Spotcheck:', err.message);
     }
 }
 
@@ -242,7 +242,7 @@ function Create_Spotcheck_Folders() {
 function Disable_IPv6() {
     try {
         if (!fs.existsSync(SYSCTL_FILE)) {
-            console.error('[ERR] Không tìm th?y sysctl.conf');
+            console.error('[ERR] Khï¿½ng tï¿½m th?y sysctl.conf');
             return;
         }
 
@@ -265,15 +265,15 @@ function Disable_IPv6() {
 
         if (updated) {
             fs.writeFileSync(SYSCTL_FILE, content + '\n', 'utf8');
-            console.log('[OK] IPv6 dã du?c disable trong sysctl.conf');
+            console.log('[OK] IPv6 dï¿½ du?c disable trong sysctl.conf');
 
             execSync('sudo sysctl -p', { stdio: 'inherit' });
-            console.log('[OK] Ðã apply c?u hình sysctl');
+            console.log('[OK] ï¿½ï¿½ apply c?u hï¿½nh sysctl');
         } else {
-            console.log('[INFO] IPv6 dã b? t?t tru?c dó, b? qua.');
+            console.log('[INFO] IPv6 dï¿½ b? t?t tru?c dï¿½, b? qua.');
         }
     } catch (err) {
-        console.error('[ERR] Không th? t?t IPv6:', err.message);
+        console.error('[ERR] Khï¿½ng th? t?t IPv6:', err.message);
     }
 }
 
