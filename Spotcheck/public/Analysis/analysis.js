@@ -62,15 +62,15 @@ function showFooterButtons() {
   const btnContainer = document.createElement("div");
   btnContainer.classList.add("footer-buttons");
 
-  const btnDownload = document.createElement("button");
-  btnDownload.id = "btnDownload";
-  btnDownload.textContent = "Download";
+  // const btnDownload = document.createElement("button");
+  // btnDownload.id = "btnDownload";
+  // btnDownload.textContent = "Download";
 
   const btnFinish = document.createElement("button");
   btnFinish.id = "btnFinish";
   btnFinish.textContent = "Finish";
 
-  btnContainer.appendChild(btnDownload);
+  // btnContainer.appendChild(btnDownload);
   btnContainer.appendChild(btnFinish);
   footer.appendChild(btnContainer);
 
@@ -82,10 +82,10 @@ function showFooterButtons() {
   });
 
   // Download Clicked
-  document.getElementById("btnDownload")?.addEventListener("click", () => {
-      // Yêu cầu server nén và download
-      socket.emit("request_download");
-  });
+  // document.getElementById("btnDownload")?.addEventListener("click", () => {
+  //     // Yêu cầu server nén và download
+  //     socket.emit("request_download");
+  // });
 }
 
 // ====================== UPDATE IMAGE TAB ======================
@@ -194,6 +194,8 @@ socket.on("sampleanalysis_done", async (data) => {
         console.error("Error generating images:", err);
         alert("🔴 Cannot generate images. Make sure data is ready.");
       }
+
+  socket.emit("request_download"); // Download ngay khi có kết quả
 });
 
 // ====================== DOM CONTENT LOADED ======================
