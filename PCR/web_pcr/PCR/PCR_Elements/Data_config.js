@@ -11,6 +11,7 @@ let STEP_PCR_CNT    = [2, 2, 2];
 let Cycles_setpoint = [30, 30, 30];
 let HOLD_END_CNT    = 1;
 let PROTOCOL_NAME   = "none";
+let PASS_ADMIN  = "1235";
 
 let Temp_Time_Setpoint = [
   [93,  93, 55, 72, 25, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39], // nhiệt độ

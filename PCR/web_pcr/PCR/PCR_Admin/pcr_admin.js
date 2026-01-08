@@ -43,19 +43,28 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       const option = card.dataset.option;
       switch(option) {
-        case 'reset_device':
-          const confirmed = await Show_Notification("The system will reset memory!", "Yes_No");
-          if (!confirmed) return;
-          Show_Loading();
-          DATA_TX_LENGHT = Pack_Protocol(DATA_TX);
-          Pack_Data(DEVICE.PCR_ID, PCR_REG.RESET_MEMORY, DATA_TX, DATA_TX_LENGHT, "Web_PCR");
-          break;
+        
         case 'set_time':
           goToPage("PCR/PCR_Set_Time/pcr_set_time.html");
           break;
-        case 'temp_calib':
-          goToPage("PCR/PCR_Temp_Calib/pcr_temp_calib.html");
+
+        case 'reset_device':
+          Require_Admin_Password(async () => 
+          {
+            const confirmed = await Show_Notification("The system will reset memory!", "Yes_No");
+            if (!confirmed) return;
+
+            Show_Loading();
+            DATA_TX_LENGHT = Pack_Protocol(DATA_TX);
+            Pack_Data(DEVICE.PCR_ID,PCR_REG.RESET_MEMORY,DATA_TX, DATA_TX_LENGHT, "Web_PCR");
+          });
+
           break;
+
+        case 'temp_calib':
+          Require_Admin_Password(() => { goToPage("PCR/PCR_Temp_Calib/pcr_temp_calib.html"); });
+          break;
+
         case 'wifi_config':
           goToPage("PCR/PCR_Wifi_Config/pcr_wifi_config.html");
           break;

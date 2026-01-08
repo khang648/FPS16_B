@@ -359,6 +359,101 @@ function Show_Notification(message, type = "Yes_No") {
     }
   });
 }
+
+function Show_Keyboard_Input({title = "Enter password",type = "number", maxLength = 4 }) {
+  return new Promise((resolve) => {
+
+    // --- Xóa overlay cũ ---
+    const old = document.getElementById("keyboard-overlay");
+    if (old) old.remove();
+
+    // --- Overlay ---
+    const overlay = document.createElement("div");
+    overlay.id = "keyboard-overlay";
+    Object.assign(overlay.style, {
+      position: "fixed",
+      inset: 0,
+      background: "rgba(0,0,0,0.4)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 9999
+    });
+
+    // --- Box ---
+    const box = document.createElement("div");
+    Object.assign(box.style, {
+      background: "#fff",
+      padding: "20px",
+      borderRadius: "12px",
+      minWidth: "260px",
+      textAlign: "center",
+      boxShadow: "0 4px 10px rgba(0,0,0,0.3)"
+    });
+
+    box.innerHTML = `
+      <p style="font-size:18px; margin-bottom:10px;">${title}</p>
+      <input id="keyboard-input"
+        type="${type}"
+        maxlength="${maxLength}"
+        style="width:90%; padding:8px; border-radius:8px; font-size:18px; text-align:center;"
+        autocomplete="off"
+      >
+      <p id="keyboard-error"
+         style="color:red; display:none; margin-top:6px;">
+         Wrong password
+      </p>
+      <div style="display:flex; gap:10px; margin-top:15px;">
+        <button id="keyboard-ok"
+          style="flex:1; padding:8px; background:#28a745; color:#fff; border:none; border-radius:8px;">
+          OK
+        </button>
+        <button id="keyboard-cancel"
+          style="flex:1; padding:8px; background:#dc3545; color:#fff; border:none; border-radius:8px;">
+          Cancel
+        </button>
+      </div>
+    `;
+
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    const input = document.getElementById("keyboard-input");
+    const error = document.getElementById("keyboard-error");
+
+    input.focus();
+
+    // --- OK ---
+    document.getElementById("keyboard-ok").onclick = () => {
+      const val = input.value.trim();
+      document.body.removeChild(overlay);
+      resolve(val);
+    };
+
+    // --- Cancel ---
+    document.getElementById("keyboard-cancel").onclick = () => {
+      document.body.removeChild(overlay);
+      resolve(null);
+    };
+  });
+}
+
+async function Require_Admin_Password(onSuccess) {
+  const val = await Show_Keyboard_Input({ title: "Enter password", type: "password", maxLength: 4 });
+
+  if (val === null) return;
+
+  if (val === PASS_ADMIN) 
+  {
+    onSuccess();
+  } 
+  else 
+  {
+    Show_Notification("Wrong password", "Cancel");
+  }
+}
+
+
 /*================================== Các panel đối tượng =================================*/
 function Render_PCR_Program() {
   const TITLE_PERCENT  = 23;
