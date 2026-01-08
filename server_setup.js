@@ -6,7 +6,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 
 const CONFIG_FILE = '/boot/firmware/config.txt';
-const HOSTNAME    = 'FPS16B';
+const HOSTNAME    = 'FPS32B_26001';
 const HOSTS_FILE  = '/etc/hosts';
 const SERVER_FILE = '/home/pi/FPS16_B/server_app.js'; 
 const SYSCTL_FILE = '/etc/sysctl.conf';
