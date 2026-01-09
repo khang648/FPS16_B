@@ -1,2 +1,3 @@
 node_modules/
 Spotcheck/python_core/__pycache__
+package-lock.json

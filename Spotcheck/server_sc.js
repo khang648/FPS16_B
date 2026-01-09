@@ -29,8 +29,27 @@ app.get('/list-json', (req, res) => {
   });
 });
 
+
+app.get("/api/device-info", (req, res) => {
+  try {
+    const WIFI_PATH = "/home/pi/FPS16_B/information.json";
+    const wifiRaw = JSON.parse(fs.readFileSync(WIFI_PATH, "utf8"));
+
+    res.json({
+      host_name: wifiRaw.host_name || "",
+      seri_number: wifiRaw.seri_number || ""
+    });
+    
+  } catch (err) {
+    res.status(500).json({
+      host_name: "",
+      seri_number: ""
+    });
+  }
+});
+
 /*========== Wifi file ==========*/
-const WIFI_CONFIG_FILE = path.join(__dirname, '../wifi.json');
+const WIFI_CONFIG_FILE = path.join(__dirname, '../information.json');
 
 /*========== Soket.IO ==========*/
 const { registerCameraSocket } = require("./socket_handlers/camera_handler");
@@ -71,7 +90,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  // Nhận Wi-Fi mới từ web thì lưu vào wifi.json
+  // Nhận Wi-Fi mới từ web thì lưu vào information.json
   socket.on("web_pcr_wifi_config", (data) => {
     try
     {

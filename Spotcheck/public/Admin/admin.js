@@ -1,6 +1,9 @@
 window.socket = io();
 
 /* ================= GLOBAL INPUTS ================= */
+const host_name = document.getElementById("host_name");
+const seri_number = document.getElementById("seri_number");
+
 const aValue = document.getElementById("a_value");
 const bValue = document.getElementById("b_value");
 
@@ -146,6 +149,10 @@ socket.on("admin_extra_data", (data) => {
   threshold2.value = data?.fam?.threshold_2 ?? 0;
   threshold3.value = data?.fam?.threshold_3 ?? 0;
   minusValue.value = data?.fam?.minus_value ?? 0;
+
+  host_name.value = data.device_info.host_name; 
+  seri_number.value = data.device_info.seri_number; 
+
 });
 
 /* ================= APPLY BUTTON ================= */
@@ -169,6 +176,10 @@ btnApply.addEventListener("click", () => {
       threshold_2: parseFloat(threshold2.value) || 0,
       threshold_3: parseFloat(threshold3.value) || 0,
       minus_value: parseFloat(minusValue.value) || 0
+    },
+    device_info: {
+      host_name: host_name.value,
+      seri_number: seri_number.value
     }
   };
 

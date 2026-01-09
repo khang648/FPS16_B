@@ -1,4 +1,4 @@
-// Ðây là file dùng d? ch?y 2 server pcr và spotcheck
+// ï¿½ï¿½y lï¿½ file dï¿½ng d? ch?y 2 server pcr vï¿½ spotcheck
 // L?nh ch?y 
 // sudo node server_app.js
 
@@ -6,13 +6,13 @@ const { exec, spawn } = require('child_process');
 const rpio  = require('rpio');
 const fs    = require('fs');
 
-const WIFI_CONFIG_FILE = './wifi.json';
+const WIFI_CONFIG_FILE = './information.json';
 let WIFI_SSID = ''; 
 let WIFI_PASS = '';
-let serversStarted = false;      // Bi?n luu tr?ng thái dã ch?y server hay chua
-let serverProcesses = [];        // M?ng luu các server dã ch?y
-let wifi_connected = false;      // Bi?n luu tr?ng thái k?t n?i wifi
-let Wifi_Check_Interval = null;  // Chuong trình ki?m tra Wifi
+let serversStarted = false;      // Bi?n luu tr?ng thï¿½i dï¿½ ch?y server hay chua
+let serverProcesses = [];        // M?ng luu cï¿½c server dï¿½ ch?y
+let wifi_connected = false;      // Bi?n luu tr?ng thï¿½i k?t n?i wifi
+let Wifi_Check_Interval = null;  // Chuong trï¿½nh ki?m tra Wifi
 let wifiLostStart = null;        // th?i di?m b?t d?u m?t Wi-Fi
 const RETRY_CONNECT_WIFI = 10;   // K?t n?i l?i Wifi
 
@@ -36,7 +36,7 @@ rpio.open(LED_RED, rpio.OUTPUT, rpio.LOW);
 rpio.open(LED_GREEN, rpio.OUTPUT, rpio.LOW);
 
 
-// -------- HÀM LED --------
+// -------- Hï¿½M LED --------
 function LED_Red(on) { rpio.write(LED_RED, on ? rpio.HIGH : rpio.LOW); }
 function LED_Green(on) { rpio.write(LED_GREEN, on ? rpio.HIGH : rpio.LOW); }
 
@@ -53,7 +53,7 @@ function StopBlinkLED() {
     if (ledBlinkTimer) clearInterval(ledBlinkTimer);
 }
 
-// -------- HÀM CH?Y L?NH ASYNC NON BLOCKING--------
+// -------- Hï¿½M CH?Y L?NH ASYNC NON BLOCKING--------
 function runCommand(cmd) {
     return new Promise((resolve, reject) => 
     {
@@ -65,7 +65,7 @@ function runCommand(cmd) {
     });
 }
 
-// -------- KI?M TRA NÚT NH?N --------
+// -------- KI?M TRA Nï¿½T NH?N --------
 setInterval(async () => {
     const isPressed = (rpio.read(BUTTON_GPIO) === rpio.LOW);
 
@@ -77,32 +77,32 @@ setInterval(async () => {
             Press_Hold = false;        // reset c?
         }
 
-        // N?u gi? d? 10s và chua x? lý
+        // N?u gi? d? 10s vï¿½ chua x? lï¿½
         if (Date.now() - Press_Reset >= 8000 && !Press_Hold) 
         {
-            Press_Hold = true; // dánh d?u dã x? lý d? không b? l?p
-            system_reset = true; // thông báo dang reset
+            Press_Hold = true; // dï¿½nh d?u dï¿½ x? lï¿½ d? khï¿½ng b? l?p
+            system_reset = true; // thï¿½ng bï¿½o dang reset
             StopBlinkLED();
-            LED_Green(false);     // t?t dèn xanh
-            LED_Red(false);        // b?t dèn d?
+            LED_Green(false);     // t?t dï¿½n xanh
+            LED_Red(false);        // b?t dï¿½n d?
 
             console.log('[BUTTON] Gi? d? 8s! B?t d?u chuy?n sang AP mode...');
 
-            if (Wifi_Check_Interval) clearInterval(Wifi_Check_Interval); // D?ng check Wifi n?u có
+            if (Wifi_Check_Interval) clearInterval(Wifi_Check_Interval); // D?ng check Wifi n?u cï¿½
             Stop_Server();         // D?ng server
-            Write_Wifi_Config();   // Xóa n?i dung wifi
+            Write_Wifi_Config();   // Xï¿½a n?i dung wifi
             await Start_AP_Mode();       // Chuy?n sang AP mode
             Run_Server();          // Ch?y server
 
-            LED_Green(false);      // t?t dèn xanh
-            LED_Red(true);         // b?t dèn d?
-            console.log('[BUTTON] Ðã chuy?n sang AP mode thành công.');
+            LED_Green(false);      // t?t dï¿½n xanh
+            LED_Red(true);         // b?t dï¿½n d?
+            console.log('[BUTTON] ï¿½ï¿½ chuy?n sang AP mode thï¿½nh cï¿½ng.');
             system_reset = false;
         }
     } 
     else 
     {
-        // Khi th? nút: reset b? d?m
+        // Khi th? nï¿½t: reset b? d?m
         Press_Reset = null;
         Press_Hold = false;
     }
@@ -118,7 +118,7 @@ async function freePort(port) {
 async function Run_Server() {
   if (serversStarted) 
   {
-    console.log('[SERVER]Server dã ch?y tru?c dó chua du?c xóa');
+    console.log('[SERVER]Server dï¿½ ch?y tru?c dï¿½ chua du?c xï¿½a');
     return;
   }
     serversStarted = true;
@@ -137,7 +137,7 @@ async function Run_Server() {
     child.stdout.on('data', data => process.stdout.write(`[${s.name}] ${data}`));
     child.stderr.on('data', data => process.stderr.write(`[${s.name} ERROR] ${data}`));
 
-    // ?? L?ng nghe tín hi?u t? process con
+    // ?? L?ng nghe tï¿½n hi?u t? process con
     child.on('message', async (msg) => 
     {
       if (msg === 'restart_system') 
@@ -155,7 +155,7 @@ async function Run_Server() {
         //     console.log(`[RESTART] ${s.name} restarting in 1s...`);
         //     setTimeout(Run_Server, 1000);
         // }
-        console.log(` ${s.name}.js dã d?ng, mã thoát = ${code}`);
+        console.log(` ${s.name}.js dï¿½ d?ng, mï¿½ thoï¿½t = ${code}`);
     });
   }
 }
@@ -164,7 +164,7 @@ async function Run_Server() {
 async function Stop_Server() {
     if (serverProcesses.length === 0) return;
     
-    console.log('[SERVER] Ðang d?ng server cu...');
+    console.log('[SERVER] ï¿½ang d?ng server cu...');
     
     await Promise.all(serverProcesses.map(p => new Promise(resolve => 
     {
@@ -175,7 +175,7 @@ async function Stop_Server() {
     serverProcesses = [];
     serversStarted = false;
 
-    console.log('[SERVER] Server dã d?ng hoàn toàn.');
+    console.log('[SERVER] Server dï¿½ d?ng hoï¿½n toï¿½n.');
 }
 
 // -------- WIFI CONFIG --------
@@ -189,21 +189,21 @@ function Read_Wifi_Config() {
             console.log(`       SSID: "${WIFI_SSID}"`);
             console.log(`       PASS: "${WIFI_PASS}"`);
         } else {
-            console.error('[WARN] Không tìm th?y wifi.json');
+            console.error('[WARN] Khï¿½ng tï¿½m th?y wifi.json');
         }
     } catch (err) {
         console.error('[ERROR] L?i d?c wifi.json:', err);
     }
 }
 
-// ------- XÓA SSID PASS --------
+// ------- Xï¿½A SSID PASS --------
 function Write_Wifi_Config() {
     try {
         fs.writeFileSync(WIFI_CONFIG_FILE, JSON.stringify({ ssid: '', password: '' }, null, 4), 'utf8');
-        console.log('[INFO] Ðã xóa SSID và password trong wifi.json');
+        console.log('[INFO] ï¿½ï¿½ xï¿½a SSID vï¿½ password trong wifi.json');
         return true;
     } catch (err) {
-        console.error('[ERROR] Không th? xóa wifi.json:', err.message);
+        console.error('[ERROR] Khï¿½ng th? xï¿½a wifi.json:', err.message);
         return false;
     }
 }
@@ -216,12 +216,12 @@ async function Remove_Old_Wifi() {
         for (const profile of profiles) 
         {
             await runCommand(`sudo nmcli connection delete id "${profile}"`);
-            console.log(`[INFO] Xóa profile cu: ${profile}`);
+            console.log(`[INFO] Xï¿½a profile cu: ${profile}`);
         }
     } 
     catch (err) 
     {
-        console.warn('[WARN] Không xóa du?c profile cu:', err);
+        console.warn('[WARN] Khï¿½ng xï¿½a du?c profile cu:', err);
     }
 }
 
@@ -239,20 +239,20 @@ async function Wait_For_Wifi(ssid, timeoutSec = 15) {
             const wlan0 = status.split('\n').find(line => line.startsWith('wlan0:'));
             if (wlan0 && wlan0.includes('connected')) 
             {
-                console.log(`[OK] Raspberry Pi dã k?t n?i Wi-Fi thành công: ${ssid}`);
+                console.log(`[OK] Raspberry Pi dï¿½ k?t n?i Wi-Fi thï¿½nh cï¿½ng: ${ssid}`);
                 return true;
             }
         } 
         catch {}
         await new Promise(r => setTimeout(r, 1000));
     }
-    console.error(`[ERR] Không th? k?t n?i Wi-Fi "${ssid}" sau ${timeoutSec} giây.`);
+    console.error(`[ERR] Khï¿½ng th? k?t n?i Wi-Fi "${ssid}" sau ${timeoutSec} giï¿½y.`);
     return false;
 }
 
 // -------- START AP MODE --------
 async function Start_AP_Mode() {
-    console.log('[INFO] Ðang b?t AP mode "FPS16B"...');
+    console.log('[INFO] ï¿½ang b?t AP mode "FPS16B"...');
     try {
         await runCommand('sudo systemctl stop wpa_supplicant');
         await Remove_Old_Wifi();
@@ -279,23 +279,23 @@ dhcp-range=192.168.50.10,192.168.50.100,255.255.255.0,24h
         await runCommand('sudo systemctl restart hostapd');
         await runCommand('sudo systemctl restart dnsmasq');
 
-        console.log('[OK] AP mode "FPS16B" dã b?t t?i 192.168.50.1');
+        console.log('[OK] AP mode "FPS16B" dï¿½ b?t t?i 192.168.50.1');
     } 
     catch (err) 
     {
-        console.error('[ERR] Không th? b?t AP mode:', err);
+        console.error('[ERR] Khï¿½ng th? b?t AP mode:', err);
     }
 }
 
 // -------- CONNECT WIFI --------
 async function Connect_To_Wifi(ssid, password) {
-    StopBlinkLED();        // ?? D?ng m?i blink còn sót l?i
+    StopBlinkLED();        // ?? D?ng m?i blink cï¿½n sï¿½t l?i
     StartBlinkLED(LED_GREEN, 500);    // B?t d?u blink led
     LED_Red(false);
     LED_Green(false);
 
 
-     if( ssid.trim() === '' &&  password.trim() === '') // N?u không có ssid và pass thì return false
+     if( ssid.trim() === '' &&  password.trim() === '') // N?u khï¿½ng cï¿½ ssid vï¿½ pass thï¿½ return false
      {
        return false;
      }
@@ -303,7 +303,7 @@ async function Connect_To_Wifi(ssid, password) {
      console.log(`[INFO] B?t d?u k?t n?i Wi-Fi: ${ssid}`); 
      try 
      {
-         console.log('[INFO] Ki?m tra và t?t AP n?u dang b?t...');
+         console.log('[INFO] Ki?m tra vï¿½ t?t AP n?u dang b?t...');
         
          await runCommand('sudo systemctl start wpa_supplicant');
          await runCommand('sudo systemctl stop hostapd');
@@ -311,11 +311,11 @@ async function Connect_To_Wifi(ssid, password) {
          await runCommand('sudo nmcli radio wifi on');     // B?t l?i wifi n?u b? t?t
          
         //  await Enable_Interface('wlan0');
-         await Remove_Old_Wifi();                          // Xóa tên wifi cu
+         await Remove_Old_Wifi();                          // Xï¿½a tï¿½n wifi cu
      } 
      catch (err) 
      {
-         console.warn('[WARN] Không th? t?t AP:', err);
+         console.warn('[WARN] Khï¿½ng th? t?t AP:', err);
      }
 
 
@@ -342,11 +342,11 @@ async function Connect_To_Wifi(ssid, password) {
          if (cnt < RETRY_CONNECT_WIFI)
              await new Promise(r => setTimeout(r, 2000));
      }
-     console.error(`[ERR] Không th? k?t n?i Wi-Fi "${ssid}" sau ${RETRY_CONNECT_WIFI} l?n th?`);
+     console.error(`[ERR] Khï¿½ng th? k?t n?i Wi-Fi "${ssid}" sau ${RETRY_CONNECT_WIFI} l?n th?`);
      return false;
 }
 
-// Hàm ki?m tra tr?ng thái Wi-Fi
+// Hï¿½m ki?m tra tr?ng thï¿½i Wi-Fi
 async function Check_Wifi_Status() 
 {
     try 
@@ -369,7 +369,7 @@ async function Check_Wifi_Status()
                 const lostTime = (Date.now() - wifiLostStart) / 1000;
                 if (lostTime >= 60) // m?t Wi-Fi 60s ? b?t AP
                 { 
-                    console.log('[WARN] Wi-Fi m?t liên t?c 60s. B?t AP mode...');
+                    console.log('[WARN] Wi-Fi m?t liï¿½n t?c 60s. B?t AP mode...');
                     Stop_Server();
                     await Start_AP_Mode();
                     Run_Server();
@@ -386,8 +386,8 @@ async function Check_Wifi_Status()
         else 
         {
             StopBlinkLED();  // D?ng blink led
-            LED_Red(false);  // T?t dèn d?
-            LED_Green(true); // B?t dèn xanh
+            LED_Red(false);  // T?t dï¿½n d?
+            LED_Green(true); // B?t dï¿½n xanh
             wifiLostStart = null; // Wi-Fi tr? l?i ? reset b? d?m
         }
     } 
@@ -397,7 +397,7 @@ async function Check_Wifi_Status()
     }
 }
 
-// -------- HÀM KH?I CH?Y WIFI + SERVER --------
+// -------- Hï¿½M KH?I CH?Y WIFI + SERVER --------
 async function Start_System() 
 {
     Read_Wifi_Config();
@@ -412,10 +412,10 @@ async function Start_System()
         StopBlinkLED();
         LED_Red(false);
         LED_Green(true);
-        console.log('[INFO] Wi-Fi k?t n?i thành công, kh?i ch?y server...');
+        console.log('[INFO] Wi-Fi k?t n?i thï¿½nh cï¿½ng, kh?i ch?y server...');
         Run_Server();
 
-        // D?ng interval cu n?u có
+        // D?ng interval cu n?u cï¿½
         if (Wifi_Check_Interval) clearInterval(Wifi_Check_Interval);
         Wifi_Check_Interval = setInterval(Check_Wifi_Status, 5000); // Ki?m tra wifi m?i 5s
     } 
@@ -426,7 +426,7 @@ async function Start_System()
         LED_Green(false);
         console.log('[INFO] K?t n?i Wi-Fi th?t b?i, b?t AP mode...');
         await Start_AP_Mode();
-        console.log('[INFO] AP mode dã b?t, kh?i ch?y server...');
+        console.log('[INFO] AP mode dï¿½ b?t, kh?i ch?y server...');
         Run_Server();
     }
 }
@@ -438,13 +438,13 @@ async function Start_System()
 
 async function Restart_System() 
 {
-    console.log('[INFO] Nh?n l?nh RESTART. D?ng server và kh?i ch?y l?i...');
+    console.log('[INFO] Nh?n l?nh RESTART. D?ng server vï¿½ kh?i ch?y l?i...');
     Stop_Server();   // d?ng server
     if (Wifi_Check_Interval) clearInterval(Wifi_Check_Interval); // d?ng check wifi cu
     
     
-    Start_System();        // g?i l?i hàm ch?y system
-    console.log('[INFO] Xong quá trình kh?i d?ng l?i !');
+    Start_System();        // g?i l?i hï¿½m ch?y system
+    console.log('[INFO] Xong quï¿½ trï¿½nh kh?i d?ng l?i !');
 }
 
 

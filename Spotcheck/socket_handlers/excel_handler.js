@@ -9,6 +9,7 @@ const THRESHOLD_PATH = "/home/pi/Spotcheck/Global/threshold.json";
 const COORD_PATH = "/home/pi/Spotcheck/Global/coordinates.json";
 const COORD0_PATH = "/home/pi/Spotcheck/Global/coordinates0.json";
 const FAM_PATH = "/home/pi/Spotcheck/Global/fam.json";
+const WIFI_PATH = "/home/pi/FPS16_B/information.json";
 
 /* =========================================================
    Hàm đăng ký các socket event liên quan Excel/Admin
@@ -191,7 +192,7 @@ function registerExcelSocket(io, socket) {
       if (!fs.existsSync(COEFFICIENT_PATH)) {
         wb = XLSX.utils.book_new();
   
-        // T?O SHEET C� K�CH THU?C
+        // T?O SHEET C� K�CH THU?C
         const empty = Array.from({ length: 20 }, () => Array(10).fill(""));
         ws = XLSX.utils.aoa_to_sheet(empty);
   
@@ -220,14 +221,20 @@ function registerExcelSocket(io, socket) {
     let coord = { x1: 0, y1: 0, x2: 0, y2: 0 };
     let coord0 = { x1: 0, y1: 0, x2: 0, y2: 0 };
     let fam = { threshold_1: 0, threshold_2: 0, threshold_3: 0, minus_value: 0 };
+    let device_info = {host_name: "FPS", seri_number: "xxxxx"};
 
     try { threshold = JSON.parse(fs.readFileSync(THRESHOLD_PATH, "utf8")); } catch {}
     try { coord = JSON.parse(fs.readFileSync(COORD_PATH, "utf8")); } catch {}
     try { coord0 = JSON.parse(fs.readFileSync(COORD0_PATH, "utf8")); } catch {}
     try { fam = JSON.parse(fs.readFileSync(FAM_PATH, "utf8")); } catch {}
+    try { 
+      const info = JSON.parse(fs.readFileSync(WIFI_PATH, "utf8"));
+      device_info.host_name = info.host_name ?? "FPS";
+      device_info.seri_number = info.seri_number ?? "xxxxx"; } 
+    catch {}
 
-    console.log("Sending admin_extra_data:", { threshold, coord, coord0, fam });
-    socket.emit("admin_extra_data", { threshold, coord, coord0, fam });
+    console.log("Sending admin_extra_data:", { threshold, coord, coord0, fam, device_info});
+    socket.emit("admin_extra_data", { threshold, coord, coord0, fam, device_info});
   });
 
   /* ------------------- ADMIN WRITE EXTRA JSON ------------------- */
@@ -262,6 +269,40 @@ function registerExcelSocket(io, socket) {
           threshold_3: Number(data.fam.threshold_3) || 0,
           minus_value: Number(data.fam.minus_value) || 0
         });
+      }
+
+      if (data.device_info) {
+        try {
+          const dir = path.dirname(WIFI_PATH);
+          if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+          let wifiRaw = {};
+
+          // đọc file cũ nếu tồn tại
+          if (fs.existsSync(WIFI_PATH)) {
+            try {
+              wifiRaw = JSON.parse(fs.readFileSync(WIFI_PATH, "utf8"));
+            } catch {
+              console.warn("wifi.json corrupted, recreating");
+              wifiRaw = {};
+            }
+          }
+
+          // chỉ update 2 key
+          if (data.device_info.host_name !== undefined) {
+            wifiRaw.host_name = data.device_info.host_name;
+          }
+
+          if (data.device_info.seri_number !== undefined) {
+            wifiRaw.seri_number = data.device_info.seri_number;
+          }
+
+          // ghi lại toàn bộ (đã merge)
+          fs.writeFileSync(WIFI_PATH, JSON.stringify(wifiRaw, null, 2));
+
+        } catch (err) {
+          console.error("Error writing wifi.json:", err);
+        }
       }
 
       console.log("admin_write_extra done");
