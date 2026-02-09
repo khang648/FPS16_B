@@ -7,6 +7,23 @@ const modbus             = require("./Modbus/Modbus");
 const ID                 = require("./Modbus/Modbus_ID");
 const { exec }           = require('child_process');
 
+const PIPE_PATH = '/tmp/tft_pipe';
+
+// Tạo Write Stream duy nhất
+const tftPipe = fs.createWriteStream(PIPE_PATH, { flags: 'a' });
+
+function sendToTFT(data) {
+    try 
+    {
+        // Ghi dữ liệu kèm theo dấu xuống dòng rõ ràng
+        tftPipe.write(JSON.stringify(data) + '\n');
+    } 
+    catch (err) 
+    {
+        console.error("Pipe Error:", err);
+    }
+}
+
 let count_rx = 0;
 
 // =========== Server Web + Socket.IO ==============
@@ -151,9 +168,25 @@ server.listen(PORT, HOST, () => {
 modbus.onFrame((frame) =>  
 {
   count_rx++;
-  //console.log("Nhận frame Modbus:", frame);
-  //console.log("Nhận frame Modbus:", frame.length, "bytes  " , count_rx);
   io.emit("Web_PCR", Array.from(frame)); // Gửi dữ liệu nhận được lên web
+
+  if (modbus.ModbusState.needUpdateTFT) 
+  {
+    const tftData = {
+      state:       modbus.PCR_Global.state_system,
+      temp:        modbus.PCR_Global.block_temp,
+      cycle:       modbus.PCR_Global.cycles_pcr[ modbus.PCR_Global.pcr_loop_index],
+      total_cycle: 40,
+      pcr_loop:    modbus.PCR_Global.pcr_loop_index,
+      time:        modbus.PCR_Global.time_run,
+      wifi:        "Connected"
+    }; 
+
+    console.log("[TFT SEND]", JSON.stringify(tftData));
+
+    sendToTFT(tftData);
+  }
+ //console.log(frame);
 });
 
 //=================== GỬI REQUEST ĐỊNH KỲ LẤY DỮ LIỆU =====================//

@@ -17,8 +17,9 @@ let wifiLostStart = null;        // th?i di?m b?t d?u m?t Wi-Fi
 const RETRY_CONNECT_WIFI = 10;   // K?t n?i l?i Wifi
 
 const servers = [
-    { name: 'PCR Server',       file: './PCR/server_pcr.js', port: 3000 },
-    { name: 'Spotcheck Server', file: './Spotcheck/server_sc.js',  port: 8081 }
+    { name: 'PCR Server',       file: './PCR/server_pcr.js',       port: 3000 },
+    { name: 'Spotcheck Server', file: './Spotcheck/server_sc.js',  port: 8081 },
+    { name: 'TFT File',         file: './TFT/tft.py',              port: null }
 ];
 
 // -------- GPIO LED - RESET BUTTON --------
@@ -115,50 +116,90 @@ async function freePort(port) {
 }
 
 // -------- START SERVER --------
+// async function Run_Server() {
+//   if (serversStarted) 
+//   {
+//     console.log('[SERVER]Server d� ch?y tru?c d� chua du?c x�a');
+//     return;
+//   }
+//     serversStarted = true;
+
+//   for (const s of servers) 
+//   {
+//     await freePort(s.port); // Clear c?ng
+
+//     if(system_reset == true)
+//         return;
+
+//     const child = spawn('node', [s.file], { stdio: ['pipe', 'pipe', 'pipe', 'ipc'] }); 
+//     serverProcesses.push(child);
+//     console.log(`[START] ${s.name} -> ${s.file} (PID: ${child.pid})`);
+
+//     child.stdout.on('data', data => process.stdout.write(`[${s.name}] ${data}`));
+//     child.stderr.on('data', data => process.stderr.write(`[${s.name} ERROR] ${data}`));
+
+//     // ?? L?ng nghe t�n hi?u t? process con
+//     child.on('message', async (msg) => 
+//     {
+//       if (msg === 'restart_system') 
+//       {
+//         console.log(`[SYSTEM] Nh?n l?nh restart t? ${s.name}`);
+//         await Restart_System();
+//       }
+//     });
+
+//     child.on('exit', code => 
+//     {
+//         console.log(` ${s.name}.js d� d?ng, m� tho�t = ${code}`);
+//     });
+//   }
+// }
+
 async function Run_Server() {
-  if (serversStarted) 
-  {
-    console.log('[SERVER]Server d� ch?y tru?c d� chua du?c x�a');
+  if (serversStarted) {
+    console.log('[SERVER] Server đã chạy');
     return;
   }
-    serversStarted = true;
 
-  for (const s of servers) 
-  {
-    await freePort(s.port); // Clear c?ng
+  serversStarted = true;
 
-    if(system_reset == true)
-        return;
+  for (const s of servers) {
 
-    const child = spawn('node', [s.file], { stdio: ['pipe', 'pipe', 'pipe', 'ipc'] }); 
+    if (system_reset) return;
+
+    // Chỉ free port nếu có port
+    if (s.port) {
+      await freePort(s.port);
+    }
+
+    let child;
+
+    // 👉 NodeJS server
+    if (s.file.endsWith('.js')) {
+      child = spawn('node', [s.file], { stdio: ['pipe', 'pipe', 'pipe', 'ipc'] });
+    }
+    // 👉 Python service
+    else if (s.file.endsWith('.py')) {
+      child = spawn('python3', [s.file], { stdio: ['pipe', 'pipe', 'pipe'] });
+    }
+
     serverProcesses.push(child);
     console.log(`[START] ${s.name} -> ${s.file} (PID: ${child.pid})`);
 
-    child.stdout.on('data', data => process.stdout.write(`[${s.name}] ${data}`));
-    child.stderr.on('data', data => process.stderr.write(`[${s.name} ERROR] ${data}`));
+    child.stdout.on('data', data =>
+      process.stdout.write(`[${s.name}] ${data}`)
+    );
 
-    // ?? L?ng nghe t�n hi?u t? process con
-    child.on('message', async (msg) => 
-    {
-      if (msg === 'restart_system') 
-      {
-        console.log(`[SYSTEM] Nh?n l?nh restart t? ${s.name}`);
-        await Restart_System();
-      }
-    });
+    child.stderr.on('data', data =>
+      process.stderr.write(`[${s.name} ERROR] ${data}`)
+    );
 
-    child.on('exit', code => 
-    {
-        // console.log(`[RESTART] ${s.name} exited with code ${code}.`);
-        // if (!system_reset) 
-        // {
-        //     console.log(`[RESTART] ${s.name} restarting in 1s...`);
-        //     setTimeout(Run_Server, 1000);
-        // }
-        console.log(` ${s.name}.js d� d?ng, m� tho�t = ${code}`);
+    child.on('exit', code => {
+      console.log(`[STOP] ${s.name} exit code = ${code}`);
     });
   }
 }
+
 
 // -------- STOP SERVER --------
 async function Stop_Server() {

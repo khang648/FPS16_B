@@ -1,6 +1,24 @@
 import time
 from PIL import Image, ImageDraw, ImageFont
 from TFT_SPI import TFT_Init  # Thư viện của bạn
+import os
+import json
+
+PIPE_PATH = '/tmp/tft_pipe'
+
+# Tạo Pipe nếu chưa có
+if not os.path.exists(PIPE_PATH):
+    os.mkfifo(PIPE_PATH)
+
+# Khởi tạo các giá trị mặc định
+current_cycles = 0
+setpoint_cycles = 40
+current_temp = 0
+time_left = 0
+state_system = 0
+wifi_name = "Connecting..."
+
+print("TFT Script is running and waiting for Pipe data...")
 
 # Khởi tạo màn hình
 disp, width, height = TFT_Init() # width=160, height=128
@@ -56,7 +74,7 @@ def draw_wifi(obj, x, y, wifi_name):
 
     # 3. VẼ TÊN WIFI
     # x + 16 để tránh biểu tượng wifi, y + 2 để canh lề với header
-    obj.text((x + 16, y + 2), display_name, font=font_smallest, fill=TEXT_WHITE)
+    obj.text((x + 15, y + 2), display_name, font=font_smallest, fill=TEXT_WHITE)
     
 def draw_ui(state_system ,cycles, cycles_setpoint, temp, remain_sec, wifi_name):
     # Tạo ảnh mới với màu nền đậm
@@ -100,7 +118,7 @@ def draw_ui(state_system ,cycles, cycles_setpoint, temp, remain_sec, wifi_name):
 
     # Vẽ ô thời gian còn lại (Phần dưới)
     draw.rounded_rectangle((5, 70, 155, 122), radius=7, outline=(255, 150, 0), fill=(0, 0, 0))
-    draw.text((36, 75), "REMAINING TIME", font=font_label, fill=(255, 180, 0))
+    draw.text((36, 75), "TIME REMAINING", font=font_label, fill=(255, 180, 0))
     
     # Format thời gian HH:MM:SS
     m, s = divmod(remain_sec, 60)
@@ -161,37 +179,32 @@ def draw_finish_ui(time_total_sec):
     # Đẩy lên màn hình
     disp.image(image)
 
-# ================= MAIN LOOP =================
-try:
-    current_cycles  = 0
-    setpoint_cycles = 40
-    current_temp = 36.6
-    time_left = 145  # 2 phút 25 giây
-    state_system = 0
 
-    while time_left >= 0:
+# Mở file một lần duy nhất
+fifo = open(PIPE_PATH, 'r')
 
-        draw_ui(state_system, current_cycles, setpoint_cycles, current_temp, time_left, "Chào em nhac")
+while True:
+    line = fifo.readline()
+    if not line:
+        # Nếu không có dữ liệu mới, nghỉ 1 chút rồi kiểm tra lại
+        time.sleep(0.25)
+        continue
         
-        time_left -= 1
+    try:
+        data = json.loads(line.strip())
 
-        # Giả lập nhiệt độ dao động nhẹ cho sinh động
-        current_temp += 1
-        current_cycles += 1
-        state_system +=1
+        state_system   = data.get("state", state_system)
+        current_temp   = data.get("temp", current_temp)
+        current_cycles = data.get("cycle", current_cycles)
+        setpoint_cycles= data.get("total_cycle", setpoint_cycles)
+        time_left      = data.get("time", time_left)
+        wifi_name      = data.get("wifi", wifi_name)
 
-        if current_temp > 99:
-            current_temp = 25
+        if state_system == 1:
+            draw_ui(state_system, current_cycles, setpoint_cycles, current_temp, time_left,"Chào em nhac")
 
-        if current_cycles > setpoint_cycles:
-            current_cycles = 0
-        if state_system > 1:
-            state_system = 1
-        time.sleep(0.2)
-        
-        # draw_finish_ui(300)
-        # time.sleep(2)
+    except Exception as e:
+        pass
 
 
-except KeyboardInterrupt:
-    print("Stopped")
+
