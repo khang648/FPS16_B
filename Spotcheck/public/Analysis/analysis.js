@@ -141,12 +141,25 @@ function updateButtonsInDOM(current_tab) {
 }
 
 // ====================== SOCKET EVENTS ======================
-socket.on("download_ready", (payload) => {
-  const { filename, data } = payload;
-  const link = document.createElement("a");
-  link.href = "data:application/zip;base64," + data;
-  link.download = filename; 
-  link.click();
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent);
+}
+
+socket.on("download_ready", ({ filename, url }) => {
+  console.log("Download ready:", filename);
+
+  if (isIOS()) {
+    // iOS: mở tab mới để user Save to Files
+    window.open(url, "_blank");
+  } else {
+    // Desktop + Android: auto download
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
 });
 
 socket.on("sampleanalysis_done", async (data) => {

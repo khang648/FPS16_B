@@ -85,14 +85,13 @@ function registerFileDownloadSocket(io, socket) {
   });
 
   /* ------------------- DOWNLOAD → ZIP FOLDER ------------------- */
-  socket.on("request_download", () => {
-    console.log("[filedownload_handler][INFO] Download request received");
+  socket.on("request_download", async () => {
+    console.log("[INFO] Download request received");
 
     let resultFolder, session_name;
     try {
       ({ resultFolder, session_name } = getSessionInfo());
     } catch (err) {
-      console.error("[filedownload_handler][ERR]", err.message);
       socket.emit("error_message", err.message);
       return;
     }
@@ -108,30 +107,23 @@ function registerFileDownloadSocket(io, socket) {
     const output = fs.createWriteStream(zipPath);
     const archive = archiver("zip", { zlib: { level: 9 } });
 
-    output.on("close", () => {
-      console.log(`[Server] Zip created (${archive.pointer()} bytes)`);
+    archive.pipe(output);
+    archive.directory(targetFolder, false);
+    archive.finalize();
 
-      const zipBase64 = fs.readFileSync(zipPath, { encoding: "base64" });
+    output.on("close", () => {
+      console.log(`[Server] Zip ready: ${zipPath}`);
 
       socket.emit("download_ready", {
-        filename: path.basename(zipPath),
-        data: zipBase64
-      });
-
-      fs.unlink(zipPath, (err) => {
-        if (err) console.error("[Server] Error deleting zip:", err);
-        else console.log("[Server] Zip deleted:", zipPath);
+        filename: `${session_name}.zip`,
+        url: `/download/${session_name}.zip`
       });
     });
 
     archive.on("error", (err) => {
-      console.error("[Server] Zip error:", err);
-      socket.emit("download_error", "Server zip error");
+      console.error("[Zip error]", err);
+      socket.emit("download_error", "Zip error");
     });
-
-    archive.pipe(output);
-    archive.directory(targetFolder, false);
-    archive.finalize();
   });
 
   /* ------------------- XÓA SELECTED RESULT FOLDERS ------------------- */

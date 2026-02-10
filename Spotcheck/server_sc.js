@@ -11,6 +11,8 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
+const RESULTS_PATH = "/home/pi/Spotcheck/Results";
+
 /*========== Thư mục public ==========*/
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -46,6 +48,22 @@ app.get("/api/device-info", (req, res) => {
       seri_number: ""
     });
   }
+});
+
+app.get("/download/:filename", (req, res) => {
+  const zipPath = path.join(RESULTS_PATH, req.params.filename);
+
+  if (!fs.existsSync(zipPath)) {
+    return res.status(404).send("File not found");
+  }
+
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename="${req.params.filename}"`
+  );
+  res.setHeader("Content-Type", "application/zip");
+
+  res.sendFile(zipPath);
 });
 
 /*========== Wifi file ==========*/
