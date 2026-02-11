@@ -87,12 +87,18 @@ function Update_Start_Protocol(data)
     let Time_count = (time_count_high << 8) | time_count_low;  // Lấy time
     let lid_temp = data[idx++];        // lấy nhiệt độ nắp
     let cycles_pcr = new Array(PCR_LOOP); ;  // lấy số cycles trong các vòng pcr
-    for (let i = 0; i < PCR_LOOP; i++)
+    for (let i = 0; i < PCR_LOOP; i++) // lấy số cyles đã chạy
     {
       cycles_pcr[i] = data[idx++];
 
       if(cycles_pcr[i] == 0) {cycles_pcr[i] = 1;} // tránh trường hợp cycles = 0
     }
+
+    for (let i = 0; i < PCR_LOOP; i++)
+    {
+      data[idx++]; // lấy bỏ các cycles
+    }
+
     let pcr_loop_index = data[idx++]; // lấy vị trí vòng pcr hiện tại
     let step_setpoint  = data[idx++]; // lấy step hiện tại
     let time_run_low   = data[idx++]; // lấy byte low
@@ -139,7 +145,7 @@ function Update_Start_Protocol(data)
       {
           if (LABEL_CYCLES_RUNNING[i] == null) continue;
 
-          if (cycles_pcr[i] !== cycles_pcr_prev[i])
+          if (cycles_pcr[i] != cycles_pcr_prev[i])
           {
               LABEL_CYCLES_RUNNING[i].textContent = Format_Cycles_Topic(cycles_pcr[i], Cycles_setpoint[i]);
               cycles_pcr_prev[i] = cycles_pcr[i];

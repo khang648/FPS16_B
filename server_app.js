@@ -14,7 +14,7 @@ let serverProcesses = [];        // M?ng luu c�c server d� ch?y
 let wifi_connected = false;      // Bi?n luu tr?ng th�i k?t n?i wifi
 let Wifi_Check_Interval = null;  // Chuong tr�nh ki?m tra Wifi
 let wifiLostStart = null;        // th?i di?m b?t d?u m?t Wi-Fi
-const RETRY_CONNECT_WIFI = 10;   // K?t n?i l?i Wifi
+const RETRY_CONNECT_WIFI = 5;   // K?t n?i l?i Wifi
 
 const servers = [
     { name: 'PCR Server',       file: './PCR/server_pcr.js',       port: 3000 },
@@ -194,6 +194,14 @@ async function Run_Server() {
       process.stderr.write(`[${s.name} ERROR] ${data}`)
     );
 
+    child.on('message', async (msg) =>  {
+      if (msg === 'restart_system') 
+      {
+        console.log(`[SYSTEM] Nh?n l?nh restart t? ${s.name}`);
+        await Restart_System();
+      }
+    });
+
     child.on('exit', code => {
       console.log(`[STOP] ${s.name} exit code = ${code}`);
     });
@@ -230,24 +238,54 @@ function Read_Wifi_Config() {
             console.log(`       SSID: "${WIFI_SSID}"`);
             console.log(`       PASS: "${WIFI_PASS}"`);
         } else {
-            console.error('[WARN] Kh�ng t�m th?y wifi.json');
+            console.error('[WARN] Kh�ng t�m th?y information.json');
         }
     } catch (err) {
-        console.error('[ERROR] L?i d?c wifi.json:', err);
+        console.error('[ERROR] L?i d?c information.json:', err);
     }
 }
 
-// ------- X�A SSID PASS --------
-function Write_Wifi_Config() {
-    try {
-        fs.writeFileSync(WIFI_CONFIG_FILE, JSON.stringify({ ssid: '', password: '' }, null, 4), 'utf8');
-        console.log('[INFO] �� x�a SSID v� password trong wifi.json');
+// // ------- X�A SSID PASS --------
+// function Write_Wifi_Config() {
+//     try {
+//         fs.writeFileSync(WIFI_CONFIG_FILE, JSON.stringify({ ssid: '', password: '' }, null, 4), 'utf8');
+//         console.log('[INFO] �� x�a SSID v� password trong information.json');
+//         return true;
+//     } catch (err) {
+//         console.error('[ERROR] Kh�ng th? x�a information.json:', err.message);
+//         return false;
+//     }
+// }
+
+function Write_Wifi_Config() 
+{
+    try 
+    {
+        // Đọc cấu trúc hiện tại
+        const data = fs.readFileSync(WIFI_CONFIG_FILE, 'utf8');
+        const info = JSON.parse(data);
+
+        // Chỉ xóa ssid và password
+        info.ssid = '';
+        info.password = '';
+
+        // Ghi lại file nhưng giữ nguyên device
+        fs.writeFileSync(
+            WIFI_CONFIG_FILE,
+            JSON.stringify(info, null, 4),
+            'utf8'
+        );
+
+        console.log('[INFO] Đã xóa SSID và password, giữ nguyên device');
         return true;
-    } catch (err) {
-        console.error('[ERROR] Kh�ng th? x�a wifi.json:', err.message);
+    } 
+    catch (err) 
+    {
+        console.error('[ERROR] Không thể cập nhật information.json:', err.message);
         return false;
     }
 }
+
 
 async function Remove_Old_Wifi() {
     try 
@@ -267,7 +305,7 @@ async function Remove_Old_Wifi() {
 }
 
 // -------- WAIT WIFI --------
-async function Wait_For_Wifi(ssid, timeoutSec = 15) {
+async function Wait_For_Wifi(ssid, timeoutSec = 10) {
     const start = Date.now();
     while ((Date.now() - start) / 1000 < timeoutSec) 
     {
@@ -292,9 +330,66 @@ async function Wait_For_Wifi(ssid, timeoutSec = 15) {
 }
 
 // -------- START AP MODE --------
-async function Start_AP_Mode() {
-    console.log('[INFO] �ang b?t AP mode "FPS16B"...');
-    try {
+// async function Start_AP_Mode() {
+//     console.log('[INFO] �ang b?t AP mode "FPS16B"...');
+//     try {
+//         await runCommand('sudo systemctl stop wpa_supplicant');
+//         await Remove_Old_Wifi();
+//         await runCommand('sudo nmcli radio wifi off');
+//         await runCommand('sudo nmcli radio wifi on');
+//         await runCommand('sudo ip addr flush dev wlan0');
+//         await runCommand('sudo ip addr add 192.168.50.1/24 dev wlan0');
+
+//         fs.writeFileSync('/etc/hostapd/hostapd.conf', `
+// interface=wlan0
+// driver=nl80211
+// ssid=FPS16B
+// hw_mode=g
+// channel=7
+// auth_algs=1
+// ignore_broadcast_ssid=0
+// `);
+
+//         fs.writeFileSync('/etc/dnsmasq.conf', `
+// interface=wlan0
+// dhcp-range=192.168.50.10,192.168.50.100,255.255.255.0,24h
+// `);
+
+//         await runCommand('sudo systemctl restart hostapd');
+//         await runCommand('sudo systemctl restart dnsmasq');
+
+//         console.log('[OK] AP mode "FPS16B" d� b?t t?i 192.168.50.1');
+//     } 
+//     catch (err) 
+//     {
+//         console.error('[ERR] Kh�ng th? b?t AP mode:', err);
+//     }
+// }
+
+async function Start_AP_Mode() 
+{
+    console.log('[INFO] Đang bật AP mode...');
+
+    let apName = "PCR_DEVICE";
+
+    try 
+    {
+        // Đọc device name từ file
+        const data = fs.readFileSync(WIFI_CONFIG_FILE, 'utf8');
+        const info = JSON.parse(data);
+
+        if (info.device && info.device.trim() !== '') 
+        {
+            apName = info.device.trim();
+        }
+    } 
+    catch (err) 
+    {
+        console.warn('[WARN] Không đọc được device name, dùng mặc định.');
+    }
+
+    try 
+    {
         await runCommand('sudo systemctl stop wpa_supplicant');
         await Remove_Old_Wifi();
         await runCommand('sudo nmcli radio wifi off');
@@ -305,7 +400,7 @@ async function Start_AP_Mode() {
         fs.writeFileSync('/etc/hostapd/hostapd.conf', `
 interface=wlan0
 driver=nl80211
-ssid=FPS16B
+ssid=${apName}
 hw_mode=g
 channel=7
 auth_algs=1
@@ -320,13 +415,14 @@ dhcp-range=192.168.50.10,192.168.50.100,255.255.255.0,24h
         await runCommand('sudo systemctl restart hostapd');
         await runCommand('sudo systemctl restart dnsmasq');
 
-        console.log('[OK] AP mode "FPS16B" d� b?t t?i 192.168.50.1');
+        console.log(`[OK] AP mode "${apName}" đã bật tại 192.168.50.1`);
     } 
     catch (err) 
     {
-        console.error('[ERR] Kh�ng th? b?t AP mode:', err);
+        console.error('[ERR] Không thể bật AP mode:', err);
     }
 }
+
 
 // -------- CONNECT WIFI --------
 async function Connect_To_Wifi(ssid, password) {
@@ -365,7 +461,7 @@ async function Connect_To_Wifi(ssid, password) {
          try 
          {
              await runCommand(`sudo nmcli device wifi connect "${ssid}" password "${password}" ifname wlan0`);
-             const ok = await Wait_For_Wifi(ssid, 15);
+             const ok = await Wait_For_Wifi(ssid, 10);
 
              if(system_reset == true)
                  return false;

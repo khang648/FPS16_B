@@ -11,9 +11,11 @@ from adafruit_rgb_display import st7735
 
 def TFT_Init():
 #================= Cấu hình SPI - Các chân giao tiếp màn hình ST7735 1.8inch =====================
-    cs_pin = digitalio.DigitalInOut(board.CE0)     # CS  - GPIO8
-    dc_pin = digitalio.DigitalInOut(board.D27)     # DC  - GPIO27
-    reset_pin = digitalio.DigitalInOut(board.D22)  # RST - GPIO22
+    cs_pin    = digitalio.DigitalInOut(board.CE0)   # CS  - GPIO8
+    dc_pin    = digitalio.DigitalInOut(board.D27)   # DC  - GPIO27
+    reset_pin = digitalio.DigitalInOut(board.D22)   # RST - GPIO22
+    led_pin   = digitalio.DigitalInOut(board.D25)   # LED - GPIO25
+
 
     BAUDRATE = 24000000  # Tốc độ 24Mhz
     spi = board.SPI()
@@ -25,7 +27,7 @@ def TFT_Init():
         dc=dc_pin,
         rst=reset_pin,
         baudrate=BAUDRATE,
-    )
+    ) 
 
 #==================================================================================================
 # ================= SCREEN SIZE ===================================================================
@@ -36,4 +38,9 @@ def TFT_Init():
         width = disp.width
         height = disp.height
 #==================================================================================================
+
+    # ===== BẬT ĐÈN NỀN HẾT CỠ =====
+    led_pin.direction = digitalio.Direction.OUTPUT
+    led_pin.value = True    # HIGH = ~3.3V → sáng max
+    
     return disp, width, height # Trả về 

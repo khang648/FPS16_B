@@ -8,6 +8,7 @@ const ID                 = require("./Modbus/Modbus_ID");
 const { exec }           = require('child_process');
 
 const PIPE_PATH = '/tmp/tft_pipe';
+const INFO_FILE = path.join(__dirname, '../information.json');
 
 // Tạo Write Stream duy nhất
 const tftPipe = fs.createWriteStream(PIPE_PATH, { flags: 'a' });
@@ -30,7 +31,6 @@ let count_rx = 0;
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
-const WIFI_CONFIG_FILE = path.join(__dirname, '../wifi.json');
 let Page_prev = "PCR/PCR_Base/pcr_base.html"; // Trang mặc định
 let Tab_prev = ""; 
 
@@ -101,9 +101,9 @@ io.on("connection", (socket) => // khi có client kết nối
     try 
     {
       let cfg = { ssid: '', password: '' };
-      if (fs.existsSync(WIFI_CONFIG_FILE)) 
+      if (fs.existsSync(INFO_FILE)) 
       {
-        cfg = JSON.parse(fs.readFileSync(WIFI_CONFIG_FILE, 'utf8')); // Đọc ssid và pass từ json
+        cfg = JSON.parse(fs.readFileSync(INFO_FILE, 'utf8')); // Đọc ssid và pass từ json
       }
       socket.emit("response_wifi_config", cfg); // gửi lên web
     } 
@@ -113,25 +113,50 @@ io.on("connection", (socket) => // khi có client kết nối
     }
   });
   
-  // Nhận Wi-Fi mới từ web thì lưu vào wifi.json
+  // // Nhận Wi-Fi mới từ web thì lưu vào wifi.json
+  // socket.on("web_pcr_wifi_config", (data) => {
+  //   try
+  //   {
+  //       fs.writeFileSync(INFO_FILE, JSON.stringify(data, null, 2), { mode: 0o600 });
+  //       socket.emit('wifi_config_saved', { success: true }); // Lưu thành công
+  //   } 
+  //   catch (err) 
+  //   {
+  //       socket.emit('wifi_config_saved', { success: false }); // Lỗi lưu
+  //   }
+  // });
+
   socket.on("web_pcr_wifi_config", (data) => {
-    try
+    try 
     {
-        fs.writeFileSync(WIFI_CONFIG_FILE, JSON.stringify(data, null, 2), { mode: 0o600 });
-        socket.emit('wifi_config_saved', { success: true }); // Lưu thành công
+      let info = {};
+
+      // 1. Đọc file cũ nếu tồn tại
+      if (fs.existsSync(INFO_FILE)) {info = JSON.parse(fs.readFileSync(INFO_FILE, "utf8")); }
+      // 2. Chỉ cập nhật wifi, giữ nguyên device
+      info.ssid = data.ssid;
+      info.password = data.password;
+      // 3. Ghi lại file
+      fs.writeFileSync( INFO_FILE,JSON.stringify(info, null, 2), { mode: 0o600 });
+
+      socket.emit("wifi_config_saved", { success: true });
+      console.log("WiFi updated, device kept:", info.device);
+
     } 
     catch (err) 
     {
-        socket.emit('wifi_config_saved', { success: false }); // Lỗi lưu
+      console.error("WiFi save error:", err);
+      socket.emit("wifi_config_saved", { success: false });
     }
   });
+
 
   // Nhận lệnh restart wifi
   socket.on("web_pcr_wifi_restart", async () => {
 
     await new Promise(r => setTimeout(r, 5000)); // Đợi 5s
 
-    //console.log('[INFO] Client requested Wi-Fi restart...');
+    console.log('[INFO] Client requested Wi-Fi restart...');
     if (process.send) 
     {
       process.send('restart_system'); // gửi lên cha
@@ -159,7 +184,9 @@ io.on("connection", (socket) => // khi có client kết nối
 const PORT = 3000;
 const HOST = '0.0.0.0';
 server.listen(PORT, HOST, () => { 
- console.log(`Server running on: http://${HOST}:${PORT}`)
+  console.log(`Server running on: http://${HOST}:${PORT}`)
+  get_Device_Name();
+  detectWifiModeOnce();
 });
 
 
@@ -173,16 +200,16 @@ modbus.onFrame((frame) =>
   if (modbus.ModbusState.needUpdateTFT) 
   {
     const tftData = {
-      state:       modbus.PCR_Global.state_system,
-      temp:        modbus.PCR_Global.block_temp,
-      cycle:       modbus.PCR_Global.cycles_pcr[ modbus.PCR_Global.pcr_loop_index],
-      total_cycle: 40,
-      pcr_loop:    modbus.PCR_Global.pcr_loop_index,
-      time:        modbus.PCR_Global.time_run,
-      wifi:        "Connected"
+      state:          modbus.PCR_Global.state_system,
+      temp:           modbus.PCR_Global.block_temp,
+      cycle_cnt:      modbus.PCR_Global.cycles_cnt[ modbus.PCR_Global.pcr_loop_index],
+      cycle_setpoint: modbus.PCR_Global.cycles_setpoint[ modbus.PCR_Global.pcr_loop_index],
+      time:           modbus.PCR_Global.time_run,
+      wifi:           modbus.PCR_Global.wifi_name,
+      device:         modbus.PCR_Global.device_name
     }; 
 
-    console.log("[TFT SEND]", JSON.stringify(tftData));
+    //console.log("[TFT SEND]", JSON.stringify(tftData));
 
     sendToTFT(tftData);
   }
@@ -202,21 +229,12 @@ setInterval(() =>
 function run(cmd) {
     return new Promise((resolve, reject) => 
     {
-        //console.log("▶ CMD SEND:");
-        //console.log(cmd);
-
         exec(cmd, (err, stdout, stderr) => 
         {
             if (err) {
-                //console.error("❌ CMD ERROR:");
-                //console.error(cmd);
-                //console.error("stderr:", stderr);
-                //console.error("err.message:", err.message);
                 reject(stderr || err.message);
             }
             else {
-                //console.log("✅ CMD OUTPUT:");
-                //console.log(stdout);
                 resolve(stdout);
             }
         });
@@ -297,3 +315,120 @@ async function scanWifi() {
   return Object.values(wifiMap);
 }
 
+// async function detectWifiModeOnce() {
+//     let info;
+
+//     try 
+//     {
+//         info = JSON.parse(fs.readFileSync(INFO_FILE, 'utf8'));
+//     } 
+//     catch (err) 
+//     {
+//         console.log('[WIFI] Cannot read information.json');
+//         modbus.PCR_Global.wifi_name = "error";
+//         return;
+//     }
+
+//     try 
+//     {
+//         // Lấy danh sách device
+//         const devs = await run(`nmcli -t -f DEVICE,TYPE,STATE dev`);
+//         const lines = devs.split('\n');
+
+//         for (const line of lines) {
+//             const [dev, type, state] = line.split(':');
+
+//             if (type === 'wifi' && state === 'connected') 
+//             {
+
+//                 // Kiểm tra AP hay STA
+//                 const iwInfo = await run(`iw dev ${dev} info`).catch(() => "");
+
+//                 if (iwInfo.includes('type AP')) 
+//                 {
+//                     // Access Point
+//                     modbus.PCR_Global.wifi_name = info.device || "AP";
+//                     console.log('[WIFI MODE] ACCESS POINT:', modbus.PCR_Global.wifi_name);
+//                 } 
+//                 else 
+//                 {
+//                     // Kết nối WiFi
+//                     modbus.PCR_Global.wifi_name = info.ssid || "";
+//                     console.log('[WIFI MODE] WIFI CONNECTED:', modbus.PCR_Global.wifi_name);
+//                 }
+//                 return;
+//             }
+//         }
+
+//         // Không có wifi device nào active
+//         modbus.PCR_Global.wifi_name = "";
+//         console.log('[WIFI MODE] No active wifi');
+
+//     } catch (err) {
+//         console.log('[WIFI MODE] Detect error:', err.message);
+//         modbus.PCR_Global.wifi_name = "";
+//     }
+// }
+
+async function detectWifiModeOnce() {
+    let info;
+
+    try {
+        info = JSON.parse(fs.readFileSync(INFO_FILE, 'utf8'));
+    } catch (err) {
+        console.log('[WIFI] Cannot read information.json');
+        modbus.PCR_Global.wifi_name = "error";
+        return;
+    }
+
+    try {
+        // 1️⃣ Kiểm tra hostapd (AP mode)
+        const apStatus = await run('systemctl is-active hostapd').catch(() => "");
+
+        if (apStatus.trim() === 'active') {
+            modbus.PCR_Global.wifi_name = info.device || "AP";
+            console.log('[WIFI MODE] ACCESS POINT:', modbus.PCR_Global.wifi_name);
+            return;
+        }
+
+        // 2️⃣ Kiểm tra Station mode
+        const iwInfo = await run('iw dev wlan0 link').catch(() => "");
+
+        if (!iwInfo.includes('Not connected')) {
+            modbus.PCR_Global.wifi_name = info.ssid || "";
+            console.log('[WIFI MODE] WIFI CONNECTED:', modbus.PCR_Global.wifi_name);
+            return;
+        }
+
+        // 3️⃣ Không có wifi
+        modbus.PCR_Global.wifi_name = "";
+        console.log('[WIFI MODE] No active wifi');
+
+    } catch (err) {
+        console.log('[WIFI MODE] Detect error:', err.message);
+        modbus.PCR_Global.wifi_name = "";
+    }
+}
+
+
+async function get_Device_Name() {
+    try 
+    {
+        const data = fs.readFileSync(INFO_FILE, 'utf8');
+        const info = JSON.parse(data);
+
+        if (info.device && info.device.length > 0) 
+        {
+            modbus.PCR_Global.device_name = info.device;
+        } 
+        else 
+        {
+            modbus.PCR_Global.device_name = "UNKNOWN";
+        }
+    } 
+    catch (err) 
+    {
+        console.log("[INFO] Cannot read information.json");
+        modbus.PCR_Global.device_name = "UNKNOWN";
+    }
+}

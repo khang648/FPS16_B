@@ -11,12 +11,15 @@ if not os.path.exists(PIPE_PATH):
     os.mkfifo(PIPE_PATH)
 
 # Khởi tạo các giá trị mặc định
-current_cycles = 0
-setpoint_cycles = 40
-current_temp = 0
-time_left = 0
-state_system = 0
+current_cycles  = 0
+setpoint_cycles = 0
+current_temp    = 0
+time_left       = 0
+state_system    = 0
 wifi_name = "Connecting..."
+device_name = "FPS32B..."
+init_drawn = False   
+
 
 print("TFT Script is running and waiting for Pipe data...")
 
@@ -31,7 +34,9 @@ CYAN_GLOW    = (70, 255, 255)  # Màu thời gian
 RED_TEMP     = (0, 0, 255)      # Màu nhiệt độ
 GREEN_ACTIVE = (0, 180, 120)    # màu xanh active
 RED_UNACTIVE = (0, 0, 240)    # màu xanh active
-
+TEXT_GRAY      = (100, 105, 115)   # Chữ xám cho tiêu đề phụ (Active Device, Link Secured)
+WIFI_PURPLE    = (120, 60, 255)    # Màu tím của icon WiFi
+PURPLE_GLOW    = (40, 30, 60)      # Hiệu ứng đổ bóng tím nhẹ
 # ================= FONTS =================
 # Lưu ý: Bạn cần kiểm tra đường dẫn font trên Pi của bạn
 try:
@@ -43,9 +48,17 @@ try:
 
     font_noti   = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 16)
     font_time_total = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 15)
+
+
+    font_header = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 9)
+    font_device_id = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 18)
+    font_status = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 8)
+    font_wifi_name = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 13)
+    font_footer = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 8)
+
 except:
     font_main = font_mid = font_label = ImageFont.load_default()
-
+    font_header = font_device_id = font_status = font_wifi_name = font_footer = ImageFont.load_default()
 
 def draw_state(obj, system_run):
    
@@ -179,6 +192,44 @@ def draw_finish_ui(time_total_sec):
     # Đẩy lên màn hình
     disp.image(image)
 
+def draw_wifi_icon(draw, x, y, size, fill_color):
+    """Vẽ icon WiFi chuyên nghiệp hơn"""
+    # Vẽ nền vuông bo góc cho icon
+    draw.rounded_rectangle((x, y, x+size, y+size), radius= 10, fill=WIFI_PURPLE)
+    # Vẽ các vòng sóng WiFi trắng
+    cx, cy = x + size//2, y + size//2 + 2
+    draw.arc((cx-8, cy-6, cx+8, cy+6), start=220, end=320, fill=(255,255,255), width = 1)
+    draw.arc((cx-5, cy-3, cx+5, cy+3), start=220, end=320, fill=(255,255,255), width = 1)
+    draw.ellipse((cx-1, cy+1, cx+1, cy+3), fill=(255,255,255))
+
+def draw_initial_ui(device_id, wifi_name):
+    # 1. Tạo nền
+    image = Image.new("RGB", (width, height), BG_COLOR)
+    draw = ImageDraw.Draw(image)
+    # 2. Tiêu đề: ACTIVE DEVICE
+    draw.text((10, 15), "ACTIVE DEVICE", font=font_header, fill=TEXT_GRAY)
+    # 3. Mã thiết bị: FPS32B26001
+    draw.text((10, 28), device_id, font=font_device_id, fill=TEXT_WHITE)
+    # 4. Khung trạng thái CONNECTED (Card nền)
+    # Tọa độ khung: x1, y1, x2, y2
+    card_coords = (12, 60, 148, 105)
+    draw.rounded_rectangle(card_coords, radius=12, fill=CARD_BG)
+    # Vẽ Icon WiFi
+    draw_wifi_icon(draw, 10, 68, 24, WIFI_PURPLE)
+    # --- KIỂM TRA ĐỘ DÀI BẰNG SỐ KÝ TỰ ---
+    limit = 12
+    display_wifi = wifi_name
+    if len(wifi_name) > limit:
+        # Lấy từ ký tự thứ 0 đến sát ký tự thứ 3 (tức là lấy 0, 1, 2)
+        display_wifi = wifi_name[:limit] + "..."
+    # Chữ "CONNECTED" nhỏ phía trên tên WiFi
+    draw.text((45, 68), "● CONNECTED", font=font_status, fill=(150, 100, 255))
+    # Tên WiFi "LAB_WIFI_D..."
+    draw.text((45, 78), display_wifi, font=font_wifi_name, fill=TEXT_WHITE)
+    # 5. Footer: LINK SECURED và REV 2.0
+    draw.text((120, 112), "V1.0.1", font=font_footer, fill=TEXT_GRAY)
+    # Hiển thị
+    disp.image(image)
 
 # Mở file một lần duy nhất
 fifo = open(PIPE_PATH, 'r')
@@ -193,15 +244,24 @@ while True:
     try:
         data = json.loads(line.strip())
 
-        state_system   = data.get("state", state_system)
-        current_temp   = data.get("temp", current_temp)
-        current_cycles = data.get("cycle", current_cycles)
-        setpoint_cycles= data.get("total_cycle", setpoint_cycles)
-        time_left      = data.get("time", time_left)
-        wifi_name      = data.get("wifi", wifi_name)
+        state_system   = data.get("state",          state_system)
+        current_temp   = data.get("temp",           current_temp)
+        current_cycles = data.get("cycle_cnt",      current_cycles)
+        setpoint_cycles= data.get("cycle_setpoint", setpoint_cycles)
+        time_left      = data.get("time",           time_left)
+        wifi_name      = data.get("wifi",           wifi_name)
+        device_name    = data.get("device",         device_name)
 
-        if state_system == 1:
-            draw_ui(state_system, current_cycles, setpoint_cycles, current_temp, time_left,"Chào em nhac")
+       
+        if state_system == 0:
+            if not init_drawn:
+                draw_initial_ui(device_name, wifi_name)
+            else:
+                draw_finish_ui(time_left)
+            
+        else:
+            init_drawn = True
+            draw_ui( state_system, current_cycles,setpoint_cycles,  current_temp,   time_left,wifi_name)
 
     except Exception as e:
         pass

@@ -17,7 +17,7 @@ let rx_len = 0;                       // chiều dài
 let crc_check = 0;                    // kiểm tra lỗi 
 const MY_BOARD_ID = ID.DEVICE.WEB_ID; // ID của Pi          
 let onFrameCallback = null;           // callback khi có frame hợp lệ
-
+let PCR_LOOP = 3
 //=================== UART =====================//
 const uart = new SerialPort  // Cấu hình uart
 ({ 
@@ -35,11 +35,14 @@ const ModbusState = {
 };
 
 const PCR_Global = {
-  block_temp: 0,
-  cycles_pcr: new Array(ID.PCR_LOOP).fill(1),
-  pcr_loop_index: 0,
-  time_run: 0,
-  state_system: 0
+  block_temp:      0,
+  cycles_cnt:      new Array(ID.PCR_LOOP).fill(1),
+  cycles_setpoint: new Array(ID.PCR_LOOP).fill(1),
+  pcr_loop_index:  0,
+  time_run:        0,
+  state_system:    0,
+  wifi_name:       0,
+  device_name:     0
 };
 
 
@@ -185,18 +188,26 @@ function Parse_Start_Data(data)
   const time_count_low  = data[idx++];
   const time_count_high = data[idx++];
   const lid_temp = data[idx++];
-  for (let i = 0; i < ID.PCR_LOOP; i++)
+  for (let i = 0; i < PCR_LOOP; i++) // lấy số đang chạy
   {
     let c = data[idx++];
-    PCR_Global.cycles_pcr[i] = (c === 0) ? 1 : c;
+    PCR_Global.cycles_cnt[i] = (c == 0) ? 1 : c;
+  }
+  
+  for (let i = 0; i < PCR_LOOP; i++) // lấy số setpoint
+  {
+    let c = data[idx++];
+    PCR_Global.cycles_setpoint[i] = (c == 0) ? 1 : c;
   }
 
   PCR_Global.pcr_loop_index = data[idx++];
-  const step_setpoint  = data[idx++];
+  const step  = data[idx++];
   const time_run_low  = data[idx++];
   const time_run_high = data[idx++];
   PCR_Global.time_run = (time_run_high << 8) | time_run_low;  // Lấy time
   PCR_Global.state_system = 1;
+
+  console.log(data)
 }
 
 
