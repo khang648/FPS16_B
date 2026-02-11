@@ -109,15 +109,40 @@ io.on("connection", (socket) => {
   });
 
   // Nhận Wi-Fi mới từ web thì lưu vào information.json
+  // socket.on("web_pcr_wifi_config", (data) => {
+  //   try
+  //   {
+  //       fs.writeFileSync(WIFI_CONFIG_FILE, JSON.stringify(data, null, 2), { mode: 0o600 });
+  //       socket.emit('wifi_config_saved', { success: true }); // Lưu thành công
+  //   } 
+  //   catch (err) 
+  //   {
+  //       socket.emit('wifi_config_saved', { success: false }); // Lỗi lưu
+  //   }
+  // });
   socket.on("web_pcr_wifi_config", (data) => {
-    try
-    {
-        fs.writeFileSync(WIFI_CONFIG_FILE, JSON.stringify(data, null, 2), { mode: 0o600 });
-        socket.emit('wifi_config_saved', { success: true }); // Lưu thành công
-    } 
-    catch (err) 
-    {
-        socket.emit('wifi_config_saved', { success: false }); // Lỗi lưu
+    try {
+      let oldData = {};
+
+      if (fs.existsSync(WIFI_CONFIG_FILE)) {
+        oldData = JSON.parse(fs.readFileSync(WIFI_CONFIG_FILE, "utf8"));
+      }
+
+      const newData = {
+        ...oldData,   // giữ key cũ
+        ...data       // ghi đè key mới
+      };
+
+      fs.writeFileSync(
+        WIFI_CONFIG_FILE,
+        JSON.stringify(newData, null, 2),
+        { mode: 0o600 }
+      );
+
+      socket.emit('wifi_config_saved', { success: true });
+    } catch (err) {
+      console.error(err);
+      socket.emit('wifi_config_saved', { success: false });
     }
   });
 
@@ -156,7 +181,7 @@ io.on("connection", (socket) => {
       socket.emit("wifi:connect_result", result);
   });
 
-  // Ngắt kết nối (ĐỂ TRỐNG CHO BẠN TỰ VIẾT)
+  // Ngắt kết nối 
   socket.on("wifi:disconnect", async (ssid) => {
       console.log(">>> user muốn disconnect, tự xử lý ở đây <<<");
 
