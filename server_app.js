@@ -257,6 +257,35 @@ function Read_Wifi_Config() {
 //     }
 // }
 
+// function Write_Wifi_Config() 
+// {
+//     try 
+//     {
+//         // Đọc cấu trúc hiện tại
+//         const data = fs.readFileSync(WIFI_CONFIG_FILE, 'utf8');
+//         const info = JSON.parse(data);
+
+//         // Chỉ xóa ssid và password
+//         info.ssid = '';
+//         info.password = '';
+
+//         // Ghi lại file nhưng giữ nguyên device
+//         fs.writeFileSync(
+//             WIFI_CONFIG_FILE,
+//             JSON.stringify(info, null, 4),
+//             'utf8'
+//         );
+
+//         console.log('[INFO] Đã xóa SSID và password, giữ nguyên device');
+//         return true;
+//     } 
+//     catch (err) 
+//     {
+//         console.error('[ERROR] Không thể cập nhật information.json:', err.message);
+//         return false;
+//     }
+// }
+
 function Write_Wifi_Config() 
 {
     try 
@@ -265,18 +294,26 @@ function Write_Wifi_Config()
         const data = fs.readFileSync(WIFI_CONFIG_FILE, 'utf8');
         const info = JSON.parse(data);
 
-        // Chỉ xóa ssid và password
-        info.ssid = '';
-        info.password = '';
+        // Giữ nguyên host_name và seri_number
+        const hostName   = info.host_name || "";
+        const seriNumber = info.seri_number || "";
 
-        // Ghi lại file nhưng giữ nguyên device
+        // Chỉ xóa wifi
+        const newInfo = {
+            host_name: hostName,
+            seri_number: seriNumber,
+            ssid: "",
+            password: ""
+        };
+
+        // Ghi lại file
         fs.writeFileSync(
             WIFI_CONFIG_FILE,
-            JSON.stringify(info, null, 4),
+            JSON.stringify(newInfo, null, 4),
             'utf8'
         );
 
-        console.log('[INFO] Đã xóa SSID và password, giữ nguyên device');
+        console.log('[INFO] Đã xóa SSID và password, giữ nguyên host_name và seri_number');
         return true;
     } 
     catch (err) 
@@ -366,6 +403,64 @@ async function Wait_For_Wifi(ssid, timeoutSec = 10) {
 //     }
 // }
 
+// async function Start_AP_Mode() 
+// {
+//     console.log('[INFO] Đang bật AP mode...');
+
+//     let apName = "PCR_DEVICE";
+
+//     try 
+//     {
+//         // Đọc device name từ file
+//         const data = fs.readFileSync(WIFI_CONFIG_FILE, 'utf8');
+//         const info = JSON.parse(data);
+
+//         if (info.device && info.device.trim() !== '') 
+//         {
+//             apName = info.device.trim();
+//         }
+//     } 
+//     catch (err) 
+//     {
+//         console.warn('[WARN] Không đọc được device name, dùng mặc định.');
+//     }
+
+//     try 
+//     {
+//         await runCommand('sudo systemctl stop wpa_supplicant');
+//         await Remove_Old_Wifi();
+//         await runCommand('sudo nmcli radio wifi off');
+//         await runCommand('sudo nmcli radio wifi on');
+//         await runCommand('sudo ip addr flush dev wlan0');
+//         await runCommand('sudo ip addr add 192.168.50.1/24 dev wlan0');
+
+//         fs.writeFileSync('/etc/hostapd/hostapd.conf', `
+// interface=wlan0
+// driver=nl80211
+// ssid=${apName}
+// hw_mode=g
+// channel=7
+// auth_algs=1
+// ignore_broadcast_ssid=0
+// `);
+
+//         fs.writeFileSync('/etc/dnsmasq.conf', `
+// interface=wlan0
+// dhcp-range=192.168.50.10,192.168.50.100,255.255.255.0,24h
+// `);
+
+//         await runCommand('sudo systemctl restart hostapd');
+//         await runCommand('sudo systemctl restart dnsmasq');
+
+//         console.log(`[OK] AP mode "${apName}" đã bật tại 192.168.50.1`);
+//     } 
+//     catch (err) 
+//     {
+//         console.error('[ERR] Không thể bật AP mode:', err);
+//     }
+// }
+
+
 async function Start_AP_Mode() 
 {
     console.log('[INFO] Đang bật AP mode...');
@@ -374,18 +469,18 @@ async function Start_AP_Mode()
 
     try 
     {
-        // Đọc device name từ file
+        // Đọc thông tin từ file
         const data = fs.readFileSync(WIFI_CONFIG_FILE, 'utf8');
         const info = JSON.parse(data);
 
-        if (info.device && info.device.trim() !== '') 
+        if (info.host_name && info.seri_number) 
         {
-            apName = info.device.trim();
+            apName = (info.host_name + info.seri_number).trim();
         }
     } 
     catch (err) 
     {
-        console.warn('[WARN] Không đọc được device name, dùng mặc định.');
+        console.warn('[WARN] Không đọc được host_name/seri_number, dùng mặc định.');
     }
 
     try 

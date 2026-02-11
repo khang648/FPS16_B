@@ -46,6 +46,31 @@ io.on("connection", (socket) => // khi có client kết nối
   
   //console.log("Go_To_Page_Web ", Page_prev, Tab_prev);
   //console.log("New client: ", socket.id);
+  // Gửi host_name + seri_number khi client vừa kết nối
+
+  //=========================================================
+  //================== Gửi host và seri =====================
+  try 
+  {
+    if (fs.existsSync(INFO_FILE)) 
+    {
+      const info = JSON.parse(fs.readFileSync(INFO_FILE, "utf8"));
+      const hostName   = info.host_name   || "";
+      const seriNumber = info.seri_number || "";
+      socket.emit("device_info", 
+      {
+        host_name: hostName,
+        seri_number: seriNumber,
+        device_name: hostName + seriNumber
+      });
+    }
+  } 
+  catch (err) 
+  {
+    console.log("Cannot send device info:", err.message);
+  }
+  //=========================================================
+  //=========================================================
 
   socket.on("Web_PCR", (jsonFrame) =>  // Web gửi dữ liệu liên quan đến PCR
   {
@@ -126,29 +151,69 @@ io.on("connection", (socket) => // khi có client kết nối
   //   }
   // });
 
+  // socket.on("web_pcr_wifi_config", (data) => {
+  //   try 
+  //   {
+  //     let info = {};
+
+  //     // 1. Đọc file cũ nếu tồn tại
+  //     if (fs.existsSync(INFO_FILE)) {info = JSON.parse(fs.readFileSync(INFO_FILE, "utf8")); }
+  //     // 2. Chỉ cập nhật wifi, giữ nguyên 
+  //     info.ssid = data.ssid;
+  //     info.password = data.password;
+  //     // 3. Ghi lại file
+  //     fs.writeFileSync( INFO_FILE,JSON.stringify(info, null, 2), { mode: 0o600 });
+
+  //     socket.emit("wifi_config_saved", { success: true });
+  //     console.log("WiFi updated, device kept:", info.device);
+
+  //   } 
+  //   catch (err) 
+  //   {
+  //     console.error("WiFi save error:", err);
+  //     socket.emit("wifi_config_saved", { success: false });
+  //   }
+  // });
   socket.on("web_pcr_wifi_config", (data) => {
-    try 
-    {
-      let info = {};
+  try 
+  {
+    let info = {};
 
-      // 1. Đọc file cũ nếu tồn tại
-      if (fs.existsSync(INFO_FILE)) {info = JSON.parse(fs.readFileSync(INFO_FILE, "utf8")); }
-      // 2. Chỉ cập nhật wifi, giữ nguyên device
-      info.ssid = data.ssid;
-      info.password = data.password;
-      // 3. Ghi lại file
-      fs.writeFileSync( INFO_FILE,JSON.stringify(info, null, 2), { mode: 0o600 });
-
-      socket.emit("wifi_config_saved", { success: true });
-      console.log("WiFi updated, device kept:", info.device);
-
-    } 
-    catch (err) 
-    {
-      console.error("WiFi save error:", err);
-      socket.emit("wifi_config_saved", { success: false });
+    // 1️⃣ Đọc file cũ nếu tồn tại
+    if (fs.existsSync(INFO_FILE)) {
+      info = JSON.parse(fs.readFileSync(INFO_FILE, "utf8"));
     }
-  });
+
+    // 2️⃣ Đảm bảo giữ nguyên host_name và seri_number
+    const hostName   = info.host_name || "";
+    const seriNumber = info.seri_number || "";
+
+    // 3️⃣ Chỉ cập nhật wifi
+    info = {
+      host_name:   hostName,
+      seri_number: seriNumber,
+      ssid:        data.ssid,
+      password:    data.password
+    };
+
+    // 4️⃣ Ghi lại file
+    fs.writeFileSync(INFO_FILE, JSON.stringify(info, null, 2), { mode: 0o600 });
+
+    socket.emit("wifi_config_saved", { success: true });
+
+    console.log(
+      "WiFi updated, device kept:",
+      hostName + seriNumber
+    );
+
+  } 
+  catch (err) 
+  {
+    console.error("WiFi save error:", err);
+    socket.emit("wifi_config_saved", { success: false });
+  }
+});
+
 
 
   // Nhận lệnh restart wifi
@@ -315,61 +380,6 @@ async function scanWifi() {
   return Object.values(wifiMap);
 }
 
-// async function detectWifiModeOnce() {
-//     let info;
-
-//     try 
-//     {
-//         info = JSON.parse(fs.readFileSync(INFO_FILE, 'utf8'));
-//     } 
-//     catch (err) 
-//     {
-//         console.log('[WIFI] Cannot read information.json');
-//         modbus.PCR_Global.wifi_name = "error";
-//         return;
-//     }
-
-//     try 
-//     {
-//         // Lấy danh sách device
-//         const devs = await run(`nmcli -t -f DEVICE,TYPE,STATE dev`);
-//         const lines = devs.split('\n');
-
-//         for (const line of lines) {
-//             const [dev, type, state] = line.split(':');
-
-//             if (type === 'wifi' && state === 'connected') 
-//             {
-
-//                 // Kiểm tra AP hay STA
-//                 const iwInfo = await run(`iw dev ${dev} info`).catch(() => "");
-
-//                 if (iwInfo.includes('type AP')) 
-//                 {
-//                     // Access Point
-//                     modbus.PCR_Global.wifi_name = info.device || "AP";
-//                     console.log('[WIFI MODE] ACCESS POINT:', modbus.PCR_Global.wifi_name);
-//                 } 
-//                 else 
-//                 {
-//                     // Kết nối WiFi
-//                     modbus.PCR_Global.wifi_name = info.ssid || "";
-//                     console.log('[WIFI MODE] WIFI CONNECTED:', modbus.PCR_Global.wifi_name);
-//                 }
-//                 return;
-//             }
-//         }
-
-//         // Không có wifi device nào active
-//         modbus.PCR_Global.wifi_name = "";
-//         console.log('[WIFI MODE] No active wifi');
-
-//     } catch (err) {
-//         console.log('[WIFI MODE] Detect error:', err.message);
-//         modbus.PCR_Global.wifi_name = "";
-//     }
-// }
-
 async function detectWifiModeOnce() {
     let info;
 
@@ -382,19 +392,24 @@ async function detectWifiModeOnce() {
     }
 
     try {
-        // 1️⃣ Kiểm tra hostapd (AP mode)
+        // Tạo tên AP từ host_name + seri_number
+        const deviceName = (info.host_name && info.seri_number)
+            ? info.host_name + info.seri_number
+            : "AP";
+
+        // 1️⃣ Kiểm tra AP mode
         const apStatus = await run('systemctl is-active hostapd').catch(() => "");
 
         if (apStatus.trim() === 'active') {
-            modbus.PCR_Global.wifi_name = info.device || "AP";
-            console.log('[WIFI MODE] ACCESS POINT:', modbus.PCR_Global.wifi_name);
+            modbus.PCR_Global.wifi_name = deviceName;
+            console.log('[WIFI MODE] ACCESS POINT:', deviceName);
             return;
         }
 
         // 2️⃣ Kiểm tra Station mode
         const iwInfo = await run('iw dev wlan0 link').catch(() => "");
 
-        if (!iwInfo.includes('Not connected')) {
+        if (iwInfo && !iwInfo.includes('Not connected')) {
             modbus.PCR_Global.wifi_name = info.ssid || "";
             console.log('[WIFI MODE] WIFI CONNECTED:', modbus.PCR_Global.wifi_name);
             return;
@@ -410,16 +425,15 @@ async function detectWifiModeOnce() {
     }
 }
 
-
 async function get_Device_Name() {
     try 
     {
         const data = fs.readFileSync(INFO_FILE, 'utf8');
         const info = JSON.parse(data);
 
-        if (info.device && info.device.length > 0) 
+        if (info.host_name && info.seri_number) 
         {
-            modbus.PCR_Global.device_name = info.device;
+            modbus.PCR_Global.device_name = info.host_name + info.seri_number;
         } 
         else 
         {

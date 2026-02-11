@@ -4,6 +4,34 @@ window.Temp_Buf = JSON.parse(localStorage.getItem('Temp_Buf')) || new Array(50).
 import PCR_UI from '../PCR/PCR_Elements/Update_UI.js';   //Link các chương trình con bên Update_UI.js
 
 
+// ===== Nhận thông tin thiết bị để cập nhật title =====
+socket.on("device_info", (data) => {
+    try 
+    {
+        const device_host = data.host_name   || "FPS32B";
+        const device_seri = data.seri_number || "26001";
+
+        const device_title = device_host + "-" + device_seri + " PCR";
+        document.title = device_title;
+        window.DEVICE_NAME = device_title;
+
+
+        const titleElement = document.querySelector(".navbar-title");
+        if (titleElement) 
+        {
+            titleElement.textContent = device_title;
+        }
+        document.addEventListener("headerLoaded", () => 
+        {
+            const el = document.querySelector(".navbar-title");
+            if (el) el.textContent = device_title;
+        });
+    }
+    catch (e)
+    {
+    }
+});
+
 // Nhận dữ liệu từ server gửi lên web tách frame và xử lý giao diện
 socket.on('Web_PCR', (arr) => 
 {
