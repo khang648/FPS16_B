@@ -17,7 +17,7 @@ let rx_len = 0;                       // chiều dài
 let crc_check = 0;                    // kiểm tra lỗi 
 const MY_BOARD_ID = ID.DEVICE.WEB_ID; // ID của Pi          
 let onFrameCallback = null;           // callback khi có frame hợp lệ
-
+let PCR_LOOP = 3
 //=================== UART =====================//
 const uart = new SerialPort  // Cấu hình uart
 ({ 
@@ -29,6 +29,22 @@ uart.on("data", (data) => { // Nhận dữ liệu đưa vào hàm phân tích fr
   const bytes = new Uint8Array(data);
   for (const b of bytes) Modbus_RX_Byte(b);
 });
+
+const ModbusState = {
+  needUpdateTFT: false,
+};
+
+const PCR_Global = {
+  block_temp:      0,
+  cycles_cnt:      new Array(ID.PCR_LOOP).fill(1),
+  cycles_setpoint: new Array(ID.PCR_LOOP).fill(1),
+  pcr_loop_index:  0,
+  time_run:        0,
+  state_system:    0,
+  wifi_name:       0,
+  device_name:     0
+};
+
 
 //=================== HÀM XỬ LÝ FRAME =====================//
 function Modbus_RX_Byte(byte) {
@@ -91,8 +107,10 @@ function Modbus_RX_Byte(byte) {
         const frame = rx_buf.slice(0, 3 + rx_len + 2);
         //console.log(frame);
 
+        Pasing_Frame(frame);
         if (onFrameCallback) 
           onFrameCallback(frame);
+         
       }
       rx_state = RXState.WAIT_ID;
       rx_idx = 0;
@@ -125,8 +143,91 @@ function Pack_Data(id, func, data, length)
   return frame;
 }
 
+function Pasing_Frame(frame)
+{
+  const id   = frame[0];
+  const func = frame[1];
+  const len  = frame[2];
+  const data = frame.slice(3, 3 + len);
+
+  // chỉ xử lý frame gửi cho WEB
+  if (id !== MY_BOARD_ID) return;
+
+  ModbusState.needUpdateTFT = false;   // reset mỗi frame
+
+  switch (func)
+  {
+    case ID.PCR_REG.START_PROTOCOL:
+      Parse_Start_Data(data);
+      ModbusState.needUpdateTFT = true;
+      break;
+
+    case ID.PCR_REG.WAIT_STATE:
+      Parse_Wait_Data(data);
+      ModbusState.needUpdateTFT = true;
+      break;
+
+    case ID.PCR_REG.STOP_PROTOCOL:
+      Parse_Stop_Data(data);
+      ModbusState.needUpdateTFT = true;
+      break;
+
+    default:
+      console.log("Unknown FUNC:", func, data);
+      break;
+  }
+  //console.log("PCR_Global:", PCR_Global);
+}
+
+function Parse_Start_Data(data)
+{
+  let idx = 0;
+
+  PCR_Global.block_temp = data[idx++];
+
+  const time_count_low  = data[idx++];
+  const time_count_high = data[idx++];
+  const lid_temp = data[idx++];
+  for (let i = 0; i < PCR_LOOP; i++) // lấy số đang chạy
+  {
+    let c = data[idx++];
+    PCR_Global.cycles_cnt[i] = (c == 0) ? 1 : c;
+  }
+  
+  for (let i = 0; i < PCR_LOOP; i++) // lấy số setpoint
+  {
+    let c = data[idx++];
+    PCR_Global.cycles_setpoint[i] = (c == 0) ? 1 : c;
+  }
+
+  PCR_Global.pcr_loop_index = data[idx++];
+  const step  = data[idx++];
+  const time_run_low  = data[idx++];
+  const time_run_high = data[idx++];
+  PCR_Global.time_run = (time_run_high << 8) | time_run_low;  // Lấy time
+  PCR_Global.state_system = 1;
+
+  console.log(data)
+}
 
 
+function Parse_Wait_Data(data)
+{
+  PCR_Global.block_temp = data[0];
+  PCR_Global.pcr_loop_index = 0;
+  PCR_Global.state_system = 0;
+}
+
+function Parse_Stop_Data(data)
+{
+  let idx = 0;
+  const time_run_low  = data[idx++];
+  const time_run_high = data[idx++];
+  PCR_Global.time_run = (time_run_high << 8) | time_run_low;
+
+  PCR_Global.pcr_loop_index = 0;
+  PCR_Global.state_system = 0;
+}
 
 //=================== UART Queue =====================//
 const uartQueue = [];
@@ -160,16 +261,6 @@ function Send_To_Uart(frame) {
   sendNext();            // Gửi Frame mỗi 5ms
 }
 
-
-// function Send_To_Uart(frame) 
-// {
-//   const buffer = Buffer.from(frame);
-//   uart.write(buffer, (err) => 
-//   {
-//     if (err) console.error("UART write error:", err.message);
-//   });
-// }
-
 // Cho phép server.js đăng ký callback khi có frame hợp lệ
 function onFrame(callback) 
 {
@@ -180,4 +271,6 @@ module.exports = {
   Pack_Data,
   Send_To_Uart,
   onFrame,
+  PCR_Global,
+  ModbusState
 };
