@@ -9,7 +9,7 @@ function Save_Clicked() {
   const nHigh = Number(document.getElementById("nHigh").value.trim());
 
   if (!kitName || !nLow || !nHigh) {
-    alert("?? Please enter Kit name, nLow and nHigh.");
+    alert("Please enter Kit name, nLow and nHigh.");
     return;
   }
 
@@ -31,9 +31,9 @@ function Save_Clicked() {
     }
   });
 
-  // c?n ít nh?t 2 c?p
+  // c?n ï¿½t nh?t 2 c?p
   if (validPoints.length < 2) {
-    alert("?? Please enter at least 2 valid data points.");
+    alert("Please enter at least 2 valid data points.");
     return;
   }
 
@@ -53,7 +53,7 @@ function Save_Clicked() {
     data: jsonData
   });
 
-  alert("?? File saved");
+  alert("File saved");
   socket.emit("getJsonList");
 }
 
