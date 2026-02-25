@@ -1,0 +1,150 @@
+/* =========================================================
+   RESET & LAYOUT BASE
+   ========================================================= */
+.email-container {
+  width: 100%;
+  margin: 8px 0;
+
+  display: flex;
+  justify-content: center;
+}
+
+.email-center {
+  width: 100%;
+  max-width: 500px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  overflow: visible;
+}
+
+/* =========================================================
+   STATUS PANEL
+   ========================================================= */
+.email-status {
+  padding: 12px;
+
+  background: #07d4f41a;
+  border: 1px solid var(--container-border-color);
+  border-radius: 8px 8px 0 0;
+
+  text-align: center;
+}
+
+#email-status-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1fd1c2;
+}
+
+/* =========================================================
+   INFO WRAPPER
+   ========================================================= */
+.email-info {
+  padding: 22px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  background: var(--container-bg);
+  border: 1px solid var(--container-border-color);
+  border-radius: 0 0 8px 8px;
+}
+
+.email-info-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.email-info-group label {
+  margin-bottom: 4px;
+}
+
+.email-info-group input {
+  width: 100%;
+  padding: 12px;
+
+  background: #ffffff0a;
+  color: var(--input-text);
+
+  border: 1px solid var(--container-border-color);
+  border-radius: 8px;
+}
+
+/* =========================================================
+   PASSWORD OPTION
+   ========================================================= */
+.email-pass-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.showpass-label {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 0.8rem;
+}
+
+.showpass-label input {
+  width: auto;
+  height: auto;
+  margin: 0;
+}
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+.email-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+#btnLogin {
+  width: 30%;
+  padding: 12px 0;
+
+  font-size: 1rem;
+  font-weight: 500;
+
+  background: var(--button-bg);
+  color: var(--text-main);
+
+  border: none;
+  border-radius: 10px;
+
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+#btnLogin:hover {
+  background: var(--button-hover);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 1024px) {
+  .email-center {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .email-center {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  #btnLogin {
+    width: 40%;
+  }
+}

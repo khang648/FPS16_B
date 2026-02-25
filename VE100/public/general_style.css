@@ -1,0 +1,175 @@
+:root {
+    --header-title-gradient-start: #0bffb6;
+    --header-title-gradient-end: #019c80;
+
+    --header-bg: #18302e9a; 
+    --footer-bg: #18302e9a; 
+    --main-bg: #0b1716;
+
+    --container-bg: #ffffff0d;
+    --container-border-color: #ffffff33;
+
+    --button-bg: rgba(26, 140, 130, 0.85);
+    --button-hover: rgba(103, 251, 189, 0.85);
+    --button-active: rgba(37, 204, 132, 0.85);
+    --button-inactive: rgba(69, 121, 105, 0.85);
+
+    --text-color: #ffffff;
+    --mutetext-color: #a8bcd6;
+    --text-size-normal: 1rem;
+    --text-size-big1: 1.1rem;
+    --text-size-big2: 1.2rem;
+    --text-size-small1: 0.9rem;
+    --text-size-small2: 0.8rem;
+
+    --font-weight-bold: 700;
+    --button-font_waight: 400;
+
+    --icon-bg: rgba(27, 144, 119, 0.85);
+    --icon-hover: #54e19d;
+
+    --widget-gap: 8px;
+    --footer-button-width: 140px;
+
+    --button-border-radius: 10px 10px;
+    --container-border-radius: 8px 8px;
+}
+
+/* =========================================================
+   GLOBAL LAYOUT - FLEX CHUẨN
+   ========================================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  /* scroll toàn trang */
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  font-family: "Poppins", "Segoe UI", Arial, sans-serif;
+  background: var(--main-bg);
+  color: var(--text-color);
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+header {
+  width: 100%;
+  background: var(--header-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+.titlebar-page {
+    margin: 8px;
+    font-size: var(--text-size-big1)
+}
+
+.titlebar-version {
+  background: linear-gradient(135deg, var(--header-title-gradient-start), var(--header-title-gradient-end));
+  padding: 8px 0;
+  font-size: var(--text-size-big2);
+  font-weight: var(--font-weight-bold);
+  text-align: center;
+  width: 100%;
+  display: block;
+  letter-spacing: 1px;
+  box-shadow: 0 6px 18px rgba(58,190,188,0.25);
+  color: var(--text-color);
+}
+
+/* =========================================================
+   MAIN CONTENT - ĐẨY FOOTER XUỐNG DƯỚI
+   ========================================================= */
+main {
+  flex: 1 0 auto;
+  width: 100%;
+  padding: 0 0;
+
+  display: flex;
+  justify-content: center;   /* canh giữa ngang */
+  align-items: center;       /* canh giữa dọc */
+  
+  /* min-height: calc(100vh - 140px); */
+  /* height: 100%; */
+
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+footer {
+  flex-shrink: 0;    /* KHÔNG cho footer bị ép */
+  width: 100%;
+  background: var(--footer-bg);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  
+  position: relative;
+  z-index: 10;
+}
+
+footer button {
+  width: var(--footer-button-width);
+  padding: 10px 0;
+  font-size: var(--text-size-small1);
+  border: none;
+  border-radius: var(--button-border-radius);
+  background: var(--button-bg);
+  color: var(--text-color);
+  font-weight: var(--button-font_waight);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+footer button:hover {
+  background: var(--button-hover);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* Tablet / Mobile ngang */
+@media (max-width: 1024px) {
+  .titlebar-version {
+    font-size: 1rem;
+  }
+  footer button {
+    font-size: 1rem;
+  }
+}
+
+/* Mobile dọc */
+@media (max-width: 768px) {
+  footer button {
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobile rất nhỏ */
+@media (max-width: 480px) {
+  footer button {
+    font-size: 0.8rem;
+  }
+}

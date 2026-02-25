@@ -1,0 +1,347 @@
+/* =========================================================
+   WIFI MAIN LAYOUT
+========================================================= */
+.wifi-main {
+  width: 800px;
+  height: 100%;
+
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+
+  padding: 8px 0;
+}
+
+
+/* =========================================================
+   LEFT PANEL: WIFI FORM
+========================================================= */
+.wifi-left {
+  flex: 3;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+
+/* =========================================================
+   RIGHT PANEL: WIFI LIST
+========================================================= */
+.wifi-right {
+  flex: 2;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff0d;
+  border: 1px solid #ffffff33;
+  border-radius: 8px;
+  padding: 12px;
+
+  backdrop-filter: blur(6px);
+  overflow-y: hidden;
+}
+
+
+/* =========================================================
+   WIFI FORM CONTAINER
+========================================================= */
+.wifi-container {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  padding: 20px;
+
+  background: #ffffff0d;
+  border: 1px solid #ffffff33;
+  border-radius: 0 0 8px 8px;
+}
+
+
+/* =========================================================
+   WIFI STATUS
+========================================================= */
+.wifi-status {
+  padding: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #07d4f41a;
+  border: 1px solid #fff9f933;
+  border-radius: 8px 8px 0 0;
+}
+
+#wifi-status-label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1fd1c2;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   WIFI FORM GROUP
+========================================================= */
+.wifi-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.wifi-group label {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.wifi-group input {
+  width: 100%;
+  padding: 10px;
+
+  border-radius: 8px;
+  border: 1px solid #ffffff44;
+
+  background: #ffffff0a;
+  color: var(--input-text);
+}
+
+
+/* =========================================================
+   PASSWORD ROW
+========================================================= */
+.wifi-pass-wrapper {
+  position: relative;
+}
+
+.showpass-row {
+  margin-top: 10px;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 5px;
+
+  font-size: 0.85rem;
+}
+
+.showpass-row input[type="checkbox"] {
+  width: auto;
+  height: auto;
+  margin: 0;
+}
+
+
+/* =========================================================
+   CONNECT BUTTON
+========================================================= */
+.wifi-buttons {
+  margin-top: auto;
+
+  display: flex;
+  justify-content: center;
+}
+
+#btnConnect {
+  width: 40%;
+  padding: 12px 0;
+
+  font-size: 1rem;
+  font-weight: 500;
+
+  border-radius: 10px;
+  border: none;
+
+  background: var(--button-bg);
+  color: var(--text-main);
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+#btnConnect:hover {
+  background: var(--button-hover);
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   WIFI LIST
+========================================================= */
+.wifi-list-label {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+#wifi-scan-section label {
+  display: block;
+  margin-bottom: 10px;
+
+  font-weight: 600;
+}
+
+#wifi-list {
+  flex: 1 1 auto;
+  max-height: 520px;
+
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+
+  overflow-y: auto;
+}
+
+#wifi-list li {
+  padding: 12px;
+  margin-bottom: 10px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: #ffffff0a;
+  border: 1px solid #ffffff33;
+  border-radius: 10px;
+
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+#wifi-list li:hover {
+  background: #ffffff22;
+}
+
+.wifi-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.wifi-icon i {
+  font-size: 20px;
+  color: #21d4fd;
+  filter: drop-shadow(0 0 3px #21d4fd80);
+}
+
+.wifi-scan.hidden {
+  display: none;
+}
+
+
+/* =========================================================
+   NOTIFICATION MODAL
+========================================================= */
+.notif-modal {
+  position: fixed;
+  inset: 0;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  background: #00000055;
+  backdrop-filter: blur(4px);
+
+  z-index: 999;
+}
+
+.notif-modal.active {
+  display: flex;
+}
+
+.notif-container {
+  width: 300px;
+  padding: 20px;
+
+  background: #ffffff0d;
+  border: 1px solid #ffffff33;
+  border-radius: 8px;
+
+  text-align: center;
+}
+
+.notif-buttons {
+  margin-top: 20px;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.notif-btn {
+  flex: 1;
+  margin: 0 5px;
+  padding: 10px;
+
+  border-radius: 8px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+/* Tablet / Mobile ngang */
+@media (max-width: 1024px) {
+  html,
+  body {
+    overflow-y: auto;
+  }
+
+  main,
+  .container {
+    flex-direction: row;
+    gap: 5px;
+    width: 100%;
+  }
+}
+
+/* Mobile dọc */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .wifi-main {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .wifi-right {
+    min-height: 200px;
+    max-height: none;
+    margin-top: 5px;
+  }
+
+  #wifi-list {
+    max-height: 250px;
+  }
+}
+
+/* Mobile nhỏ */
+@media (max-width: 480px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .wifi-main {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .wifi-right {
+    min-height: 200px;
+    max-height: none;
+  }
+
+  #wifi-list {
+    max-height: 250px;
+  }
+}

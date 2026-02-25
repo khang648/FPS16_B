@@ -1,0 +1,173 @@
+/* =========================================================
+   STAGE FORM EXTENSION
+========================================================= */
+
+.stage-form {
+  max-width: 100%;
+}
+
+/* ===== TOP ===== */
+.stage-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stage-top input {
+  width: 70px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--container-border-color);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--input-text);
+}
+
+/* ===== STAGE WRAPPER ===== */
+.stage-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  padding: 10px 0;
+}
+
+.stage-container {
+  display: flex;
+  gap: 20px;
+}
+
+/* ===== STAGE FRAME (DÀI HƠN) ===== */
+.stage-box {
+  min-width: 280px;
+  min-height: 380px;     /* làm frame dài hơn */
+  
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  padding: 16px;
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--container-border-color);
+
+  transition: all 0.25s ease;
+}
+
+.stage-box.disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.stage-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-main);
+}
+
+/* ===== CARD ===== */
+.stage-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-header {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* ===== VOLTAGE ===== */
+.voltage-body {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.voltage-input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--container-border-color);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--input-text);
+  text-align: center;
+}
+
+.voltage-input:disabled {
+  background: rgba(0, 0, 0, 0.4);
+  color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.05);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* ===== TIMER ===== */
+.timer-body {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.min-input,
+.sec-input {
+  flex: 1;
+  width: 90px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--container-border-color);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--input-text);
+  text-align: center;
+}
+
+/* ===== BUTTON ===== */
+.toggle-btn {
+  flex: 1;
+  padding: 12px 4px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: var(--button-bg);
+  color: var(--text-main);
+
+  font-size: inherit;
+  font-weight: 500;
+
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.toggle-btn:hover {
+   background: var(--button-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== SAVE ===== */
+.stage-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+#saveBtn {
+  flex: 1;
+  padding: 12px 0;
+
+  border: none;
+  border-radius: 10px;
+
+  background: var(--button-bg);
+  color: var(--text-main);
+
+  font-size: inherit;
+  font-weight: 500;
+
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+#saveBtn:hover {
+   background: var(--button-hover);
+  transform: translateY(-1px);
+}

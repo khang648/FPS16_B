@@ -18,7 +18,8 @@ const RETRY_CONNECT_WIFI = 5;   // K?t n?i l?i Wifi
 
 const servers = [
     { name: 'PCR Server',       file: './PCR/server_pcr.js',       port: 3000 },
-    { name: 'Spotcheck Server', file: './Spotcheck/server_sc.js',  port: 8081 },
+    // { name: 'Spotcheck Server', file: './Spotcheck/server_sc.js',  port: 8081 },
+    { name: 'VE100 Server',     file: './VE100/server_ve.js',      port: 1010 },
     { name: 'TFT File',         file: './TFT/tft.py',              port: null }
 ];
 
