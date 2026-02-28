@@ -3,28 +3,65 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const path = require("path");
-const fs = require('fs');
+const fs = require("fs");
 
 const wifi = require("./socket_handlers/wifi_handler");
+const { registerCameraSocket } = require("./socket_handlers/camera_handler");
+const { registerJsonSocket } = require("./socket_handlers/json_handler");
+const { registerElectrophoresisSocket } = require("./socket_handlers/electrophoresis_handler");
 
+/*========== INIT ==========*/
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
 
-/*========== Thư mục public ==========*/
+const io = new Server(server, {
+  maxHttpBufferSize: 1e8,
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+
+/*========== CONSTANTS ==========*/
+const PORT = 1010;
+const HOST = "0.0.0.0";
+
+const WIFI_CONFIG_FILE = path.join(__dirname, "../information.json");
+const DEVICE_INFO_FILE = "/home/pi/FPS16_B/information.json";
+
+/*========== GLOBAL ERROR HANDLER ==========*/
+process.on("uncaughtException", (err) => {
+  console.error("[FATAL] Uncaught Exception:", err);
+});
+
+process.on("unhandledRejection", (reason) => {
+  console.error("[FATAL] Unhandled Rejection:", reason);
+});
+
+/*========== STATIC PUBLIC FOLDER ==========*/
 app.use(express.static(path.join(__dirname, "public")));
 
+/*========== API DEVICE INFO ==========*/
 app.get("/api/device-info", (req, res) => {
   try {
-    const WIFI_PATH = "/home/pi/FPS16_B/information.json";
-    const wifiRaw = JSON.parse(fs.readFileSync(WIFI_PATH, "utf8"));
+    if (!fs.existsSync(DEVICE_INFO_FILE)) {
+      return res.json({
+        host_name: "",
+        seri_number: ""
+      });
+    }
+
+    const wifiRaw = JSON.parse(
+      fs.readFileSync(DEVICE_INFO_FILE, "utf8")
+    );
 
     res.json({
       host_name: wifiRaw.host_name || "",
       seri_number: wifiRaw.seri_number || ""
     });
-    
+
   } catch (err) {
+    console.log("[VE100][ERROR] device-info:", err.message);
     res.status(500).json({
       host_name: "",
       seri_number: ""
@@ -32,119 +69,114 @@ app.get("/api/device-info", (req, res) => {
   }
 });
 
-/*========== Wifi file ==========*/
-const WIFI_CONFIG_FILE = path.join(__dirname, '../information.json');
-
-/*========== Soket.IO ==========*/
-// const { registerCameraSocket } = require("./socket_handlers/camera_handler");
-const { registerJsonSocket } = require("./socket_handlers/json_handler")
-// const { registerExcelSocket } = require("./socket_handlers/excel_handler");
-// const { registerFileDownloadSocket } = require("./socket_handlers/filedownload_handler");
-// const { registerEmailSocket } = require("./socket_handlers/email_handler");
-// const { registerResultSocket } = require("./socket_handlers/result_handler");
-
-
+/*========== SOCKET.IO ==========*/
 io.on("connection", (socket) => {
+
   console.log("[VE100][INFO] Client connected:", socket.id);
 
-  // Import socket
-  // registerCameraSocket(io, socket);
+  /* ===== Register module sockets ===== */
   registerJsonSocket(io, socket);
-  // registerExcelSocket(io, socket); 
-  // registerFileDownloadSocket(io, socket);
-  // registerEmailSocket(io, socket);
-  // registerResultSocket(io, socket);
+  registerCameraSocket(io, socket);
+  registerElectrophoresisSocket(io, socket);
 
-  /*---------- WIFI CONFIG - START ----------*/
-  // Wi-Fi config request received 
-  socket.on("request_wifi_config", () => 
-  {
-    try 
-    {
-      let cfg = { ssid: '', password: '' };
-      if (fs.existsSync(WIFI_CONFIG_FILE)) 
-      {
-        cfg = JSON.parse(fs.readFileSync(WIFI_CONFIG_FILE, 'utf8')); // Đọc ssid và pass từ json
+  /* ================= WIFI CONFIG ================= */
+
+  socket.on("request_wifi_config", () => {
+    try {
+      let cfg = { ssid: "", password: "" };
+
+      if (fs.existsSync(WIFI_CONFIG_FILE)) {
+        cfg = JSON.parse(
+          fs.readFileSync(WIFI_CONFIG_FILE, "utf8")
+        );
       }
-      socket.emit("response_wifi_config", cfg); // gửi lên web
-    } 
-    catch (err) 
-    {
-      socket.emit("response_wifi_config", { ssid: '', password: '' }); // gửi ssid và pass rỗng
+
+      socket.emit("response_wifi_config", cfg);
+
+    } catch (err) {
+      console.log("[VE100][ERROR] read wifi config:", err.message);
+      socket.emit("response_wifi_config", {
+        ssid: "",
+        password: ""
+      });
     }
   });
 
-  // Nhận Wi-Fi mới từ web thì lưu vào information.json
   socket.on("web_pcr_wifi_config", (data) => {
-    try
-    {
-        fs.writeFileSync(WIFI_CONFIG_FILE, JSON.stringify(data, null, 2), { mode: 0o600 });
-        socket.emit('wifi_config_saved', { success: true }); // Lưu thành công
-    } 
-    catch (err) 
-    {
-        socket.emit('wifi_config_saved', { success: false }); // Lỗi lưu
+    try {
+
+      fs.writeFileSync(
+        WIFI_CONFIG_FILE,
+        JSON.stringify(data, null, 2),
+        { mode: 0o600 }
+      );
+
+      socket.emit("wifi_config_saved", { success: true });
+
+    } catch (err) {
+      console.log("[VE100][ERROR] save wifi config:", err.message);
+      socket.emit("wifi_config_saved", { success: false });
     }
   });
 
-  // Nhận lệnh restart wifi
   socket.on("web_pcr_wifi_restart", async () => {
 
-    await new Promise(r => setTimeout(r, 5000)); // Đợi 5s
+    console.log("[VE100][INFO] Restart requested...");
 
-    //console.log('[INFO] Client requested Wi-Fi restart...');
-    if (process.send) 
-    {
-      process.send('restart_system'); // gửi lên cha
-    } 
-    else
-    {
-      console.log('[VE100][WARNING] process.send không khả dụng');
+    await new Promise((r) => setTimeout(r, 5000));
+
+    if (process.send) {
+      process.send("restart_system");
+    } else {
+      console.log("[VE100][WARNING] process.send not available");
     }
-  })
-  /*---------- WIFI CONFIG - END ----------*/
+  });
 
+  /* ================= WIFI CONTROL ================= */
 
   socket.on("wifi:get_status", async () => {
+    try {
       const status = await wifi.getWifiStatus();
       socket.emit("wifi:status", status);
+    } catch (err) {
+      console.log("[VE100][ERROR] wifi:get_status:", err.message);
+      socket.emit("wifi:status", { connected: false });
+    }
   });
 
-  // Quét WiFi
   socket.on("wifi:scan", async () => {
+    try {
       const list = await wifi.scanWifi();
       socket.emit("wifi:scan_result", list);
+    } catch (err) {
+      console.log("[VE100][ERROR] wifi:scan:", err.message);
+      socket.emit("wifi:scan_result", []);
+    }
   });
 
-  // Kết nối WiFi
   socket.on("wifi:connect", async ({ ssid, password }) => {
+    try {
       const result = await wifi.connectWifi(ssid, password);
       socket.emit("wifi:connect_result", result);
+    } catch (err) {
+      console.log("[VE100][ERROR] wifi:connect:", err.message);
+      socket.emit("wifi:connect_result", { success: false });
+    }
   });
 
-  // Ngắt kết nối (ĐỂ TRỐNG CHO BẠN TỰ VIẾT)
   socket.on("wifi:disconnect", async (ssid) => {
-      console.log(">>> user muốn disconnect, tự xử lý ở đây <<<");
-
-      // ví dụ:
-      // const ok = await wifi.disconnectWifi(ssid);
-      // socket.emit("wifi:disconnect_result", { success: ok });
-
+    console.log("[VE100][INFO] Disconnect requested:", ssid);
+    // implement nếu cần
   });
-  
+
   socket.on("disconnect", () => {
     console.log("[VE100][INFO] Client disconnected:", socket.id);
   });
 });
 
-/*========== Khởi động server ==========*/
-// const PORT = 80;
-// server.listen(PORT, () => {
-//   console.log(`Webserver running at http://localhost:${PORT}`);
-// });
-
-const PORT = 1010;
-const HOST = '0.0.0.0';
-server.listen(PORT, HOST, () => { 
- console.log(`[VE100][INFO] Server running on: http://${HOST}:${PORT}`)
+/*========== START SERVER ==========*/
+server.listen(PORT, HOST, () => {
+  console.log(
+    `[VE100][INFO] Server running on: http://${HOST}:${PORT}`
+  );
 });

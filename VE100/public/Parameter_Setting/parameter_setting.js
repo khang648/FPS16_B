@@ -11,16 +11,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const MAX_STAGE = 5;
 
   // yêu cầu server gửi parameters.json
-  socket.emit("loadJsonFile", "parameters.json");
+  socket.emit("loadJsonFile", parameters_path);
 
-  socket.on("writeResult", (res) => {
+  // socket.on("writeResult", (res) => {
 
-    if (res.success) {
-      alert("🟢 Parameters saved successfully!");
-    } else {
-      alert("🔴 Save failed: " + res.error);
-    }
-  });
+  //   if (res.success) {
+  //     alert("🟢 Parameters saved successfully!");
+  //   } else {
+  //     alert("🔴 Save failed: " + res.error);
+  //   }
+  // });
 
   socket.on("jsonData", (data) => {
 
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  stageCountInput.addEventListener("input", updateStageVisibility);
+  stageCountInput.addEventListener("change", updateStageVisibility);
   updateStageVisibility();
 
   /* =============================
@@ -187,12 +187,12 @@ document.addEventListener("DOMContentLoaded", () => {
         stages: stages
       };
 
-      
-
       socket.emit("writeJsonFile", {
         filePath: parameters_path,
         data: dataToSave
       });
+
+      alert("🟢 Parameters saved successfully!");
 
     });
   });
@@ -200,58 +200,50 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =============================
      NEXT
   ============================== */
-  nextBtn.addEventListener("click", () => {
+  btnNext.addEventListener("click", () => {
 
-    const saveBtn = document.getElementById("saveBtn");
     const stageCountInput = document.getElementById("stageCount");
 
-    saveBtn.addEventListener("click", () => {
+    const stage_count = parseInt(stageCountInput.value);
+    const stages = {};
 
-      if (!confirm("Save Setting?")) return;
+    for (let i = 1; i <= 5; i++) {
 
-      const stage_count = parseInt(stageCountInput.value);
-      const stages = {};
+      const stageBox = document.querySelector(`.stage-box[data-stage="${i}"]`);
+      if (!stageBox) continue;
 
-      for (let i = 1; i <= 5; i++) {
+      const voltageInput = stageBox.querySelector(".voltage-input");
+      const minInput = stageBox.querySelector(".min-input");
+      const secInput = stageBox.querySelector(".sec-input");
 
-        const stageBox = document.querySelector(`.stage-box[data-stage="${i}"]`);
-        if (!stageBox) continue;
+      const voltage_enabled = !voltageInput.disabled;
 
-        const voltageInput = stageBox.querySelector(".voltage-input");
-        const minInput = stageBox.querySelector(".min-input");
-        const secInput = stageBox.querySelector(".sec-input");
+      const voltage = parseInt(voltageInput.value) || 0;
+      const minute = parseInt(minInput.value) || 0;
+      const second = parseInt(secInput.value) || 0;
 
-        const voltage_enabled = !voltageInput.disabled;
-
-        const voltage = parseInt(voltageInput.value) || 0;
-        const minute = parseInt(minInput.value) || 0;
-        const second = parseInt(secInput.value) || 0;
-
-        stages[`stage_${i}`] = {
-          voltage: {
-            value: voltage,
-            enabled: voltage_enabled
-          },
-          timer: {
-            minute: minute,
-            second: second
-          }
-        };
-      }
-
-      const dataToSave = {
-        stage_count: stage_count,
-        stages: stages
+      stages[`stage_${i}`] = {
+        voltage: {
+          value: voltage,
+          enabled: voltage_enabled
+        },
+        timer: {
+          minute: minute,
+          second: second
+        }
       };
+    }
 
-      socket.emit("writeJsonFile", {
-        filePath: globalvar_tmp_path,
-        data: dataToSave
-      });
+    const dataToSave = {
+      stage_count: stage_count,
+      stages: stages
+    };
 
-      goToPage("./Electrophoresis/electrophoresis.html");
-
+    socket.emit("writeJsonFile", {
+      filePath: globalvar_tmp_path,
+      data: dataToSave
     });
-  });
 
+    goToPage("./Electrophoresis/electrophoresis.html");
+  });
 });

@@ -7,8 +7,12 @@ const jsonDir = "/home/pi/VE100";
 // ======================= REGISTER SOCKET =======================
 function registerJsonSocket(io, socket) {
   /* ------------------- ĐỌC NỘI DUNG FILE JSON ------------------- */
-  socket.on("loadJsonFile", (filename) => {
-    const filePath = path.join(jsonDir, filename);
+  socket.on("loadJsonFile", (filePath) => {
+
+    if (!filePath) {
+      socket.emit("jsonData", { error: "Thiếu filePath" });
+      return;
+    }
 
     if (!fs.existsSync(filePath)) {
       console.warn(`[json_handler][WARN] File không tồn tại: ${filePath}`);
@@ -19,8 +23,11 @@ function registerJsonSocket(io, socket) {
     try {
       const content = fs.readFileSync(filePath, "utf8");
       const data = JSON.parse(content);
+
       socket.emit("jsonData", data);
-      console.log(`[json_handler][INFO] Sent data for file: ${filename}`);
+
+      console.log(`[json_handler][INFO] Sent data for file: ${filePath}`);
+
     } catch (err) {
       console.error("[json_handler][ERROR] Lỗi đọc hoặc parse JSON:", err);
       socket.emit("jsonData", { error: "Lỗi đọc file JSON" });
