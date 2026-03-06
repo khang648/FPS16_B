@@ -18,7 +18,49 @@ socket.on("jsonKeyValue", (res) => {
         return;
     }
 
-    document.getElementById("foldernamename").value = res.value[0];
+    document.getElementById("foldername").value = res.value;
+});
+
+
+/* ================= SOCKET RESPONSE ================= */
+
+socket.on("resultFolderExists", (res) => {
+
+    const confirmOverwrite = confirm(
+        "Folder already exists.\nDo you want to overwrite it?"
+    );
+
+    if (confirmOverwrite) {
+
+        socket.emit("overwriteResultFolder", {
+            folderPath: res.folderPath
+        });
+
+    }
+});
+
+
+socket.on("resultFolderCreated", (res) => {
+
+    const foldername = document.getElementById("foldername").value.trim();
+    const now = new Date();
+    const formattedTime = formatLocalDateTime(now);
+
+    // Sau khi folder OK → mới ghi JSON
+    socket.emit("writeJsonFile", {
+        filePath: globalvar_tmp_path,
+        data: {
+            folder_name: foldername,
+            session_createtime: formattedTime
+        }
+    });
+
+    goToPage("./Sample_Naming/sample_naming.html");
+});
+
+
+socket.on("resultFolderError", (res) => {
+    alert("🔴 Error creating folder: " + res.error);
 });
 
 /* ================= MAIN EXECUTION ================= */
@@ -42,15 +84,19 @@ window.addEventListener("DOMContentLoaded", () => {
         const now = new Date();
         const formattedTime = formatLocalDateTime(now);
 
-        socket.emit("writeJsonFile", {
-            filePath: globalvar_tmp_path,
-            data: {
-                folder_name: foldername,
-                session_createtime: formattedTime
-            }
-        });
+        // socket.emit("writeJsonFile", {
+        //     filePath: globalvar_tmp_path,
+        //     data: {
+        //         folder_name: foldername,
+        //         session_createtime: formattedTime
+        //     }
+        // });
 
-        goToPage("./Sample_Naming/sample_naming.html");
+        // goToPage("./Sample_Naming/sample_naming.html");
+
+        socket.emit("createResultFolder", {
+            folderName: foldername
+        });
     });
 
     /* ---------- BACK BUTTON ---------- */

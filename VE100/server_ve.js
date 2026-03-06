@@ -8,7 +8,12 @@ const fs = require("fs");
 const wifi = require("./socket_handlers/wifi_handler");
 const { registerCameraSocket } = require("./socket_handlers/camera_handler");
 const { registerJsonSocket } = require("./socket_handlers/json_handler");
-const { registerElectrophoresisSocket } = require("./socket_handlers/electrophoresis_handler");
+const { 
+  registerElectrophoresisSocket,
+  getElectrophoresisState
+} = require("./socket_handlers/electrophoresis_handler");
+const { registerADCSocket } = require("./socket_handlers/adc_handler");
+const { registerFolderSocket } = require("./socket_handlers/folder_handler");
 
 /*========== INIT ==========*/
 const app = express();
@@ -36,6 +41,29 @@ process.on("uncaughtException", (err) => {
 
 process.on("unhandledRejection", (reason) => {
   console.error("[FATAL] Unhandled Rejection:", reason);
+});
+
+
+/*========== ELECTROPHORESIS AUTO REDIRECT ==========*/
+app.use((req, res, next) => {
+  try {
+
+    const state = getElectrophoresisState();
+
+    if (
+      state &&
+      state.isRunning &&
+      (req.path === "/" || req.path === "/index.html")
+    ) {
+      console.log("[VE100][INFO] Redirect to electrophoresis page");
+      return res.redirect("/Electrophoresis/electrophoresis.html");
+    }
+
+  } catch (err) {
+    console.log("[VE100][ERROR] redirect:", err.message);
+  }
+
+  next();
 });
 
 /*========== STATIC PUBLIC FOLDER ==========*/
@@ -78,6 +106,8 @@ io.on("connection", (socket) => {
   registerJsonSocket(io, socket);
   registerCameraSocket(io, socket);
   registerElectrophoresisSocket(io, socket);
+  registerADCSocket(io, socket);
+  registerFolderSocket(io, socket);
 
   /* ================= WIFI CONFIG ================= */
 

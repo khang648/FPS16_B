@@ -5,11 +5,14 @@
 const stagePanel = document.getElementById("stagePanel");
 const currentVoltage = document.getElementById("currentVoltage");
 const cameraImg = document.getElementById("img");
+const btnStop = document.getElementById("btnStop");
 
 const socket = io();
 
 let isCameraRunning = false;
 let stageData = null;
+let isFinished = false;
+
 
 /* =========================================================
    FORMAT TIME
@@ -25,6 +28,7 @@ function formatTime(seconds) {
   return `${pad(m)}:${pad(s)}`;
 }
 
+
 /* =========================================================
    SOCKET CONNECT
 ========================================================= */
@@ -39,20 +43,41 @@ socket.on("disconnect", () => {
 });
 
 
+/* =========================================================
+   REAL VOLTAGE
+========================================================= */
+
+socket.on("electro:realVoltage", (voltage) => {
+
+  if (!currentVoltage) return;
+
+  if (voltage === "ERR") {
+    currentVoltage.textContent = "ERR";
+    currentVoltage.style.color = "red";
+    return;
+  }
+
+  if (typeof voltage === "number") {
+    currentVoltage.textContent = voltage.toFixed(2) + " V";
+    currentVoltage.style.color = "var(--button-hover)";
+  }
+});
+
+
 socket.on("electro:reset", () => {
 
-  console.log("[CLIENT] Reset received");
-
-  // reset voltage
-  updateVoltage(0);
-
-  // reset stage UI về trạng thái ban đầu
   renderStages();
+
+  if (currentVoltage) {
+    currentVoltage.textContent = "0 V";
+    currentVoltage.style.color = "var(--button-hover)";
+  }
 
 });
 
+
 /* =========================================================
-   LOAD JSON FROM SERVER
+   LOAD JSON
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -67,12 +92,10 @@ socket.on("jsonData", (data) => {
   }
 
   stageData = data;
-
   renderStages();
-
-  // Sau khi render xong → hỏi server trạng thái
   socket.emit("electro:sync");
 });
+
 
 /* =========================================================
    RENDER STAGES
@@ -97,12 +120,10 @@ function renderStages() {
 
     div.innerHTML = `
       <div class="stage-title">STAGE ${i}</div>
-
       <div class="stage-voltage">
         <span class="voltage-value">${info.voltage.value}</span>
         <span class="voltage-unit">V</span>
       </div>
-
       <div class="stage-bottom">
         <div class="stage-countdown-label">TIME</div>
         <div class="stage-countdown">
@@ -113,18 +134,16 @@ function renderStages() {
 
     stagePanel.appendChild(div);
   }
-
-  currentVoltage.textContent = "0 V";
 }
 
+
 /* =========================================================
-   CONVERT JSON → STAGE CONFIG
+   BUILD CONFIG
 ========================================================= */
 
 function buildStageConfigFromJson(data) {
 
   const result = [];
-
   const stageCount = data.stage_count || 0;
 
   for (let i = 1; i <= stageCount; i++) {
@@ -145,6 +164,8 @@ function buildStageConfigFromJson(data) {
 
   return result;
 }
+
+
 /* =========================================================
    STATE CONTROL
 ========================================================= */
@@ -173,12 +194,9 @@ function updateCountdown(index, remaining) {
   if (el) el.textContent = formatTime(remaining);
 }
 
-function updateVoltage(voltage) {
-  currentVoltage.textContent = voltage + " V";
-}
 
 /* =========================================================
-   SYNC STATE FROM SERVER
+   SYNC STATE
 ========================================================= */
 
 socket.on("electro:state", (state) => {
@@ -187,9 +205,6 @@ socket.on("electro:state", (state) => {
 
   const stages = getStages();
 
-  // =========================
-  // CASE 1: SERVER ĐANG CHẠY
-  // =========================
   if (state.isRunning) {
 
     setRunning(state.currentIndex);
@@ -199,30 +214,17 @@ socket.on("electro:state", (state) => {
       const countdownEl = el.querySelector(".stage-countdown");
       if (!countdownEl) return;
 
-      // Stage đã hoàn thành
       if (i < state.currentIndex) {
         countdownEl.textContent = "00:00";
       }
-
-      // Stage đang chạy
       else if (i === state.currentIndex) {
         countdownEl.textContent = formatTime(state.remaining);
       }
-
-      // Stage chưa chạy → giữ nguyên
     });
-
-    const currentStage = state.stages[state.currentIndex];
-    if (currentStage) {
-      updateVoltage(currentStage.voltage);
-    }
 
     return;
   }
 
-  // =========================
-  // CASE 2: CHƯA CHẠY GÌ
-  // =========================
   if (!state.isRunning && state.currentIndex === -1) {
 
     const stageConfig = buildStageConfigFromJson(stageData);
@@ -230,9 +232,6 @@ socket.on("electro:state", (state) => {
     return;
   }
 
-  // =========================
-  // CASE 3: ĐÃ HOÀN TẤT
-  // =========================
   if (!state.isRunning && state.currentIndex >= state.stages.length) {
 
     setRunning(state.stages.length);
@@ -241,19 +240,17 @@ socket.on("electro:state", (state) => {
       const countdownEl = el.querySelector(".stage-countdown");
       if (countdownEl) countdownEl.textContent = "00:00";
     });
-
-    updateVoltage(0);
   }
 
 });
 
+
 /* =========================================================
-   SOCKET EVENTS REALTIME
+   REALTIME EVENTS
 ========================================================= */
 
 socket.on("electro:stageStart", (data) => {
   setRunning(data.index);
-  updateVoltage(data.stage.voltage);
 });
 
 socket.on("electro:tick", (data) => {
@@ -268,12 +265,53 @@ socket.on("electro:stageCompleted", (data) => {
   }
 });
 
-socket.on("electro:finished", () => {
-  updateVoltage(0);
-});
 
 /* =========================================================
-   CAMERA CONTROL (giữ nguyên)
+   FINISHED EVENT
+========================================================= */
+
+socket.on("electro:finished", () => {
+
+  console.log("[CLIENT] Process finished");
+
+  isFinished = true;
+
+  /* STOP CAMERA */
+  if (isCameraRunning) {
+    socket.emit("camera:stop");
+    isCameraRunning = false;
+  }
+
+  /* SHOW COMPLETED */
+  const completedDiv = document.createElement("div");
+  completedDiv.id = "processCompleted";
+  completedDiv.innerText = "COMPLETED";
+  completedDiv.style.position = "fixed";
+  completedDiv.style.top = "50%";
+  completedDiv.style.left = "50%";
+  completedDiv.style.transform = "translate(-50%, -50%)";
+  completedDiv.style.fontSize = "48px";
+  completedDiv.style.fontWeight = "bold";
+  completedDiv.style.color = "#00ff88";
+  completedDiv.style.zIndex = "9999";
+  completedDiv.style.background = "rgba(0,0,0,0.7)";
+  completedDiv.style.padding = "30px 60px";
+  completedDiv.style.borderRadius = "12px";
+
+  document.body.appendChild(completedDiv);
+
+  /* CHANGE BUTTON */
+  if (btnStop) {
+    btnStop.innerText = "FINISH";
+    btnStop.classList.remove("stop-button");
+    btnStop.classList.add("finish-button");
+  }
+
+});
+
+
+/* =========================================================
+   CAMERA CONTROL
 ========================================================= */
 
 window.addEventListener("load", () => {
@@ -295,41 +333,51 @@ window.addEventListener("beforeunload", () => {
   }
 });
 
-document.addEventListener("visibilitychange", () => {
 
-  if (document.hidden) {
-    if (isCameraRunning) {
-      socket.emit("camera:stop");
-      isCameraRunning = false;
-    }
-  } else {
-    if (!isCameraRunning) {
-      socket.emit("camera:start");
-      isCameraRunning = true;
-    }
-  }
-});
+
+// document.addEventListener("visibilitychange", () => {
+//   if (document.hidden) {
+//     if (isCameraRunning) {
+//       socket.emit("camera:stop");
+//       isCameraRunning = false;
+//     }
+//   } else {
+//     if (!isCameraRunning) {
+//       socket.emit("camera:start");
+//       isCameraRunning = true;
+//     }
+//   }
+// });
+
 
 /* =========================================================
-   STOP BUTTON
+   STOP / FINISH BUTTON
 ========================================================= */
 
-const btnStop = document.getElementById("btnStop");
-
 if (btnStop) {
+
   btnStop.addEventListener("click", () => {
 
-    if (!confirm("Are you sure you want to stop?")) return;
+    if (isFinished) {
+
+      if (!confirm("Process completed. Go back to main screen?")) return;
+
+      window.location.href = "../index.html";
+      return;
+    }
+
+    if (!confirm("Are you sure you want to stop the process?")) return;
 
     socket.emit("electro:stop");
 
-    // Sau 500ms chuyển về trang chủ
     setTimeout(() => {
-      window.location.href = "../index.html";  // chỉnh lại nếu path khác
+      window.location.href = "../index.html";
     }, 500);
 
   });
+
 }
+
 
 /* =========================================================
    FULLSCREEN

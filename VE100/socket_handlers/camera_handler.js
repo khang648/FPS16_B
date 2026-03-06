@@ -1,23 +1,88 @@
+/* =========================================================
+   CAMERA HANDLER
+   Industrial MJPEG pipeline
+========================================================= */
+
 const { spawn } = require("child_process");
+const fs = require("fs");
+const path = require("path");
+
+/* ================= STATE ================= */
 
 let camProcess = null;
-let clients = new Set(); // lưu các socket đang xem camera
+let clients = new Set();
+
 let buffer = Buffer.alloc(0);
+let lastFrame = null;
 
-/* ================================
-   START CAMERA PROCESS
-================================ */
-function startCameraProcess(io) {
+let isStarting = false;
+let restartTimer = null;
 
-  if (camProcess) {
-    console.log("[CAM] Camera already running");
-    return;
+/* ================= CONFIG ================= */
+
+const GLOBAL_INFO_PATH = "/home/pi/FPS16_B/VE100/tmp/global_info.json";
+const RESULTS_BASE_PATH = "/home/pi/VE100/Results";
+
+const CAMERA_CMD = "/usr/bin/rpicam-vid";
+
+/* =========================================================
+   ENSURE SESSION FOLDER
+========================================================= */
+
+function getSessionFolderPath() {
+
+  try {
+
+    if (!fs.existsSync(GLOBAL_INFO_PATH)) {
+      console.log("[CAM] global_info.json not found");
+      return null;
+    }
+
+    const raw = JSON.parse(
+      fs.readFileSync(GLOBAL_INFO_PATH, "utf8")
+    );
+
+    const folderName = raw.folder_name;
+
+    if (!folderName) {
+      console.log("[CAM] folder_name missing");
+      return null;
+    }
+
+    if (!fs.existsSync(RESULTS_BASE_PATH)) {
+      fs.mkdirSync(RESULTS_BASE_PATH, { recursive: true });
+    }
+
+    const fullPath = path.join(RESULTS_BASE_PATH, folderName);
+
+    if (!fs.existsSync(fullPath)) {
+      fs.mkdirSync(fullPath, { recursive: true });
+      console.log("[CAM] Created session folder:", fullPath);
+    }
+
+    return fullPath;
+
+  } catch (err) {
+
+    console.log("[CAM] Folder error:", err.message);
+    return null;
   }
+}
 
-  console.log("[CAM] Starting camera process...");
+/* =========================================================
+   START CAMERA
+========================================================= */
+
+function startCameraProcess() {
+
+  if (camProcess || isStarting) return;
+
+  isStarting = true;
+
+  console.log("[CAM] Starting camera pipeline...");
 
   camProcess = spawn(
-    "/usr/bin/rpicam-vid",
+    CAMERA_CMD,
     [
       "-t", "0",
       "--codec", "mjpeg",
@@ -36,6 +101,7 @@ function startCameraProcess(io) {
   buffer = Buffer.alloc(0);
 
   camProcess.stdout.on("data", chunk => {
+
     buffer = Buffer.concat([buffer, chunk]);
 
     let start, end;
@@ -44,14 +110,24 @@ function startCameraProcess(io) {
       (start = buffer.indexOf(Buffer.from([0xff, 0xd8]))) !== -1 &&
       (end = buffer.indexOf(Buffer.from([0xff, 0xd9]), start)) !== -1
     ) {
+
       const frame = buffer.slice(start, end + 2);
       buffer = buffer.slice(end + 2);
 
-      // Gửi cho tất cả client đang xem
-      for (const socket of clients) {
-        socket.emit("camera:frame", frame.toString("base64"));
+      lastFrame = frame;
+
+      if (clients.size > 0) {
+
+        const base64 = frame.toString("base64");
+
+        for (const socket of clients) {
+          socket.emit("camera:frame", base64);
+        }
+
       }
+
     }
+
   });
 
   camProcess.stderr.on("data", d => {
@@ -59,63 +135,147 @@ function startCameraProcess(io) {
   });
 
   camProcess.on("close", code => {
-    console.log("[CAM] Camera stopped with code", code);
+
+    console.log("[CAM] Camera stopped:", code);
+
     camProcess = null;
+    isStarting = false;
+
+    autoRestart();
+
   });
 
   camProcess.on("error", err => {
-    console.error("[CAM ERROR]:", err);
+
+    console.log("[CAM ERROR]:", err.message);
+
     camProcess = null;
+    isStarting = false;
+
+    autoRestart();
+
   });
+
 }
 
-/* ================================
-   STOP CAMERA PROCESS
-================================ */
+/* =========================================================
+   AUTO RESTART
+========================================================= */
+
+function autoRestart() {
+
+  if (restartTimer) return;
+
+  restartTimer = setTimeout(() => {
+
+    restartTimer = null;
+
+    if (!camProcess) {
+      console.log("[CAM] Restarting camera...");
+      startCameraProcess();
+    }
+
+  }, 3000);
+
+}
+
+/* =========================================================
+   STOP CAMERA
+========================================================= */
+
 function stopCameraProcess() {
-  if (camProcess) {
-    console.log("[CAM] Stopping camera process...");
+
+  if (!camProcess) return;
+
+  console.log("[CAM] Stopping camera pipeline...");
+
+  try {
     camProcess.kill("SIGINT");
-    camProcess = null;
-  }
+  } catch (e) {}
+
+  camProcess = null;
+
 }
 
-/* ================================
+/* =========================================================
+   SAFE FRAME CAPTURE
+========================================================= */
+
+function captureCurrentFrame(stageId) {
+
+  if (!lastFrame) {
+
+    console.log("[CAM] No frame available");
+
+    return null;
+
+  }
+
+  const folder = getSessionFolderPath();
+
+  if (!folder) return null;
+
+  const filename = `stage_${stageId}.jpg`;
+  const savePath = path.join(folder, filename);
+
+  try {
+
+    const frameCopy = Buffer.from(lastFrame);
+
+    fs.writeFileSync(savePath, frameCopy);
+
+    console.log("[CAM] Image saved:", savePath);
+
+    return savePath;
+
+  } catch (err) {
+
+    console.log("[CAM] Save error:", err.message);
+
+    return null;
+  }
+
+}
+
+/* =========================================================
    REGISTER SOCKET
-================================ */
+========================================================= */
+
 function registerCameraSocket(io, socket) {
 
   socket.on("camera:start", () => {
 
-    console.log("[CAM] Start requested:", socket.id);
     clients.add(socket);
 
     if (!camProcess) {
-      startCameraProcess(io);
+      startCameraProcess();
     }
+
   });
 
   socket.on("camera:stop", () => {
 
-    console.log("[CAM] Stop requested:", socket.id);
     clients.delete(socket);
 
-    // Nếu không còn ai xem → tắt camera
     if (clients.size === 0) {
       stopCameraProcess();
     }
+
   });
 
   socket.on("disconnect", () => {
 
     clients.delete(socket);
 
-    if (clients.size === 0) {
-      stopCameraProcess();
-    }
   });
+
 }
 
+/* =========================================================
+   EXPORT
+========================================================= */
+
 module.exports = {
-  registerCameraSocket
+  registerCameraSocket,
+  captureCurrentFrame
 };

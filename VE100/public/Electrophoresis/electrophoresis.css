@@ -92,6 +92,7 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  height: 100%;
 }
 
 /* =========================================================
@@ -298,6 +299,54 @@
 
 
 /* =========================================================
+   STAGE STATUS STATES
+========================================================= */
+
+/* ===== WAITING ===== */
+.stage.waiting {
+  opacity: 0.6;
+}
+
+/* ===== RUNNING (nổi bật nhất) ===== */
+.stage.running {
+  border-color: var(--button-hover);
+  box-shadow: 
+    0 0 0 1px var(--button-hover),
+    0 0 20px rgba(0, 255, 150, 0.25);
+
+  background: rgba(0, 255, 150, 0.05);
+
+  transform: translateY(-2px);
+}
+
+/* hiệu ứng nhấp nháy nhẹ cho countdown */
+.stage.running .stage-countdown {
+  animation: pulseRunning 1.2s infinite ease-in-out;
+}
+
+/* ===== COMPLETED ===== */
+.stage.completed {
+  opacity: 0.45;
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255,255,255,0.08);
+}
+
+.stage.completed .stage-countdown {
+  color: #aaa;
+}
+
+/* =========================================================
+   RUNNING ANIMATION
+========================================================= */
+
+@keyframes pulseRunning {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+
+/* =========================================================
    RESPONSIVE - PORTRAIT / MOBILE
 ========================================================= */
 
@@ -318,6 +367,7 @@
 
     gap: 12px;
     padding: 12px;
+    margin-top: 180px;
 
     height: auto;
   }
@@ -342,4 +392,13 @@
     flex: none;             /* QUAN TRỌNG */
   }
 
+}
+
+
+.finish-button {
+  background-color: #00c853;
+}
+
+.finish-button:hover {
+  background-color: #00e676;
 }
