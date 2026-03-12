@@ -55,13 +55,37 @@ function StopBlinkLED() {
 }
 
 // -------- H�M CH?Y L?NH ASYNC NON BLOCKING--------
+// function runCommand(cmd) {
+//     return new Promise((resolve, reject) => 
+//     {
+//         exec(cmd, { timeout: 5000 }, (err, stdout, stderr) => 
+//         {
+//             if (err) reject(stderr || err.message);
+//             else resolve(stdout);
+//         });
+//     });
+// }
+
 function runCommand(cmd) {
+    console.log(`[CMD] ${cmd}`);
+
     return new Promise((resolve, reject) => 
     {
-        exec(cmd, (err, stdout, stderr) => 
+        exec(cmd, { timeout: 8000 }, (err, stdout, stderr) => 
         {
-            if (err) reject(stderr || err.message);
-            else resolve(stdout);
+            if (stdout) console.log(`[OUT] ${stdout.trim()}`);
+            if (stderr) console.log(`[ERR] ${stderr.trim()}`);
+
+            if (err) 
+            {
+                console.error(`[FAIL] ${cmd}`);
+                reject(stderr || err.message);
+            }
+            else 
+            {
+                console.log(`[DONE] ${cmd}`);
+                resolve(stdout);
+            }
         });
     });
 }
@@ -115,46 +139,6 @@ async function freePort(port) {
     catch {}
 }
 
-// -------- START SERVER --------
-// async function Run_Server() {
-//   if (serversStarted) 
-//   {
-//     console.log('[SERVER]Server d� ch?y tru?c d� chua du?c x�a');
-//     return;
-//   }
-//     serversStarted = true;
-
-//   for (const s of servers) 
-//   {
-//     await freePort(s.port); // Clear c?ng
-
-//     if(system_reset == true)
-//         return;
-
-//     const child = spawn('node', [s.file], { stdio: ['pipe', 'pipe', 'pipe', 'ipc'] }); 
-//     serverProcesses.push(child);
-//     console.log(`[START] ${s.name} -> ${s.file} (PID: ${child.pid})`);
-
-//     child.stdout.on('data', data => process.stdout.write(`[${s.name}] ${data}`));
-//     child.stderr.on('data', data => process.stderr.write(`[${s.name} ERROR] ${data}`));
-
-//     // ?? L?ng nghe t�n hi?u t? process con
-//     child.on('message', async (msg) => 
-//     {
-//       if (msg === 'restart_system') 
-//       {
-//         console.log(`[SYSTEM] Nh?n l?nh restart t? ${s.name}`);
-//         await Restart_System();
-//       }
-//     });
-
-//     child.on('exit', code => 
-//     {
-//         console.log(` ${s.name}.js d� d?ng, m� tho�t = ${code}`);
-//     });
-//   }
-// }
-
 async function Run_Server() {
   if (serversStarted) {
     console.log('[SERVER] Server đã chạy');
@@ -164,8 +148,6 @@ async function Run_Server() {
   serversStarted = true;
 
   for (const s of servers) {
-
-    if (system_reset) return;
 
     // Chỉ free port nếu có port
     if (s.port) {
@@ -207,7 +189,6 @@ async function Run_Server() {
     });
   }
 }
-
 
 // -------- STOP SERVER --------
 async function Stop_Server() {
@@ -366,100 +347,6 @@ async function Wait_For_Wifi(ssid, timeoutSec = 10) {
     return false;
 }
 
-// -------- START AP MODE --------
-// async function Start_AP_Mode() {
-//     console.log('[INFO] �ang b?t AP mode "FPS16B"...');
-//     try {
-//         await runCommand('sudo systemctl stop wpa_supplicant');
-//         await Remove_Old_Wifi();
-//         await runCommand('sudo nmcli radio wifi off');
-//         await runCommand('sudo nmcli radio wifi on');
-//         await runCommand('sudo ip addr flush dev wlan0');
-//         await runCommand('sudo ip addr add 192.168.50.1/24 dev wlan0');
-
-//         fs.writeFileSync('/etc/hostapd/hostapd.conf', `
-// interface=wlan0
-// driver=nl80211
-// ssid=FPS16B
-// hw_mode=g
-// channel=7
-// auth_algs=1
-// ignore_broadcast_ssid=0
-// `);
-
-//         fs.writeFileSync('/etc/dnsmasq.conf', `
-// interface=wlan0
-// dhcp-range=192.168.50.10,192.168.50.100,255.255.255.0,24h
-// `);
-
-//         await runCommand('sudo systemctl restart hostapd');
-//         await runCommand('sudo systemctl restart dnsmasq');
-
-//         console.log('[OK] AP mode "FPS16B" d� b?t t?i 192.168.50.1');
-//     } 
-//     catch (err) 
-//     {
-//         console.error('[ERR] Kh�ng th? b?t AP mode:', err);
-//     }
-// }
-
-// async function Start_AP_Mode() 
-// {
-//     console.log('[INFO] Đang bật AP mode...');
-
-//     let apName = "PCR_DEVICE";
-
-//     try 
-//     {
-//         // Đọc device name từ file
-//         const data = fs.readFileSync(WIFI_CONFIG_FILE, 'utf8');
-//         const info = JSON.parse(data);
-
-//         if (info.device && info.device.trim() !== '') 
-//         {
-//             apName = info.device.trim();
-//         }
-//     } 
-//     catch (err) 
-//     {
-//         console.warn('[WARN] Không đọc được device name, dùng mặc định.');
-//     }
-
-//     try 
-//     {
-//         await runCommand('sudo systemctl stop wpa_supplicant');
-//         await Remove_Old_Wifi();
-//         await runCommand('sudo nmcli radio wifi off');
-//         await runCommand('sudo nmcli radio wifi on');
-//         await runCommand('sudo ip addr flush dev wlan0');
-//         await runCommand('sudo ip addr add 192.168.50.1/24 dev wlan0');
-
-//         fs.writeFileSync('/etc/hostapd/hostapd.conf', `
-// interface=wlan0
-// driver=nl80211
-// ssid=${apName}
-// hw_mode=g
-// channel=7
-// auth_algs=1
-// ignore_broadcast_ssid=0
-// `);
-
-//         fs.writeFileSync('/etc/dnsmasq.conf', `
-// interface=wlan0
-// dhcp-range=192.168.50.10,192.168.50.100,255.255.255.0,24h
-// `);
-
-//         await runCommand('sudo systemctl restart hostapd');
-//         await runCommand('sudo systemctl restart dnsmasq');
-
-//         console.log(`[OK] AP mode "${apName}" đã bật tại 192.168.50.1`);
-//     } 
-//     catch (err) 
-//     {
-//         console.error('[ERR] Không thể bật AP mode:', err);
-//     }
-// }
-
 
 async function Start_AP_Mode() 
 {
@@ -485,6 +372,14 @@ async function Start_AP_Mode()
 
     try 
     {
+        // await runCommand('sudo systemctl stop wpa_supplicant');
+        // await Remove_Old_Wifi();
+        // await runCommand('sudo nmcli radio wifi off');
+        // await runCommand('sudo nmcli radio wifi on');
+        // await runCommand('sudo ip addr flush dev wlan0');
+        // await runCommand('sudo ip addr add 192.168.50.1/24 dev wlan0');
+
+
         await runCommand('sudo systemctl stop wpa_supplicant');
         await Remove_Old_Wifi();
         await runCommand('sudo nmcli radio wifi off');

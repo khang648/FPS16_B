@@ -1,6 +1,7 @@
 const XLSX = require("xlsx");
 const fs = require("fs");
 const path = require("path");
+const { exec } = require("child_process");
 
 // ---------------------- CONSTANTS ----------------------
 const START_CELL = "B5"; // Vị trí bắt đầu
@@ -244,6 +245,25 @@ function registerExcelSocket(io, socket) {
     fs.writeFileSync(filePath, JSON.stringify(dataObj, null, 2));
   }
 
+  function updateHostname(host_name, seri_number) {
+  const host = `${host_name}${seri_number}`;
+
+  const cmd = `
+  sudo hostnamectl set-hostname ${host} &&
+  sudo sed -i 's/^127\\.0\\.1\\.1.*/127.0.1.1 ${host}/' /etc/hosts &&
+  sudo sed -i 's/^host-name=.*/host-name=${host}/' /etc/avahi/avahi-daemon.conf &&
+  sudo systemctl restart avahi-daemon
+  `;
+
+  exec(cmd, (error, stdout, stderr) => {
+    if (error) {
+      console.error("Hostname update error:", error);
+      return;
+    }
+    console.log("Hostname updated:", host);
+    });
+  }
+
   socket.on("admin_write_extra", (data) => {
     try {
       if (data.threshold) {
@@ -300,7 +320,10 @@ function registerExcelSocket(io, socket) {
           // ghi lại toàn bộ (đã merge)
           fs.writeFileSync(WIFI_PATH, JSON.stringify(wifiRaw, null, 2));
 
-        } catch (err) {
+          updateHostname(wifiRaw.host_name, wifiRaw.seri_number);
+        } 
+        catch (err) 
+        {
           console.error("Error writing wifi.json:", err);
         }
       }

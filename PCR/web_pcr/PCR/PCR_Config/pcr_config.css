@@ -1,0 +1,61 @@
+body{
+    Font-family: "Noto Serif", serif;
+    background:#f4f6f8;
+    margin:0;
+}
+
+header{
+    background:#1e2a38;
+    color:white;
+    padding:15px;
+    font-size:20px;
+}
+
+.container{
+    width:400px;
+    margin:60px auto;
+    background:white;
+    padding:30px;
+    border-radius:8px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.form-row{
+    margin-bottom:20px;
+}
+
+label{
+    display:block;
+    margin-bottom:5px;
+}
+
+input{
+    width:100%;
+    padding:8px;
+    font-size:16px;
+}
+
+.button-area{
+    display:flex;
+    justify-content:space-between;
+    margin-top:25px;
+}
+
+button{
+    padding:10px 25px;
+    font-size:16px;
+    border-radius: 8px;
+    cursor:pointer;
+}
+
+.apply{
+    background:#2ecc71;
+    border:none;
+    color:white;
+}
+
+.back{
+    background:#e74c3c;
+    border:none;
+    color:white;
+}

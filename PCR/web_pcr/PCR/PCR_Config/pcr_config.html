@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google" content="notranslate">
+  <title>PCR Config</title>
+  
+  <link rel="stylesheet" href="../PCR_Elements/style.css">
+  <link rel="stylesheet" href="pcr_config.css">
+  <link rel="stylesheet" href="../PCR_Elements/Create_UI.css">
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+  <div class="form-row">
+    <label>Host name</label>
+    <input type="text" id="host_name">
+  </div>
+
+  <div class="form-row">
+    <label>Seri number</label>
+    <input type="text" id="seri_number">
+  </div>
+
+  <div class="button-area">
+    <button class="back" id="backBtn">Back</button>
+    <button class="apply" id="applyBtn">Apply</button>
+  </div>
+
+</div>
+
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/components/header.js"></script> 
+  <script src="/components/program.js"></script> 
+  
+  <script src="../../Websocket/Websocket_ID.js"></script>
+  <script type="module" src="../../Websocket/Websocket.js"></script>
+  <script src="../PCR_Elements/Package.js"></script>
+  <script src="../PCR_Elements/Convert.js"></script>
+  <script src="../PCR_Elements/Handle.js"></script>
+  <script src="../PCR_Elements/Data_config.js"></script>
+  <script src="../PCR_Elements/Create_UI.js"></script>
+
+  <script src="pcr_config.js"></script>
+
+</body>
+</html>

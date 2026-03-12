@@ -17,6 +17,32 @@ function initHeaderLogic() {
       goToPage(page);
     });
   });
+
+
+  // Kiểm tra nhấn đủ 5s
+  const title = document.getElementById("deviceTitle");
+
+  let holdTimer = null;
+
+  function startHold() {
+
+    holdTimer = setTimeout(() => {
+      // console.log("Đã click giữ 5 giây");
+      goToPage("PCR/PCR_Config/pcr_config.html", "none");
+    }, 5000);
+
+  }
+
+  function cancelHold() {
+
+    if (holdTimer) {
+      clearTimeout(holdTimer);
+      holdTimer = null;
+    }
+
+  }
+
+  title.addEventListener("pointerdown", startHold);
+  title.addEventListener("pointerup", cancelHold);
+  title.addEventListener("pointerleave", cancelHold);
 }
-
-
