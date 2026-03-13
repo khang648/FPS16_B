@@ -14,6 +14,8 @@ const {
 } = require("./socket_handlers/electrophoresis_handler");
 const { registerADCSocket } = require("./socket_handlers/adc_handler");
 const { registerFolderSocket } = require("./socket_handlers/folder_handler");
+const { registerResultSocket, registerResultRoutes } = require("./socket_handlers/result_handler");
+const { registerEmailSocket } = require("./socket_handlers/email_handler");
 
 /*========== INIT ==========*/
 const app = express();
@@ -108,6 +110,9 @@ io.on("connection", (socket) => {
   registerElectrophoresisSocket(io, socket);
   registerADCSocket(io, socket);
   registerFolderSocket(io, socket);
+  registerResultSocket(io, socket);
+  registerResultRoutes(app);
+  registerEmailSocket(io, socket);
 
   /* ================= WIFI CONFIG ================= */
 

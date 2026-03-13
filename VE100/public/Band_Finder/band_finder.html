@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPS32B - Spotcheck 26001</title>
+
+  <!-- ================= STYLES ================= -->
+  <link rel="stylesheet" href="../assets/fontawesome-7.1.0/css/all.min.css">
+  <link rel="stylesheet" href="band_finder.css">
+  <link rel="stylesheet" href="../general_style.css">
+</head>
+
+<body>
+
+<header>
+  <div class="titlebar-top">
+    <span class="titlebar-version">SPOTCHECK</span>
+  </div>
+
+  <div class="titlebar-bottom">
+    <span class="titlebar-page">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      VIEW RESULTS
+    </span>
+  </div>
+</header>
+
+<main class="bandfinder-main">
+
+  <div class="bandfinder-container">
+
+    <!-- LEFT LINE PANEL -->
+    <aside class="line-panel mobile-line-panel">
+
+      <button id="btnBase" class="line-btn" disabled>
+        <span class="line-color base"></span>Base
+      </button>
+
+      <button id="btnFirst" class="line-btn" disabled>
+        <span class="line-color first"></span>First
+      </button>
+
+      <button id="btnLast" class="line-btn" disabled>
+        <span class="line-color last"></span>Last
+      </button>
+
+      <button id="btnResult" class="line-btn" disabled>
+        <span class="line-color result"></span>Result
+      </button>
+
+    </aside>
+
+    <!-- CENTER WORKSPACE -->
+    <section class="workspace">
+
+      <div class="image-view">
+
+        <img id="bandImage">
+        <canvas id="overlayCanvas"></canvas>
+
+        <div class="image-placeholder">
+        Select an image from Results
+        </div>
+
+      </div>
+
+
+      <!-- CONTROL PANEL -->
+      <div class="control-panel">
+
+        <div class="input-group">
+          <label>First band</label>
+          <input type="number" id="firstBandValue" value="100">
+        </div>
+
+        <div class="input-group">
+          <label>Last band</label>
+          <input type="number" id="lastBandValue" value="2000">
+        </div>
+
+        <div class="input-group">
+          <label>Band size</label>
+          <input type="number" id="bandSize">
+        </div>
+
+        <div class="action-buttons">
+          <button id="btnFind" disabled>Find</button>
+          <button id="btnReset" disabled>Reset</button>
+          <button id="btnSave" disabled>Save</button>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- RIGHT FILE EXPLORER -->
+    <aside class="file-panel">
+      <div class="panel-header">
+        <h2>Results</h2>
+        <button id="btn-back" class="back-btn">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+      </div>
+
+      <div class="path-bar" id="pathBar">
+        /home/pi/VE100/Results
+      </div>
+
+      <div class="panel-body">
+        <div id="result-grid" class="result-grid"></div>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="panel-footer">
+
+        <button id="btn-download" class="panel-btn">
+          <i class="fas fa-download"></i>
+          Download
+        </button>
+
+        <button id="btn-delete" class="panel-btn danger">
+          <i class="fas fa-trash"></i>
+          Delete
+        </button>
+
+      </div>
+
+    </aside>
+
+  </div>
+</main>
+
+
+<footer>
+<button id="btnBack" type="button">Back</button>
+</footer>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="../Navigation/nav.js"></script>
+<script src="band_finder.js"></script>
+
+</body>
+</html>

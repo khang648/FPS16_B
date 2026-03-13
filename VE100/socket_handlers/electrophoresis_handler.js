@@ -4,7 +4,7 @@ const rpio = require("rpio");
 const { SerialPort } = require("serialport");
 const { captureCurrentFrame } = require("./camera_handler");
 const { createCanvas, loadImage, registerFont } = require("canvas");
-
+const { autoSendResultEmail } = require("./email_handler");
 
 
 
@@ -151,6 +151,32 @@ function ensureSessionFolder() {
     console.log("[FOLDER ERROR]:", err.message);
     return false;
   }
+}
+
+/* ========================================================= */
+function getCurrentResultFolder() {
+
+  try {
+
+    if (!fs.existsSync(GLOBAL_INFO_PATH)) return null;
+
+    const raw = JSON.parse(
+      fs.readFileSync(GLOBAL_INFO_PATH, "utf8")
+    );
+
+    const folderName = raw.folder_name;
+
+    if (!folderName) return null;
+
+    return path.join(RESULTS_BASE_PATH, folderName);
+
+  } catch (err) {
+
+    console.log("[RESULT FOLDER ERROR]:", err.message);
+    return null;
+
+  }
+
 }
 
 /* ========================================================= */
@@ -367,12 +393,22 @@ async function runNextStage() {
     applyStageVoltage(0);
 
     try {
+
       const lastImagePath = await captureCurrentFrame("final");
 
       if (lastImagePath && fs.existsSync(lastImagePath)) {
         await processFinalImage(lastImagePath);
       } else {
         console.log("[IMAGE] Final image not found:", lastImagePath);
+      }
+
+      /* ================= AUTO SEND EMAIL ================= */
+
+      const resultFolder = getCurrentResultFolder();
+
+      if (resultFolder) {
+        console.log("[EMAIL] Sending result email...");
+        await autoSendResultEmail(resultFolder);
       }
 
     } catch (err) {

@@ -1,0 +1,80 @@
+.popup-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.3s;
+}
+
+.popup-overlay.hidden {
+  display: none;
+}
+
+.popup-box {
+  background: #1f1f2e;
+  color: #fff;
+  padding: 25px 30px;
+  border-radius: 15px;
+  width: 300px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+  position: relative;
+}
+
+.popup-icon {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+.popup-text {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.popup-btn {
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: linear-gradient(90deg,#3abebc,#1f47fa);
+  color: #fff;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.popup-btn:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+/* Loading animation */
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+
+.popup-icon.loading {
+  border: 4px solid #fff;
+  border-top: 4px solid #3abebc;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 15px;
+  animation: spin 1s linear infinite;
+}
+
+/* Blur background khi popup mở */
+body.popup-active > *:not(.popup-overlay) {
+  filter: blur(2px);
+  pointer-events: none; /* Không cho click vào nội dung phía sau */
+  user-select: none;
+}

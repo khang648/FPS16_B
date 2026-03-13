@@ -1,0 +1,307 @@
+/* =========================================================
+   MAIN CONTAINER
+   ========================================================= */
+.result-container {
+  width: 100%;
+  margin: 8px 0;
+
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* =========================================================
+   RESULT PANEL
+   ========================================================= */
+.result-panel {
+  width: 100%;
+  height: 610px;
+  padding: 16px;
+
+  background: var(--container-bg);
+  border: 1px solid var(--container-border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================================
+   PANEL HEADER
+   ========================================================= */
+.panel-header {
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.panel-header h2 {
+  margin: 0;
+
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* =========================================================
+   PANEL BODY
+   ========================================================= */
+.panel-body {
+  flex: 1;
+  max-height: 500px;
+  padding: 8px;
+
+  background: #14202c;
+  border: 1px solid #e0e0e057;
+  border-radius: 8px;
+
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+/* =========================================================
+   RESULT GRID
+   ========================================================= */
+.result-grid {
+  min-width: 500px;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+/* =========================================================
+   RESULT ITEM
+   ========================================================= */
+.result-item {
+  padding: 12px 4px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  text-align: center;
+  user-select: none;
+  cursor: pointer;
+
+  background: transparent;
+  border-radius: 10px;
+  transition: 0.15s ease;
+}
+
+.result-item:hover {
+  background: rgba(255, 255, 255, 0.053);
+}
+
+/* =========================================================
+   FOLDER ICON
+   ========================================================= */
+.folder-icon i {
+  font-size: 3rem;
+  color: #f2c14e;
+  pointer-events: none;
+}
+
+/* =========================================================
+   FOLDER NAME
+   ========================================================= */
+.folder-name {
+  width: 100%;
+  max-width: 120px;
+
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #ffffff;
+
+  word-break: break-word;
+}
+
+/* =========================================================
+   SELECTED STATE
+   ========================================================= */
+.result-item.selected {
+  background: rgba(4, 255, 217, 0.24);
+}
+
+.result-item.selected .folder-icon i {
+  color: #f2c14e;
+}
+
+.result-item.selected .folder-name {
+  color: #34fcff;
+  font-weight: 600;
+}
+
+/* =========================================================
+   PANEL FOOTER
+   ========================================================= */
+.panel-footer {
+  margin-top: 12px;
+
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+/* =========================================================
+   FOOTER BUTTON COMMON
+   ========================================================= */
+.panel-footer button {
+  flex: 2;
+  padding: 12px;
+
+  font-size: 1rem;
+  font-weight: 500;
+
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+
+  transition: 0.15s ease;
+}
+
+/* =========================================================
+   DOWNLOAD BUTTON
+   ========================================================= */
+#download-btn {
+  flex: 5;
+  background: #4b90ff;
+  color: #ffffff;
+}
+
+#download-btn:hover {
+  background: #3277ec;
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   DELETE BUTTONS
+   ========================================================= */
+#delete-btn,
+#deleteall-btn {
+  flex: 1;
+  background: var(--button-bg);
+  color: var(--text-main);
+
+  transition: all 0.25s ease;
+}
+
+#delete-btn:hover,
+#deleteall-btn:hover {
+  background: var(--button-hover);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   EXCEL INFO
+   ========================================================= */
+.excel-info div {
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+
+/* =========================================================
+   EXCEL TABLE
+   ========================================================= */
+.excel-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.excel-table td {
+  padding: 6px 8px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* =========================================================
+   RESULT ROW COLOR
+   ========================================================= */
+.excel-table tr {
+  transition: background-color 0.2s ease;
+  backdrop-filter: blur(2px);
+}
+
+.excel-table tr.nosample {
+  background-color: rgba(126, 126, 126, 0.8);
+  color: #d0d0d0;
+}
+
+.excel-table tr.negative {
+  background-color: rgba(16, 204, 16, 0.8);
+  color: #ffffff;
+}
+
+.excel-table tr.lowcopy {
+  background-color: rgba(255, 153, 204, 0.8);
+  color: #ffffff;
+}
+
+.excel-table tr.mediumcopy {
+  background-color: rgba(255, 146, 38, 0.8);
+  color: #ffffff;
+}
+
+.excel-table tr.positive {
+  background-color: rgba(255, 77, 77, 0.8);
+  color: #ffffff;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 1024px) {
+  .result-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .result-panel {
+    height: auto;
+    max-height: none;
+  }
+
+  .panel-body {
+    max-height: 100vh;
+  }
+
+  .result-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .panel-body {
+    max-height: 50vh;
+  }
+
+  .folder-icon i {
+    font-size: 2.5rem;
+  }
+
+  .folder-name {
+    font-size: 0.9rem;
+  }
+
+  .excel-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .excel-table td {
+    font-size: 0.85rem;
+    padding: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .panel-footer {
+    flex-direction: column;
+  }
+
+  .panel-footer button {
+    width: 100%;
+  }
+}

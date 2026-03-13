@@ -26,6 +26,12 @@ window.addEventListener("DOMContentLoaded", () => {
         goToPage("./Wifi_Setting/wifi_setting.html");
     });
 
+    // BAND FINDER
+    document.getElementById("btnBandFinder")?.addEventListener("click", () => {
+        goToPage("./Band_Finder/band_finder.html");
+    });
+
+
     // RESULT
     document.getElementById("btnResults")?.addEventListener("click", () => {
         goToPage("./Result_View/result_view.html");

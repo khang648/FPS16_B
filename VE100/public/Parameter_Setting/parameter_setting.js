@@ -1,14 +1,43 @@
 /* ================= GLOBAL SOCKET ================= */
 window.socket = io();
 
-const parameters_path = "/home/pi/VE100/parameters.json";
-
 document.addEventListener("DOMContentLoaded", () => {
+  /* ================= GLOBAL ================= */
+  const emailDialog = document.getElementById("email-dialog");
+  const emailInput = document.getElementById("email-input");
+  const btnEmailCancel = document.getElementById("email-cancel");
+  const btnEmailOk = document.getElementById("email-ok");
+  const parameters_path = "/home/pi/VE100/parameters.json";
+
+  let automail = 0;
 
   const stageContainer = document.getElementById("stageContainer");
   const stageCountInput = document.getElementById("stageCount");
   const saveBtn = document.getElementById("saveBtn");
   const MAX_STAGE = 5;
+
+  socket.emit("readJsonKey", {
+    filePath: globalvar_tmp_path,
+    key: "email"
+  });
+
+  // Receive email login info
+  socket.on("jsonKeyValue", (res) => {
+    if (res.error) {
+      console.error("ERROR:", res.error);
+      return;
+    }
+
+    automail = res.value;
+    console.log("automail:", automail);
+  });
+
+  // Receive Excel data
+  socket.on("excelData", (values) => {
+    samplename_data = values;
+    applyExcelValues(samplename_data);
+  });
+
 
   // yêu cầu server gửi parameters.json
   socket.emit("loadJsonFile", parameters_path);
@@ -197,6 +226,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  btnEmailCancel.addEventListener("click", () => {
+    hideEmailDialog();
+  });
+
+  btnEmailOk.addEventListener("click", () => {
+    const emails = emailInput.value.trim();
+
+    if (!emails) {
+      alert("🟡 Please enter at least one email address");
+      return;
+    }
+
+    socket.emit("writeJsonFile", {
+      filePath: globalvar_tmp_path,
+      data: {
+        automail: 1,
+        recipient: emails
+      }
+    });
+
+    hideEmailDialog();
+    goToPage("./Electrophoresis/electrophoresis.html");
+  });
+
   /* =============================
      NEXT
   ============================== */
@@ -244,6 +297,29 @@ document.addEventListener("DOMContentLoaded", () => {
       data: dataToSave
     });
 
-    goToPage("./Electrophoresis/electrophoresis.html");
+
+    if (automail) {
+      const ask = confirm("Do you want to automatically send the result file by email?");
+      if (!ask) {
+        goToPage("./Electrophoresis/electrophoresis.html");
+        return;
+      }
+      showEmailDialog();
+    } else {
+      goToPage("./Electrophoresis/electrophoresis.html");
+    }
+
   });
+
+  /* ================= EMAIL DIALOG ================= */
+
+  function showEmailDialog() {
+    emailInput.value = "";
+    emailDialog.style.display = "flex";
+  }
+
+  function hideEmailDialog() {
+    emailDialog.style.display = "none";
+  }
+
 });
