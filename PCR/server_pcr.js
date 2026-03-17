@@ -25,6 +25,27 @@ function sendToTFT(data) {
     }
 }
 
+ function updateHostname(host_name, seri_number) {
+  const host = `${host_name}${seri_number}`;
+
+  const cmd = `
+  sudo hostnamectl set-hostname ${host} &&
+  sudo sed -i 's/^127\\.0\\.1\\.1.*/127.0.1.1 ${host}/' /etc/hosts &&
+  sudo sed -i 's/^host-name=.*/host-name=${host}/' /etc/avahi/avahi-daemon.conf &&
+  sudo systemctl restart avahi-daemon
+  `;
+
+  exec(cmd, (error, stdout, stderr) => {
+    if (error) {
+      console.error("Hostname update error:", error);
+      return;
+    }
+    console.log("Hostname updated:", host);
+    });
+  }
+
+
+
 let count_rx = 0;
 
 // =========== Server Web + Socket.IO ==============
@@ -138,42 +159,7 @@ io.on("connection", (socket) => // khi có client kết nối
     }
   });
   
-  // // Nhận Wi-Fi mới từ web thì lưu vào wifi.json
-  // socket.on("web_pcr_wifi_config", (data) => {
-  //   try
-  //   {
-  //       fs.writeFileSync(INFO_FILE, JSON.stringify(data, null, 2), { mode: 0o600 });
-  //       socket.emit('wifi_config_saved', { success: true }); // Lưu thành công
-  //   } 
-  //   catch (err) 
-  //   {
-  //       socket.emit('wifi_config_saved', { success: false }); // Lỗi lưu
-  //   }
-  // });
-
-  // socket.on("web_pcr_wifi_config", (data) => {
-  //   try 
-  //   {
-  //     let info = {};
-
-  //     // 1. Đọc file cũ nếu tồn tại
-  //     if (fs.existsSync(INFO_FILE)) {info = JSON.parse(fs.readFileSync(INFO_FILE, "utf8")); }
-  //     // 2. Chỉ cập nhật wifi, giữ nguyên 
-  //     info.ssid = data.ssid;
-  //     info.password = data.password;
-  //     // 3. Ghi lại file
-  //     fs.writeFileSync( INFO_FILE,JSON.stringify(info, null, 2), { mode: 0o600 });
-
-  //     socket.emit("wifi_config_saved", { success: true });
-  //     console.log("WiFi updated, device kept:", info.device);
-
-  //   } 
-  //   catch (err) 
-  //   {
-  //     console.error("WiFi save error:", err);
-  //     socket.emit("wifi_config_saved", { success: false });
-  //   }
-  // });
+ 
   socket.on("web_pcr_wifi_config", (data) => {
   try 
   {
@@ -243,6 +229,23 @@ io.on("connection", (socket) => // khi có client kết nối
 
   /*====================================================================================*/
   /*====================================================================================*/ 
+
+
+  socket.on("update_device_info", (data) => {
+
+    console.log("Nhận từ web:", data);
+
+    const info = JSON.parse(fs.readFileSync("./information.json"));
+    info.host_name = data.host_name;
+    info.seri_number = data.seri_number;
+    fs.writeFileSync("./information.json", JSON.stringify(info, null, 2));
+    
+    updateHostname(info.host_name, info.seri_number);
+    /* báo về web */
+    socket.emit("device_info_saved", true);
+
+  });
+
 });
 
 // lắng nghe tất cả interface
@@ -446,3 +449,32 @@ async function get_Device_Name() {
         modbus.PCR_Global.device_name = "UNKNOWN";
     }
 }
+
+
+
+// Hàm nhận yêu cầu dữ liệu từ web
+io.on("request_device_info", () => {
+
+  try {
+
+    if (fs.existsSync(INFO_FILE)) 
+    {
+
+      const info = JSON.parse(fs.readFileSync(INFO_FILE, "utf8"));
+
+      socket.emit("device_info", 
+      {
+        host_name: info.host_name || "",
+        seri_number: info.seri_number || "",
+        device_name: (info.host_name || "") + (info.seri_number || "")
+      });
+
+    }
+
+  } 
+  catch (err) 
+  {
+    console.log("Send device info error:", err.message);
+  }
+
+});
