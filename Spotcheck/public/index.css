@@ -10,6 +10,26 @@
   align-items: center;
 }
 
+.titlebar-top {
+  position: relative;
+}
+
+/* Language select */
+.lang-select {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  padding: 4px 8px;
+  font-size: 12px;
+
+  border-radius: 6px;
+  border: 1px solid #ccc;
+
+  background: #fff;
+  cursor: pointer;
+}
 
 /* =========================================================
    MAIN BUTTON

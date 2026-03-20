@@ -23,7 +23,7 @@
     <div class="titlebar-bottom">
       <span class="titlebar-page">
         <i class="fa-solid fa-list-check"></i>
-        SYSTEM CHECK
+        <span data-i18n="HEADER_SYSTEM_CHECK"></span>
       </span>
     </div>
   </header>
@@ -74,8 +74,7 @@
 
         <!-- status text -->
         <div class="status-panel">
-          <div class="status-text" id="statusText">
-            Processing...
+          <div class="status-text" id="statusText" data-i18n="LABEL_PROCESSING">
           </div>
         </div>
 
@@ -103,6 +102,7 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="../Navigation/nav.js"></script>
   <script src="system_check.js"></script>
+  <script src="../lang/i18n.js"></script>
 
 </body>
 </html>

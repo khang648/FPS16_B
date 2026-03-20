@@ -21,7 +21,8 @@
 
     <div class="titlebar-bottom">
       <span class="titlebar-page">
-        <i class="fa-solid fa-magnifying-glass-chart"></i> KIT SELECTION
+        <i class="fa-solid fa-magnifying-glass-chart"></i> 
+        <span data-i18n="HEADER_KIT_SELECTION"></span>
       </span>
     </div>
   </header>
@@ -32,18 +33,18 @@
 
       <!-- ===== LEFT PANEL ===== -->
       <div class="left-panel">
-        <h3>Available Kits</h3>
+        <h3 data-i18n="LABEL_AVAILABLE_KITS"></h3>
         <div id="fileList" class="file-list"></div>
       </div>
 
       <!-- ===== RIGHT PANEL ===== -->
       <div class="right-panel">
-        <h3>Kit Information</h3>
+        <h3 data-i18n="LABEL_KIT_INFORMATION"></h3>
 
         <div class="info-box">
 
           <div class="kit-name">
-            <label>Kit Name:</label>
+            <label data-i18n="LABEL_KIT_NAME"></label>
             <input type="text" id="kitName" readonly>
           </div>
 
@@ -59,14 +60,15 @@
 
   <!-- ================= FOOTER ================= -->
   <footer>
-    <button id="btnBack">Back</button>
-    <button id="btnNext">Next</button>
+    <button id="btnBack" type="button" data-i18n="BUTTON_BACK"></button>
+    <button id="btnNext" type="button" data-i18n="BUTTON_NEXT"></button>
   </footer>
 
   <!-- ================= SCRIPTS ================= -->
   <script src="/socket.io/socket.io.js"></script>
   <script src="../Navigation/nav.js"></script>
   <script src="kit_selection.js"></script>
+  <script src="../lang/i18n.js"></script>
 
 </body>
 </html>

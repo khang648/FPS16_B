@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ).length;
 
     if (selectedCount === 0) {
-      alert("🟡 Please select at least one well before checking");
+      alert(t("ALERT_WELL_MISSING"));
       return;
     }
 
@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    checkBtn.textContent = "Checking...";
+    checkBtn.textContent = t("LABEL_PROCESSING");
     checkBtn.disabled = true;
 
     socket.emit("fam_check");
@@ -161,7 +161,7 @@ socket.on("famcheck_done", (data) => {
 
   hasResult = true;
 
-  checkBtn.textContent = "Check";
+  checkBtn.textContent = t("BUTTON_CHECK");
   checkBtn.disabled = false;
 
   console.log("Value received:", values);

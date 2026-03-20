@@ -10,6 +10,9 @@ let samplename_data = [];
 let automail = 0;
 let selectedSampleFile = "";
 
+/* ===== DRAG STATE ===== */
+let isSelecting = false;
+
 /* ================= SOCKET EVENTS ================= */
 
 // Receive sample file list
@@ -138,7 +141,15 @@ function applyExcelValues(values) {
   }
 }
 
-// Well clicked
+/* ===== FIX: activate only (no toggle bug) ===== */
+function activateWell(id) {
+  const el = document.querySelector(`.well[data-pos="${id}"]`);
+  if (!el.classList.contains("active")) {
+    el.classList.add("active");
+  }
+}
+
+// giữ click đơn
 function onWellClicked(id) {
   const el = document.querySelector(`.well[data-pos="${id}"]`);
   el.classList.toggle("active");
@@ -189,13 +200,58 @@ document.addEventListener("DOMContentLoaded", () => {
     wellGrid.appendChild(row);
   }
 
+  /* ===== EVENTS ===== */
   for (let r = 0; r < NUMBER_OF_ROWS; r++) {
     for (let c = 0; c < NUMBER_OF_COLUMNS; c++) {
       const id = `${rowLabels[r]}${c + 1}`;
       const well = document.querySelector(`.well[data-pos="${id}"]`);
+
+      // PC
+      well.addEventListener("mousedown", () => {
+        isSelecting = true;
+        activateWell(id);
+      });
+
+      well.addEventListener("mouseover", () => {
+        if (isSelecting) activateWell(id);
+      });
+
+      // MOBILE (FIX CHÍNH)
+      well.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        isSelecting = true;
+        activateWell(id);
+      }, { passive: false });
+
+      well.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+
+        const touch = e.touches[0];
+        const el = document.elementFromPoint(touch.clientX, touch.clientY);
+
+        if (el && el.classList.contains("well")) {
+          activateWell(el.dataset.pos);
+        }
+      }, { passive: false });
+
+      // click đơn
       well.addEventListener("click", () => onWellClicked(id));
     }
   }
+
+  // stop drag
+  document.addEventListener("mouseup", () => {
+    isSelecting = false;
+  });
+
+  document.addEventListener("touchend", () => {
+    isSelecting = false;
+  });
+
+  // chặn menu copy mobile
+  document.addEventListener("contextmenu", (e) => {
+    e.preventDefault();
+  });
 
   btnEmailCancel.addEventListener("click", () => {
     hideEmailDialog();
@@ -238,7 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("btnNext")?.addEventListener("click", () => {
     if (!selectedSampleFile) {
-      alert("🟡 Please select a sample file first");
+      alert(t("ALERT_SAMPLEFILE_MISSING"));
       return;
     }
 
@@ -253,7 +309,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (automail) {
-      const ask = confirm("Do you want to automatically send the result file by email?");
+      const ask = confirm("Do you want to automatically send the result by email?");
       if (!ask) {
         goToPage("../Analysis/analysis.html");
         return;

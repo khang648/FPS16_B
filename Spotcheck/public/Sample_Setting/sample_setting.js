@@ -188,11 +188,11 @@ function initWellGrid(rows, cols) {
   saveBtn.addEventListener("click", () => {
     const filledWells = wells.filter(w => w.classList.contains("filled"));
     if (filledWells.length === 0) {
-      alert("🟡 You must enter at least one well name before saving!");
+      alert(t("ALERT_WELLNAME_MISSING"));
       return;
     }
 
-    const fileName = prompt("Enter filename to save Excel:");
+    const fileName = prompt(t("ALERT_ENTER_FILENAME"));
     if (!fileName) return;
 
     const resultData = wells.map(w =>
@@ -208,7 +208,7 @@ function initWellGrid(rows, cols) {
     });
 
     const confirmBack = confirm(
-      "File has been created.\nDo you want to go back?"
+      t("ALERT_CREATEFILE_DONE")
     );
 
     if (confirmBack) {
@@ -272,11 +272,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelector(".delete-btn").addEventListener("click", () => {
     if (sampleSelectList.length === 0) {
-      alert("🟡 You have not selected any file to delete");
+      alert(t("ALERT_DELETEFILE_MISSING"));
       return;
     }
 
-    if (!confirm(`Delete ${sampleSelectList.length} selected file ?`)) return;
+    if (!confirm(t("ALERT_DELETE_FILE"))) return;
 
     socket.emit("delete_selected_samplefile", sampleSelectList);
   });
@@ -288,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelector(".deleteall-btn").addEventListener("click", () => {
-    if (!confirm("Are you sure you want to delete ALL files?")) return;
+    if (!confirm(t("ALERT_DELETEALL_FILE"))) return;
     socket.emit("delete_all_samplefile");
   });
 

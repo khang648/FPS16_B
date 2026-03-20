@@ -153,7 +153,7 @@ socket.on("jsonData", (data) => {
 
 /* ================= DELETE ALL FILES ================= */
 function DeleteAll_Clicked() {
-  if (confirm("⚠️ Are you sure to delete ALL kit files?")) {
+  if (confirm(t("ALERT_DELETEALL_FILE"))) {
     socket.emit("deleteAllJson");
   }
 }
@@ -181,11 +181,11 @@ function Clear_Clicked() {
 /* ================= DELETE SELECTED ================= */
 document.querySelector(".delete-btn").addEventListener("click", () => {
   if (kitSelectList.length === 0) {
-    alert("🟡 You have not selected any file to delete");
+    alert(t("ALERT_DELETEFILE_MISSING"));
     return;
   }
 
-  if (!confirm(`Delete ${kitSelectList.length} selected file?`)) return;
+  if (!confirm(t("ALERT_DELETE_FILE"))) return;
 
   console.log("[Client] Request delete folders:", kitSelectList);
   socket.emit("delete_selected_kit", kitSelectList);
@@ -199,7 +199,7 @@ socket.on("delete_selected_done", () => {
 
 /* ================= DELETE ALL (ALT) ================= */
 document.querySelector(".deleteall-btn").addEventListener("click", () => {
-  if (!confirm("Are you sure you want to delete ALL files?")) return;
+  if (!confirm(t("ALERT_DELETEALL_FILE"))) return;
 
   console.log("[Client] Request delete ALL file");
   socket.emit("delete_all_kit");

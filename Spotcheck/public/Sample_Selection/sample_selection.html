@@ -22,7 +22,7 @@
     <div class="titlebar-bottom">
       <span class="titlebar-page">
         <i class="fa-solid fa-magnifying-glass-chart"></i>
-        SAMPLE-FILE SELECTION
+        <span data-i18n="HEADER_SAMPLEFILE_SELECTION"></span>
       </span>
     </div>
   </header>
@@ -35,7 +35,7 @@
       <div class="file-panel">
 
         <div class="panel-header">
-          <h2>Sample Files</h2>
+          <h2 data-i18n="LABEL_SAMPLEFILE"></h2>
         </div>
 
         <div class="panel-body">
@@ -45,7 +45,7 @@
         </div>
 
         <div class="panel-footer">
-          <button id="btnCreate" class="btnCreate">Create</button>
+          <button id="btnCreate" class="btnCreate" data-i18n="BUTTON_CREATE"></button>
         </div>
 
       </div>
@@ -74,7 +74,7 @@
   <div id="email-dialog" class="email-dialog">
     <div class="email-dialog-content">
 
-      <h3>Enter recipient email(s)</h3>
+      <h3 data-i18n="LABEL_RECIPIENT_EMAIL"></h3>
 
       <input
         id="email-input"
@@ -83,8 +83,8 @@
       >
 
       <div class="email-dialog-buttons">
-        <button id="email-cancel">Cancel</button>
-        <button id="email-ok">OK</button>
+        <button id="email-cancel" data-i18n="BUTTON_CANCEL"></button>
+        <button id="email-ok" data-i18n="BUTTON_ANALYSIS_1"></button>
       </div>
 
     </div>
@@ -92,14 +92,15 @@
 
   <!-- ================= FOOTER ================= -->
   <footer>
-    <button id="btnBack" type="button">Back</button>
-    <button id="btnNext" type="button">Next</button>
+    <button id="btnBack" type="button" data-i18n="BUTTON_BACK"></button>
+    <button id="btnNext" type="button" data-i18n="BUTTON_ANALYSIS_1"></button>
   </footer>
 
   <!-- ================= SCRIPTS ================= -->
   <script src="/socket.io/socket.io.js"></script>
   <script src="../Navigation/nav.js"></script>
   <script src="sample_selection.js"></script>
+  <script src="../lang/i18n.js"></script>
 
 </body>
 </html>
