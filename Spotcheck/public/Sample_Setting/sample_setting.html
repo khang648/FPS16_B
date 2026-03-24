@@ -23,7 +23,7 @@
     <div class="titlebar-bottom">
       <span class="titlebar-page">
         <i class="fa-solid fa-file"></i>
-        SAMPLE-FILE MANAGEMENT
+        <span data-i18n="HEADER_SAMPLEFILE_MANAGEMENT"></span>
       </span>
     </div>
   </header>
@@ -50,26 +50,25 @@
 
           <!-- sample name input -->
           <div class="field-block">
-            <label for="sampleName" class="field-label">
-              Sample name
+            <label for="sampleName" class="field-label" data-i18n="LABEL_SAMPLE_NAME">
             </label>
             <input
               type="text"
               id="sampleName"
-              placeholder="Enter sample name..."
+              data-i18n-placeholder="PLACEHOLDER_SAMPLE_NAME"
             >
           </div>
 
           <!-- set buttons -->
           <div class="btn-group-row">
-            <button id="setBtn" class="small-btn">Set</button>
-            <button id="quickSetBtn" class="small-btn">Quick set</button>
-            <button id="clearBtn" class="small-btn danger">Clear all</button>
+            <button id="setBtn" class="small-btn" data-i18n="BUTTON_SET"></button>
+            <button id="quickSetBtn" class="small-btn" data-i18n="BUTTON_QUICKSET"></button>
+            <button id="clearBtn" class="small-btn danger" data-i18n="BUTTON_CLEARALL"></button>
           </div>
 
           <!-- create button -->
           <div class="save-btn-container">
-            <button id="saveBtn" class="create-btn">Create</button>
+            <button id="saveBtn" class="create-btn" data-i18n="BUTTON_CREATE"></button>
           </div>
 
         </div>
@@ -79,7 +78,7 @@
       <div class="file-panel">
 
         <div class="panel-header">
-          <h2>Sample-Name Files</h2>
+          <h2 data-i18n="LABEL_AVAILABLE_SAMPLEFILE"></h2>
         </div>
 
         <div class="panel-body">
@@ -90,8 +89,8 @@
 
         <div class="panel-footer">
           <!-- <button id="load-btn" class="load-btn">Load</button> -->
-          <button id="delete-btn" class="delete-btn">Delete</button>
-          <button id="deleteall-btn" class="deleteall-btn">Delete All</button>
+          <button id="delete-btn" class="delete-btn" data-i18n="BUTTON_DELETE"></button>
+          <button id="deleteall-btn" class="deleteall-btn" data-i18n="BUTTON_DELETEALL"></button>
         </div>
 
       </div>
@@ -101,13 +100,14 @@
 
   <!-- ================= FOOTER ================= -->
   <footer>
-    <button id="btnBack" type="button">Back</button>
+    <button id="btnBack" type="button" data-i18n="BUTTON_BACK"></button>
   </footer>
 
   <!-- ================= SCRIPTS ================= -->
   <script src="/socket.io/socket.io.js"></script>
   <script src="../Navigation/nav.js"></script>
   <script src="sample_setting.js"></script>
+  <script src="../lang/i18n.js"></script>
 
 </body>
 </html>

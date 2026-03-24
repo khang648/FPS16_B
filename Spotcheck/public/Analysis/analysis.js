@@ -76,7 +76,7 @@ function showFooterButtons() {
 
   // Finish Clicked
   document.getElementById("btnFinish")?.addEventListener("click", () => {
-    if (confirm("Do you want to go back to the HOME screen ?")) {
+    if (confirm(t("ALERT_BACKHOME"))) {
       goToPage("../index.html");
     } 
   });
@@ -179,11 +179,11 @@ socket.on("sampleanalysis_done", async (data) => {
   const tab2Btn = document.querySelector('.tab-btn[data-tab="tab2"]');
 
   if (window.sensitivity_chose === "low") {
-    if(tab1Btn) tab1Btn.textContent = "Low Sensitivity";
-    if(tab2Btn) tab2Btn.textContent = "High Sensitivity";
+    if(tab1Btn) tab1Btn.textContent = t("BUTTON_SENSITIVITY_LOW");
+    if(tab2Btn) tab2Btn.textContent = t("BUTTON_SENSITIVITY_HIGH");
   } else if (window.sensitivity_chose === "high") {
-    if(tab1Btn) tab1Btn.textContent = "High Sensitivity";
-    if(tab2Btn) tab2Btn.textContent = "Low Sensitivity";
+    if(tab1Btn) tab1Btn.textContent = t("BUTTON_SENSITIVITY_HIGH");
+    if(tab2Btn) tab2Btn.textContent = t("BUTTON_SENSITIVITY_LOW");
   } else {
     // fallback
     if(tab1Btn) tab1Btn.textContent = "Sensitivity 1";
@@ -208,7 +208,10 @@ socket.on("sampleanalysis_done", async (data) => {
         alert("🔴 Cannot generate images. Make sure data is ready.");
       }
 
-  socket.emit("request_download"); // Download ngay khi có kết quả
+  // socket.emit("request_download"); // Download ngay khi có kết quả
+  if (confirm(t("ALERT_DOWNLOAD_RESULT"))) {
+    socket.emit("request_download");
+  }
 });
 
 // ====================== DOM CONTENT LOADED ======================

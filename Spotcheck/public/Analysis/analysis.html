@@ -21,7 +21,8 @@
 
     <div class="titlebar-bottom">
       <span class="titlebar-page">
-        <i class="fa-solid fa-magnifying-glass-chart"></i> ANALYSIS
+        <i class="fa-solid fa-magnifying-glass-chart"></i> 
+        <span data-i18n="HEADER_ANALYSIS"></span>
       </span>
     </div>
   </header>
@@ -35,9 +36,9 @@
 
         <!-- TAB BUTTONS -->
         <div class="tab-header">
-          <button class="tab-btn" data-tab="tab1">Result</button>
-          <button class="tab-btn" data-tab="tab2">Sub-Result</button>
-          <button class="tab-btn" data-tab="tab-image">Image</button>
+          <button class="tab-btn" data-tab="tab1" data-i18n="BUTTON_RESULT"></button>
+          <button class="tab-btn" data-tab="tab2" data-i18n="BUTTON_SUBRESULT"></button>
+          <button class="tab-btn" data-tab="tab-image" data-i18n="BUTTON_IMAGE"></button>
         </div>
 
         <!-- TAB CONTENT AREA -->
@@ -51,12 +52,11 @@
       <div class="note-panel">
 
         <!-- NOTE HEADER -->
-        <div class="note-reference">
-          Reference
+        <div class="note-reference" data-i18n="LABEL_REFERENCE">
         </div>
 
         <div class="note-row note-header">
-          <div class="note-cell">Value</div>
+          <div class="note-cell" data-i18n="LABEL_VALUE"></div>
           <div class="note-cell">CT</div>
         </div>
 
@@ -101,7 +101,7 @@
     <div id="footerLoading" class="footer-loading">
       <div class="footer-spinner-text">
         <div class="spinner"></div>
-        <span class="processing-text">Processing</span>
+        <span class="processing-text" data-i18n="LABEL_PROCESSING"></span>
       </div>
     </div>
   </footer>
@@ -112,6 +112,7 @@
   <script src="analysis.js"></script>
   <!-- <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script> -->
   <script src="../assets/html2canvas-1.4.1/html2canvas.min.js"></script>
+  <script src="../lang/i18n.js"></script>
 
 
 </body>

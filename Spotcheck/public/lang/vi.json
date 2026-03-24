@@ -1,0 +1,114 @@
+{
+  "BUTTON_NEXT": "Kế tiếp",
+  "BUTTON_BACK": "Trở lại",
+
+
+  "HEADER_HOME": "TRANG CHỦ",
+  "BUTTON_ANALYSIS": "PHÂN TÍCH",
+  "BUTTON_OPTICAL_INSPECTION": "KIỂM TRA QUANG HỌC",
+  "BUTTON_SYSTEM_CHECK": "KIỂM TRA HỆ THỐNG",
+  "BUTTON_MANAGE_KITS": "QUẢN LÝ KIT",
+  "BUTTON_MANAGE_SAMPLE_FILES": "QUẢN LÝ TỆP MẪU",
+  "BUTTON_RESULTS": "KẾT QUẢ",
+  "BUTTON_EMAIL": "EMAIL",
+  "BUTTON_WIFI": "WIFI",
+  "POPUP_ANALYSIS_MODE": "Cách thức phân tích",
+  "BUTTON_HIGH_SENSITIVITY": "Độ nhạy cao",
+  "BUTTON_LOW_SENSITIVITY": "Độ nhạy thấp",
+  "POPUP_SYSTEMCHECK": "⚠️ Đã hơn 1 giờ kể từ lần cuối kiểm tra hệ thống. Bạn nên kiểm tra lại !",
+  "POPUP_SYSTEM_ERROR": "⛔ Hệ thống đang có lỗi, phân tích vào lúc này có thể ảnh hưởng đến độ chính xác",
+  
+  
+  "HEADER_SESSION_INFORMATION": "THÔNG TIN PHIÊN CHẠY",
+  "LABEL_SESSION_NAME": "Tên phiên chạy",
+  "LABEL_TECHNICIAN_NAME": "Kỹ thuật viên",
+  "PLACEHOLDER_SESSION_NAME": "Nhập tên phiên chạy",
+  "PLACEHOLDER_TECHNICIAN_NAME": "Nhập tên kỹ thuật viên",
+  "ALERT_INFOR_MISSING": "🟡 Xin nhập đầy đủ các thông tin",
+  
+
+  "HEADER_KIT_SELECTION": "CHỌN KIT",
+  "LABEL_AVAILABLE_KITS": "Kit khả dụng",
+  "LABEL_KIT_INFORMATION": "Thông tin kit",
+  "LABEL_KIT_NAME": "Tên kit:",
+  "LABEL_NO_KITS_AVAILABLE": "Chưa có kit khả dụng",
+  "LABEL_CONCENTRATION_VALUE": "Nồng độ & Giá trị",
+  "ALERT_KIT_MISSING": "🟡 Xin hãy chọn một kit",
+
+
+  "HEADER_SAMPLEFILE_SELECTION": "CHỌN TỆP MẪU",
+  "LABEL_SAMPLEFILE": "Tệp mẫu",
+  "BUTTON_CREATE": "Tạo mới",
+  "ALERT_SAMPLEFILE_MISSING": "🟡 Xin hãy chọn một tệp mẫu",
+  "ALERT_AUTOMAIL_SEND": "Bạn có muốn tự động gửi kết quả qua email ?",
+  "LABEL_RECIPIENT_EMAIL": "Email người nhận",
+  "BUTTON_CANCEL": "Hủy",
+  "BUTTON_ANALYSIS_1": "Phân tích",
+  "ALERT_AUTOEMAIL": "Bạn có muốn tự động gửi email kết quả ?",
+  "ALERT_PLACE_SAMPLE": "XIN HÃY ĐẢM BẢO BẠN ĐÃ ĐẶT MẪU VÀO ĐÚNG VỊ TRÍ ĐÃ CHỌN",
+  
+
+  "HEADER_ANALYSIS": "PHÂN TÍCH",
+  "BUTTON_RESULT": "Kết quả", 
+  "BUTTON_SUBRESULT": "Kể quả phụ",
+  "BUTTON_IMAGE": "Hình ảnh",
+  "LABEL_REFERENCE": "Tham chiếu", 
+  "LABEL_VALUE": "Giá trị",
+  "LABEL_PROCESSING": "Đang xử lý",
+  "ALERT_BACKHOME": "Bạn muốn quay về trang chủ ?",
+  "BUTTON_SENSITIVITY_HIGH": "Độ nhạy cao",
+  "BUTTON_SENSITIVITY_LOW": "Độ nhạy thấp",
+  "ALERT_DOWNLOAD_RESULT": "Bạn có muốn tải xuống kết quả ?",
+
+
+  "HEADER_OPTICAL_INSPECTION": "KIỂM TRA QUANG HỌC", 
+  "BUTTON_SELECTALL": "Chọn tất cả",
+  "BUTTON_DESELECTALL": "Bỏ chọn tất cả",
+  "BUTTON_CHECK": "Kiểm tra",
+  "ALERT_WELL_MISSING": "🟡 Xin hãy chọn ít nhất một giếng trước khi kiểm tra",
+
+
+  "HEADER_SYSTEM_CHECK": "KIỂM TRA HỆ THỐNG",
+  "BUTTON_RECHECK": "Kiểm tra lại",
+  "MSG_SYSTEM_ERROR": "⛔ [SYSTEM ERROR] - Xin vệ sinh khay mẫu và kiểm tra lại",
+  "MSG_SYSTEM_WARNING": "⚠️ [SYSTEM WARNING] - Các giếng màu đỏ cần được vệ sinh",
+  "MSG_SYSTEM_OK": "✅ [SYSTEM OK] - Kiểm tra hệ thống hoàn tất",
+
+
+  "HEADER_KIT_MANAGEMENT": "QUẢN LÝ KIT",
+  "LABEL_STANDARD_CURVE": "Dữ liệu đường chuẩn", 
+  "LABEL_CONCENTRATION": "Nồng độ",
+  "LABEL_NVALUE": "Giá trị N",
+  "LABEL_NHIGH": "N cao", 
+  "LABEL_NLOW": "N thấp",
+  "BUTTON_SAVE": "Lưu", 
+  "BUTTON_CLEAR": "Dọn dẹp",
+  "BUTTON_DELETE": "Xóa", 
+  "BUTTON_DELETEALL": "Xóa tất cả",
+  "PLACEHOLDER_KIT_NAME": "Nhập tên kit",
+  "ALERT_DELETEALL_FILE": "Bạn có chắc muốn xóa tất cả tệp ?",
+  "ALERT_DELETE_FILE": "Xóa tệp đã chọn ?",
+  "ALERT_DELETEFILE_MISSING": "🟡 Bạn chưa chọn tệp nào để xóa",
+
+
+  "HEADER_SAMPLEFILE_MANAGEMENT": "QUẢN LÝ TỆP MẪU", 
+  "LABEL_SAMPLE_NAME": "Tên mẫu",
+  "LABEL_AVAILABLE_SAMPLEFILE": "Tệp mẫu khả dụng",
+  "BUTTON_SET": "Đặt",
+  "BUTTON_QUICKSET": "Đặt tên nhanh",
+  "BUTTON_CLEARALL": "Xóa tất cả", 
+  "PLACEHOLDER_SAMPLE_NAME": "Nhập tên mẫu",
+  "ALERT_WELLNAME_MISSING": "🟡 Bạn phải nhập ít nhất một tên giếng trước khi lưu !",
+  "ALERT_ENTER_FILENAME": "Nhập tên file:",
+  "ALERT_CREATEFILE_DONE": "File đã được tạo. \nBạn có muốn quay trở lại trang trước ?",
+
+
+  "HEADER_RESULTS": "KẾT QUẢ", 
+  "LABEL_RESULT_FOLDERS": "Thư mục kết quả",
+  "LABEL_RESULT_PREVIEW": "Xem trước",
+  "BUTTON_DOWNLOAD": "Tải về",
+  "ALERT_DELETEALL_FOLDER": "Bạn có chắc muốn xóa tất cả thư mục ?",
+  "ALERT_DELETE_FOLDER": "Xóa thư mục đã chọn ?",
+  "ALERT_FOLDER_MISSING": "🟡 Bạn chưa chọn thư mục nào"
+
+}

@@ -1,0 +1,113 @@
+{
+  "BUTTON_NEXT": "Next",
+  "BUTTON BACK": "Back", 
+
+  "HEADER_HOME": "HOME",
+  "BUTTON_ANALYSIS": "ANALYSIS",
+  "BUTTON_OPTICAL_INSPECTION": "OPTICAL INSPECTION",
+  "BUTTON_SYSTEM_CHECK": "SYSTEM CHECK",
+  "BUTTON_MANAGE_KITS": "MANAGE KITS",
+  "BUTTON_MANAGE_SAMPLE_FILES": "MANAGE SAMPLE FILES",
+  "BUTTON_RESULTS": "RESULTS",
+  "BUTTON_EMAIL": "EMAIL",
+  "BUTTON_WIFI": "WIFI",
+  "POPUP_ANALYSIS_MODE": "Analysis Mode",
+  "BUTTON_HIGH_SENSITIVITY": "High Sensitivity",
+  "BUTTON_LOW_SENSITIVITY": "Low Sensitivity",
+  "POPUP_SYSTEMCHECK": "⚠️ It's been more than 1 hour since the last system check. You should check the system again !",
+  "POPUP_SYSTEM_ERROR": "⛔ The system is experiencing an error, analysis at this time may affect result accuracy",
+
+
+  "HEADER_SESSION_INFORMATION": "SESSION INFORMATION",
+  "LABEL_SESSION_NAME": "Session name",
+  "LABEL_TECHNICIAN_NAME": "Technician",
+  "PLACEHOLDER_SESSION_NAME": "Enter session name",
+  "PLACEHOLDER_TECHNICIAN_NAME": "Enter technician name",
+  "ALERT_INFOR_MISSING": "🟡 Please enter all the information",
+  
+
+
+  "HEADER_KIT_SELECTION": "KIT SELECTION",
+  "LABEL_AVAILABLE_KITS": "Available Kits",
+  "LABEL_KIT_INFORMATION": "Kit Information",
+  "LABEL_KIT_NAME":"Kit name",
+  "LABEL_NO_KITS_AVAILABLE": " No kits available",
+  "LABEL_CONCENTRATION_VALUE": "Concentration & Value",
+  "ALERT_KIT_MISSING": "🟡 Please select a kit first",
+
+
+  "HEADER_SAMPLEFILE_SELECTION": "SAMPLE-FILE SELECTION",
+  "LABEL_SAMPLEFILE": "Sample Files",
+  "BUTTON_CREATE": "Create",
+  "ALERT_SAMPLEFILE_MISSING": "🟡 Please select a sample file first",
+  "LABEL_RECIPIENT_EMAIL": "Enter recipient email(s)",
+  "BUTTON_CANCEL": "Cancel",
+  "BUTTON_ANALYSIS_1": "Analysis",
+  "ALERT_AUTOEMAIL": "Do you want to automatically send the result by email ?",
+  "ALERT_PLACE_SAMPLE": "PLEASE ENSURE YOU HAVE PLACED THE SAMPLES IN THE CORRECT SELECTED POSITION",
+  
+
+  "HEADER_ANALYSIS": "ANALYSIS",
+  "BUTTON_RESULT": "Result", 
+  "BUTTON_SUBRESULT": "Sub-Result",
+  "BUTTON_IMAGE": "Image",
+  "LABEL_REFERENCE": "Reference", 
+  "LABEL_VALUE": "Value",
+  "LABEL_PROCESSING": "Processing",
+  "ALERT_BACKHOME": "Do you want to go back to the HOME screen ?",
+  "BUTTON_SENSITIVITY_HIGH": "High Sensitivity",
+  "BUTTON_SENSITIVITY_LOW": "Low Sensitivity",
+
+
+  "HEADER_OPTICAL_INSPECTION": "OPTICAL INSPECTION", 
+  "BUTTON_SELECTALL": "Sellect all",
+  "BUTTON_DESELECTALL": "Deselect all",
+  "BUTTON_CHECK": "Check",
+  "ALERT_WELL_MISSING": "🟡 Please select at least one well before checking",
+
+
+  "HEADER_SYSTEM_CHECK": "SYSTEM CHECK",
+  "BUTTON_RECHECK": "Recheck",
+  "MSG_SYSTEM_ERROR": "⛔ [SYSTEM ERROR] - Please clean the plate and check again",
+  "MSG_SYSTEM_WARNING": "⚠️ [SYSTEM WARNING] - Red wells need to be cleaned",
+  "MSG_SYSTEM_OK": "✅ [SYSTEM OK] - System check completed",
+
+
+  "HEADER_KIT_MANAGEMENT": "KIT MANAGEMENT",
+  "LABEL_STANDARD_CURVE": "Standard Curve Data", 
+  "LABEL_CONCENTRATION": "Concentration",
+  "LABEL_NVALUE": "N-Value",
+  "LABEL_NHIGH": "N-High", 
+  "LABEL_NLOW": "N-Low",
+  "BUTTON_SAVE": "Save", 
+  "BUTTON_CLEAR": "Clear",
+  "BUTTON_DELETE": "Delete", 
+  "BUTTON_DELETEALL": "Delete All",
+  "PLACEHOLDER_KIT_NAME": "Enter kit name",
+  "ALERT_DELETEALL": "Are you sure to delete ALL files ?",
+  "ALERT_DELETE_FILE": "Delete selected file(s) ?",
+  "ALERT_DELETEFILE_MISSING": "🟡 You have not selected any file to delete",
+
+
+  "HEADER_SAMPLEFILE_MANAGEMENT": "SAMPLE FILE MANAGEMENT", 
+  "LABEL_SAMPLE_NAME": "Sample name",
+  "LABEL_AVAILABLE_SAMPLEFILE": "Available sample files",
+  "BUTTON_SET": "Set",
+  "BUTTON_QUICKSET": "Quick set",
+  "BUTTON_CLEARALL": "Clear all", 
+  "PLACEHOLDER_SAMPLE_NAME": "Enter sample name",
+  "ALERT_WELLNAME_MISSING": "🟡 You must enter at least one well name before saving !",
+  "ALERT_ENTER_FILENAME": "Enter file name:",
+  "ALERT_CREATEFILE_DONE": "File has been created.\nDo you want to go back to the previous page ?",
+
+
+  "HEADER_RESULTS": "RESULT", 
+  "LABEL_RESULT_FOLDERS": "Result folders",
+  "LABEL_RESULT_PREVIEW": "Result preview",
+  "BUTTON_DOWNLOAD": "Download",
+  "ALERT_DELETEALL_FOLDER": "Are you sure to delete ALL folders ?",
+  "ALERT_DELETE_FOLDER": "Delete selected folder(s) ?",
+  "ALERT_FOLDER_MISSING": "🟡 You have not selected any folder"
+
+
+}

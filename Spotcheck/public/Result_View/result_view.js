@@ -64,24 +64,24 @@ socket.on("download_zip_done", () => {
 // Delete selected
 document.getElementById("delete-btn")?.addEventListener("click", () => {
   if (resultSelectList.length === 0) {
-    alert("🟡 You have not selected any folder to delete");
+    alert(t("ALERT_FOLDER_MISSING"));
     return;
   }
 
-  if (!confirm(`Delete ${resultSelectList.length} selected folder(s)?`)) return;
+  if (!confirm(t("ALERT_DELETE_FOLDER"))) return;
   socket.emit("delete_selected_folders", resultSelectList);
 });
 
 // Delete all
 document.getElementById("deleteall-btn")?.addEventListener("click", () => {
-  if (!confirm("Are you sure you want to delete ALL result folders?")) return;
+  if (!confirm(t("ALERT_DELETEALL_FOLDER"))) return;
   socket.emit("delete_all_folders");
 });
 
 // Download
 document.getElementById("download-btn")?.addEventListener("click", () => {
   if (resultSelectList.length === 0) {
-    alert("🟡 You haven't selected a folder yet");
+    alert(t("ALERT_FOLDER_MISSING"));
     return;
   }
 

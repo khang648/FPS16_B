@@ -1,15 +1,14 @@
 {
-  "sensitivity": null,
-  "kit_value_a": null,
-  "kit_value_b": null,
-  "kit_selected": null,
+  "sensitivity": "high",
+  "kit_value_a": -0.147,
+  "kit_value_b": 1.74,
+  "kit_selected": "test_kit",
   "session_info": [
-    "",
-    "",
-    ""
+    "test_session",
+    "gag"
   ],
   "samplefile_create_direct": 0,
-  "session_createtime": "",
+  "session_createtime": "2026-03-23 16:34:41",
   "samplename_list": [
     "N/A",
     "N/A",
@@ -34,6 +33,6 @@
   "recipient": "",
   "resultfile_name": null,
   "lasttime_check": "2026-02-25 11:00:48",
-  "samplefile_name": "vuna",
+  "samplefile_name": "ttt",
   "famfolder_name": "Optical (2026-01-08_12-43-05)"
 }

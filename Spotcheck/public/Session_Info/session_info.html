@@ -23,7 +23,7 @@
     <div class="titlebar-bottom">
       <span class="titlebar-page">
         <i class="fa-solid fa-magnifying-glass-chart"></i>
-        SESSION INFORMATION
+        <span data-i18n="HEADER_SESSION_INFORMATION"></span>
       </span>
     </div>
   </header>
@@ -34,21 +34,21 @@
 
       <!-- session name -->
       <div class="form-group">
-        <label for="filename">Session Name</label>
+        <label for="filename" data-i18n="LABEL_SESSION_NAME"></label>
         <input
           type="text"
           id="filename"
-          placeholder="Enter session name"
+          data-i18n-placeholder="PLACEHOLDER_SESSION_NAME"
         >
       </div>
 
       <!-- technician -->
       <div class="form-group">
-        <label for="technician">Technician</label>
+        <label for="technician" data-i18n="LABEL_TECHNICIAN_NAME"></label>
         <input
           type="text"
           id="technician"
-          placeholder="Enter technician name"
+          data-i18n-placeholder="PLACEHOLDER_TECHNICIAN_NAME"
         >
       </div>
 
@@ -69,14 +69,15 @@
 
   <!-- ================= FOOTER ================= -->
   <footer>
-    <button id="btnBack" type="button">Back</button>
-    <button id="btnNext" type="button">Next</button>
+    <button id="btnBack" type="button" data-i18n="BUTTON_BACK"></button>
+    <button id="btnNext" type="button" data-i18n="BUTTON_NEXT"></button>
   </footer>
 
   <!-- ================= SCRIPTS ================= -->
   <script src="/socket.io/socket.io.js"></script>
   <script src="../Navigation/nav.js"></script>
   <script src="session_info.js"></script>
+  <script src="../lang/i18n.js"></script>
 
 </body>
 </html>

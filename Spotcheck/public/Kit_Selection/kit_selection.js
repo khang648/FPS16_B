@@ -23,7 +23,9 @@ socket.on("jsonList", (files) => {
 
   if (!files || files.length === 0) {
     fileList.innerHTML =
-      `<div style="text-align:center; color:#a8bcd6;">No kits available</div>`;
+      `<div style="text-align:center; color:#a8bcd6;">
+        ${t("LABEL_NO_KITS_AVAILABLE")}
+      </div>`;
     return;
   }
 
@@ -82,7 +84,9 @@ function renderKitDetails(data) {
     return;
   }
 
-  kitDetails.innerHTML += `<p><strong>Concentration & Value:</strong></p>`;
+  kitDetails.innerHTML += `
+    <p><strong>${t("LABEL_CONCENTRATION_VALUE")}:</strong></p>
+  `;
 
   let hasPair = false;
   for (let i = 1; i <= 10; i++) {
@@ -106,8 +110,8 @@ function renderKitDetails(data) {
 
   kitDetails.innerHTML += `
     <hr style="border:none; border-top:1px solid rgba(255,255,255,0.1); margin:8px 0;">
-    <p><strong>n_low:</strong> ${data.n_low ?? ""}</p>
-    <p><strong>n_high:</strong> ${data.n_high ?? ""}</p>
+    <p><strong>${t("LABEL_NLOW")}:</strong> ${data.n_low ?? ""}</p>
+    <p><strong>${t("LABEL_NHIGH")}:</strong> ${data.n_high ?? ""}</p>
   `;
 
   if (a_value != null && b_value != null) {
@@ -175,7 +179,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const kitName = document.getElementById("kitName").value.trim();
 
     if (kitName === "") {
-      alert("🟡 Please select a kit first");
+      alert(t("ALERT_KIT_MISSING"));
       return;
     }
 

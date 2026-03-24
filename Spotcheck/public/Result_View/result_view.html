@@ -21,7 +21,8 @@
 
     <div class="titlebar-bottom">
       <span class="titlebar-page">
-        <i class="fa-solid fa-square-poll-horizontal"></i> RESULTS
+        <i class="fa-solid fa-square-poll-horizontal"></i> 
+        <span data-i18n="HEADER_RESULTS"></span>
       </span>
     </div>
   </header>
@@ -34,7 +35,7 @@
       <div class="result-panel" style="flex: 1;">
 
         <div class="panel-header">
-          <h2>Result Folders</h2>
+          <h2 data-i18n="LABEL_RESULT_FOLDERS"></h2>
         </div>
 
         <div class="panel-body">
@@ -43,10 +44,11 @@
 
         <div class="panel-footer">
           <button id="download-btn">
-            <i class="fas fa-download"></i> Download
+            <i class="fas fa-download"></i>
+            <span data-i18n="BUTTON_DOWNLOAD">Download</span>
           </button>
-          <button id="delete-btn">Delete</button>
-          <button id="deleteall-btn">Delete All</button>
+          <button id="delete-btn" data-i18n="BUTTON_DELETE"></button>
+          <button id="deleteall-btn" data-i18n="BUTTON_DELETEALL"></button>
         </div>
 
       </div>
@@ -55,12 +57,12 @@
       <div class="result-panel" style="flex: 1.2;">
 
         <div class="panel-header">
-          <h2>Result Preview</h2>
+          <h2 data-i18n="LABEL_RESULT_PREVIEW"></h2>
         </div>
 
         <div id="excel-preview" class="panel-body">
           <p style="opacity: 0.6; text-align: center;">
-            Select a folder to preview result
+           ...
           </p>
         </div>
 
@@ -71,13 +73,14 @@
 
   <!-- ================= FOOTER ================= -->
   <footer>
-    <button id="back-btn" type="button">Back</button>
+    <button id="back-btn" type="button" data-i18n="BUTTON_BACK"></button>
   </footer>
 
   <!-- ================= SCRIPTS ================= -->
   <script src="/socket.io/socket.io.js"></script>
   <script src="../Navigation/nav.js"></script>
   <script src="result_view.js"></script>
+  <script src="../lang/i18n.js"></script>
 
 </body>
 </html>

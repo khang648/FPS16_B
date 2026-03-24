@@ -21,12 +21,18 @@
   <header>
     <div class="titlebar-top">
       <span class="titlebar-version">SPOTCHECK</span>
+
+      <!-- Language Switch -->
+      <select id="langSelect" class="lang-select">
+        <option value="vi">VI</option>
+        <option value="en">EN</option>
+      </select>
     </div>
 
     <div class="titlebar-bottom">
       <span class="titlebar-page" id="homeBtn">
         <i class="fa-solid fa-house"></i>
-        HOME
+        <span data-i18n="HEADER_HOME"></span>
       </span>
     </div>
   </header>
@@ -45,7 +51,7 @@
         <span class="icon">
           <i class="fa-solid fa-magnifying-glass-chart"></i>
         </span>
-        <span class="text">ANALYSIS</span>
+        <span class="text" data-i18n="BUTTON_ANALYSIS"></span>
       </button>
 
       <!-- optical inspection -->
@@ -53,7 +59,7 @@
         <span class="icon">
           <i class="fa-solid fa-vials"></i>
         </span>
-        <span class="text">OPTICAL INSPECTION</span>
+        <span class="text" data-i18n="BUTTON_OPTICAL_INSPECTION"></span>
       </button>
 
       <!-- system check -->
@@ -61,7 +67,7 @@
         <span class="icon">
           <i class="fa-solid fa-list-check"></i>
         </span>
-        <span class="text">SYSTEM CHECK</span>
+        <span class="text" data-i18n="BUTTON_SYSTEM_CHECK"></span>
       </button>
 
       <!-- kit management -->
@@ -69,7 +75,7 @@
         <span class="icon">
           <i class="fa-solid fa-gear"></i>
         </span>
-        <span class="text">MANAGE KITS</span>
+        <span class="text" data-i18n="BUTTON_MANAGE_KITS"></span>
       </button>
 
       <!-- sample file management -->
@@ -77,7 +83,7 @@
         <span class="icon">
           <i class="fa-solid fa-file"></i>
         </span>
-        <span class="text">MANAGE SAMPLE FILES</span>
+        <span class="text" data-i18n="BUTTON_MANAGE_SAMPLE_FILES"></span>
       </button>
 
       <!-- results -->
@@ -85,7 +91,7 @@
         <span class="icon">
           <i class="fa-solid fa-square-poll-horizontal"></i>
         </span>
-        <span class="text">RESULTS</span>
+        <span class="text" data-i18n="BUTTON_RESULTS"></span>
       </button>
 
       <!-- email -->
@@ -93,7 +99,7 @@
         <span class="icon">
           <i class="fa-solid fa-envelope"></i>
         </span>
-        <span class="text">EMAIL</span>
+        <span class="text" data-i18n="BUTTON_EMAIL"></span>
       </button>
 
       <!-- wifi -->
@@ -101,7 +107,7 @@
         <span class="icon">
           <i class="fa-solid fa-wifi"></i>
         </span>
-        <span class="text">WIFI</span>
+        <span class="text" data-i18n="BUTTON_WIFI"></span>
       </button>
 
     </div>
@@ -128,22 +134,22 @@
 
       <button class="close-button" id="btnCloseDialog">×</button>
 
-      <h3>Analysis Mode</h3>
+      <h3 data-i18n="POPUP_ANALYSIS_MODE"></h3>
 
       <button
         class="mode mode1"
         type="button"
         id="btnHighSensitivity"
+        data-i18n="BUTTON_HIGH_SENSITIVITY"
       >
-        High Sensitivity
       </button>
 
       <button
         class="mode mode2"
         type="button"
         id="btnLowSensitivity"
+        data-i18n="BUTTON_LOW_SENSITIVITY"
       >
-        Low Sensitivity
       </button>
 
     </div>
@@ -153,6 +159,7 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="./Navigation/nav.js"></script>
   <script src="index.js"></script>
+  <script src="./lang/i18n.js"></script>
 
 </body>
 </html>

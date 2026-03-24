@@ -10,22 +10,20 @@ let samplename_data = [];
 let automail = 0;
 let selectedSampleFile = "";
 
+let samplefile_create_direct = null;
+
+/* ===== FIX RACE CONDITION ===== */
+let pendingFiles = null;
+
+/* ===== DRAG STATE ===== */
+let isSelecting = false;
+
 /* ================= SOCKET EVENTS ================= */
 
 // Receive sample file list
 socket.on("sample_file_list", (files) => {
-  renderFileGrid(files);
-});
-
-// Receive email login info
-socket.on("jsonKeyValue", (res) => {
-  if (res.error) {
-    console.error("ERROR:", res.error);
-    return;
-  }
-
-  automail = res.value;
-  console.log("automail:", automail);
+  pendingFiles = files;
+  tryRender();
 });
 
 // Receive Excel data
@@ -34,9 +32,55 @@ socket.on("excelData", (values) => {
   applyExcelValues(samplename_data);
 });
 
+// Receive JSON values
+socket.on("jsonKeyValue", (res) => {
+  if (res.error) {
+    console.error("ERROR:", res.error);
+    return;
+  }
+
+  if (res.key === "email") {
+    automail = res.value;
+    console.log("automail:", automail);
+  }
+
+  if (res.key === "samplefile_create_direct") {
+    samplefile_create_direct = res.value;
+    console.log("samplefile_create_direct:", samplefile_create_direct);
+  }
+
+  tryRender();
+});
+
+/* ================= FIX: WAIT BOTH ================= */
+
+function tryRender() {
+  if (!pendingFiles) return;
+  if (samplefile_create_direct === null) return;
+
+  renderFileGrid(pendingFiles);
+
+  if (samplefile_create_direct == 1) {
+    const firstItem = document.querySelector(".result-item");
+
+    if (firstItem) {
+      console.log("[AUTO] Select first file");
+      toggleSelect(firstItem);
+
+      socket.emit("writeJsonFile", {
+        filePath: globalvar_tmp_path,
+        data: { samplefile_create_direct: 0 }
+      });
+
+      samplefile_create_direct = 0;
+    }
+  }
+
+  pendingFiles = null;
+}
+
 /* ================= FILE GRID ================= */
 
-// Render file grid
 function renderFileGrid(folders) {
   const grid = document.getElementById("result-grid");
   grid.innerHTML = "";
@@ -80,7 +124,6 @@ function toggleSelect(item) {
 
 /* ================= WELL DATA ================= */
 
-// Collect well state
 function collectWellsState() {
   let result = {};
 
@@ -95,7 +138,6 @@ function collectWellsState() {
   return result;
 }
 
-// Collect well values
 function collectWellValues() {
   const result = [];
   const rowLabels = ["A", "B", "C", "D"];
@@ -111,7 +153,6 @@ function collectWellValues() {
   return result;
 }
 
-// Apply Excel values
 function applyExcelValues(values) {
   if (!values || values.length !== 16) return;
 
@@ -138,13 +179,21 @@ function applyExcelValues(values) {
   }
 }
 
-// Well clicked
+/* ================= WELL EVENTS ================= */
+
+function activateWell(id) {
+  const el = document.querySelector(`.well[data-pos="${id}"]`);
+  if (!el.classList.contains("active")) {
+    el.classList.add("active");
+  }
+}
+
 function onWellClicked(id) {
   const el = document.querySelector(`.well[data-pos="${id}"]`);
   el.classList.toggle("active");
 }
 
-/* ================= EMAIL DIALOG ================= */
+/* ================= EMAIL ================= */
 
 function showEmailDialog() {
   emailInput.value = "";
@@ -155,7 +204,7 @@ function hideEmailDialog() {
   emailDialog.style.display = "none";
 }
 
-/* ================= MAIN EXECUTION ================= */
+/* ================= MAIN ================= */
 
 document.addEventListener("DOMContentLoaded", () => {
   socket.emit("scan_sample_files");
@@ -163,6 +212,11 @@ document.addEventListener("DOMContentLoaded", () => {
   socket.emit("readJsonKey", {
     filePath: globalvar_tmp_path,
     key: "email"
+  });
+
+  socket.emit("readJsonKey", {
+    filePath: globalvar_tmp_path,
+    key: "samplefile_create_direct"
   });
 
   const wellGrid = document.getElementById("wellGrid");
@@ -189,17 +243,48 @@ document.addEventListener("DOMContentLoaded", () => {
     wellGrid.appendChild(row);
   }
 
+  /* EVENTS giữ nguyên */
   for (let r = 0; r < NUMBER_OF_ROWS; r++) {
     for (let c = 0; c < NUMBER_OF_COLUMNS; c++) {
       const id = `${rowLabels[r]}${c + 1}`;
       const well = document.querySelector(`.well[data-pos="${id}"]`);
+
+      well.addEventListener("mousedown", () => {
+        isSelecting = true;
+        activateWell(id);
+      });
+
+      well.addEventListener("mouseover", () => {
+        if (isSelecting) activateWell(id);
+      });
+
+      well.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        isSelecting = true;
+        activateWell(id);
+      }, { passive: false });
+
+      well.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+
+        const touch = e.touches[0];
+        const el = document.elementFromPoint(touch.clientX, touch.clientY);
+
+        if (el && el.classList.contains("well")) {
+          activateWell(el.dataset.pos);
+        }
+      }, { passive: false });
+
       well.addEventListener("click", () => onWellClicked(id));
     }
   }
 
-  btnEmailCancel.addEventListener("click", () => {
-    hideEmailDialog();
-  });
+  document.addEventListener("mouseup", () => isSelecting = false);
+  document.addEventListener("touchend", () => isSelecting = false);
+
+  document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+  btnEmailCancel.addEventListener("click", hideEmailDialog);
 
   btnEmailOk.addEventListener("click", () => {
     const emails = emailInput.value.trim();
@@ -218,7 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     hideEmailDialog();
-    goToPage("../Analysis/analysis.html");
+    goToAnalysisWithConfirm();
   });
 
   document.getElementById("btnCreate")?.addEventListener("click", () => {
@@ -238,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("btnNext")?.addEventListener("click", () => {
     if (!selectedSampleFile) {
-      alert("🟡 Please select a sample file first");
+      alert(t("ALERT_SAMPLEFILE_MISSING"));
       return;
     }
 
@@ -253,14 +338,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (automail) {
-      const ask = confirm("Do you want to automatically send the result file by email?");
+      const ask = confirm(t("ALERT_AUTOEMAIL"));
       if (!ask) {
-        goToPage("../Analysis/analysis.html");
+        goToAnalysisWithConfirm();
         return;
       }
       showEmailDialog();
     } else {
-      goToPage("../Analysis/analysis.html");
+      goToAnalysisWithConfirm();
     }
   });
 });
+
+function goToAnalysisWithConfirm() {
+  const ok = confirm(t("ALERT_PLACE_SAMPLE"));
+  if (ok) {
+    goToPage("../Analysis/analysis.html");
+  }
+}

@@ -38,8 +38,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
         if (missing.length > 0) {
             alert(
-                "🟡 Please fill in the following information completely: " +
-                missing.join(", ")
+                t("ALERT_INFOR_MISSING") 
+                // + missing.join(", ")
             );
             return;
         }

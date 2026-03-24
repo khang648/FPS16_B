@@ -88,6 +88,9 @@ td {
   background: #12bec1f4;
 }
 
+.well {
+  touch-action: none;
+}
 
 /* =========================================================
    SIDE PANEL

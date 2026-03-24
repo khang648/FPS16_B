@@ -1,6 +1,8 @@
 /* ================= GLOBAL SOCKET ================= */
 window.socket = io();
 
+const langSelect = document.getElementById("langSelect");
+
 /* ================= SYSTEM CHECK NOTICE ================= */
 socket.on("jsonKeyValue", (res) => {
     if (res.error) {
@@ -16,7 +18,7 @@ socket.on("jsonKeyValue", (res) => {
     if (lastCheckStr === ERROR_TIME_STR) {
         showBlinkNotice(
             "error",
-            "⛔ System check FAILED. Analysis at this time may affect result accuracy"
+            t("POPUP_SYSTEM_ERROR")
         );
         return;
     }
@@ -35,7 +37,7 @@ socket.on("jsonKeyValue", (res) => {
     if (diffMinutes > 60) {
         showBlinkNotice(
             "warning",
-            "⚠️ It's been more than 1 hour since the last system check"
+            t("POPUP_SYSTEMCHECK")
         );
     }
 });
@@ -81,7 +83,7 @@ window.addEventListener("DOMContentLoaded", () => {
             samplefile_create_direct: 0,
             samplename_list: Array(16).fill("N/A"),
             automail: 0,
-            resultfile_name: null
+            resultfile_name: null,
         }
     });
 
@@ -161,6 +163,27 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+
+/* ================= LANGUAGE ================= */
+if (langSelect) {
+  langSelect.value = localStorage.getItem("lang") || "en";
+
+  langSelect.addEventListener("change", () => {
+    const lang = langSelect.value;
+
+    if (typeof loadLanguage === "function") {
+      loadLanguage(lang);
+    }
+
+    try {
+      localStorage.setItem("lang", lang);
+    } catch (e) {
+      console.warn("localStorage not available");
+    }
+  });
+}
+
+
 /* ================= ADMIN HIDDEN ACCESS ================= */
 let holdTimer = null;
 const HOLD_DURATION = 5000;
@@ -191,3 +214,4 @@ history.pushState(null, "", location.href);
 window.addEventListener("popstate", () => {
     history.pushState(null, "", location.href);
 });
+

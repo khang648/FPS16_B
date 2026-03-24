@@ -402,3 +402,14 @@ td {
     font-size: 0.9rem;
   }
 }
+
+.well, #wellGrid {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -ms-user-select: none !important;
+
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent;
+
+  touch-action: none;
+}

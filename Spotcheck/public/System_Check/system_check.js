@@ -192,7 +192,7 @@ socket.on("systemcheck_done", (data) => {
 
     if (err2) {
         const btn = document.createElement("button");
-        btn.textContent = "RECHECK";
+        btn.textContent = t("BUTTON_RECHECK");
         btn.className = "button";
         btn.onclick = () => {
             socket.emit("process_image", 0);
@@ -200,11 +200,11 @@ socket.on("systemcheck_done", (data) => {
         };
         footer.appendChild(btn);
 
-        updateStatus("error", "⛔ [SYSTEM ERROR] - Please clean the plate and check again");
+        updateStatus("error", t("MSG_SYSTEM_ERROR"));
 
     } else if (err1) {
         const btn1 = document.createElement("button");
-        btn1.textContent = "RECHECK";
+        btn1.textContent = t("BUTTON_RECHECK");
         btn1.className = "button";
         btn1.onclick = () => {
             socket.emit("process_image", 0);
@@ -212,23 +212,23 @@ socket.on("systemcheck_done", (data) => {
         };
 
         const btn2 = document.createElement("button");
-        btn2.textContent = "BACK";
+        btn2.textContent = t("BUTTON_BACK");
         btn2.className = "button";
         btn2.onclick = () => goToPage("../index.html");
 
         footer.appendChild(btn1);
         footer.appendChild(btn2);
 
-        updateStatus("warning", "⚠️ [SYSTEM WARNING] - Red wells need to be cleaned");
+        updateStatus("warning", t("MSG_SYSTEM_WARNING"));
 
     } else {
         const btn = document.createElement("button");
-        btn.textContent = "BACK";
+        btn.textContent = t("BUTTON_BACK");
         btn.className = "button";
         btn.onclick = () => goToPage("../index.html");
         footer.appendChild(btn);
 
-        updateStatus("ok", "✅ [SYSTEM OK] - System check completed");
+        updateStatus("ok", t("MSG_SYSTEM_OK"));
     }
 
     /* ---------- SAVE LAST CHECK TIME ---------- */

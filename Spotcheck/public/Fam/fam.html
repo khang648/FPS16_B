@@ -21,7 +21,8 @@
 
     <div class="titlebar-bottom">
       <span class="titlebar-page">
-        <i class="fa-solid fa-vials"></i> OPTICAL INSPECTION
+        <i class="fa-solid fa-vials"></i> 
+        <span data-i18n="HEADER_OPTICAL_INSPECTION"></span>
       </span>
     </div>
   </header>
@@ -52,9 +53,9 @@
 
       <!-- ===== CONTROL PANEL ===== -->
       <div class="control-panel">
-        <button id="selectall-btn" class="delete-btn">Select All</button>
-        <button id="deselectall-btn" class="deleteall-btn">Deselect All</button>
-        <button id="check-btn" class="check-btn">Check</button>
+        <button id="selectall-btn" class="delete-btn" data-i18n="BUTTON_SELECTALL"></button>
+        <button id="deselectall-btn" class="deleteall-btn" data-i18n="BUTTON_DESELECTALL"></button>
+        <button id="check-btn" class="check-btn" data-i18n="BUTTON_CHECK"></button>
       </div>
 
     </div>
@@ -62,13 +63,14 @@
 
   <!-- ================= FOOTER ================= -->
   <footer>
-    <button id="btnBack" type="button">Back</button>
+    <button id="btnBack" type="button" data-i18n="BUTTON_BACK"></button>
   </footer>
 
   <!-- ================= SCRIPTS ================= -->
   <script src="/socket.io/socket.io.js"></script>
   <script src="../Navigation/nav.js"></script>
   <script src="fam.js"></script>
+  <script src="../lang/i18n.js"></script>
 
 </body>
 </html>
