@@ -44,6 +44,8 @@
   "LABEL_RECIPIENT_EMAIL": "Email người nhận",
   "BUTTON_CANCEL": "Hủy",
   "BUTTON_ANALYSIS_1": "Phân tích",
+  "ALERT_AUTOEMAIL": "Bạn có muốn tự động gửi email kết quả ?",
+  "ALERT_PLACE_SAMPLE": "XIN HÃY ĐẢM BẢO BẠN ĐÃ ĐẶT MẪU VÀO ĐÚNG VỊ TRÍ ĐÃ CHỌN",
   
 
   "HEADER_ANALYSIS": "PHÂN TÍCH",
@@ -56,6 +58,7 @@
   "ALERT_BACKHOME": "Bạn muốn quay về trang chủ ?",
   "BUTTON_SENSITIVITY_HIGH": "Độ nhạy cao",
   "BUTTON_SENSITIVITY_LOW": "Độ nhạy thấp",
+  "ALERT_DOWNLOAD_RESULT": "Bạn có muốn tải xuống kết quả ?",
 
 
   "HEADER_OPTICAL_INSPECTION": "KIỂM TRA QUANG HỌC", 

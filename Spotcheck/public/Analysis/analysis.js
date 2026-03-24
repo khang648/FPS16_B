@@ -208,7 +208,10 @@ socket.on("sampleanalysis_done", async (data) => {
         alert("🔴 Cannot generate images. Make sure data is ready.");
       }
 
-  socket.emit("request_download"); // Download ngay khi có kết quả
+  // socket.emit("request_download"); // Download ngay khi có kết quả
+  if (confirm(t("ALERT_DOWNLOAD_RESULT"))) {
+    socket.emit("request_download");
+  }
 });
 
 // ====================== DOM CONTENT LOADED ======================

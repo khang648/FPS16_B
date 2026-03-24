@@ -6,17 +6,14 @@ let samplefile_create_direct = null;
 
 /* ================= SOCKET EVENTS ================= */
 
-// Nhận dữ liệu JSON key-value
 socket.on("jsonKeyValue", (res) => {
   if (res.error) {
     console.error("ERROR:", res.error);
     return;
   }
-
   samplefile_create_direct = res.value;
 });
 
-// Nhận danh sách sample file
 socket.on("sample_file_list", (files) => {
   renderFileGrid(files);
 });
@@ -24,12 +21,14 @@ socket.on("sample_file_list", (files) => {
 /* ================= WELL GRID ================= */
 
 function initWellGrid(rows, cols) {
-  const rowLabels = ["A","B","C","D","E","F","G","H","I","J","K","L"];
+  const rowLabels = ["A","B","C","D","E","F","G","H"];
+
   const wellGrid = document.getElementById("wellGrid");
   const sampleName = document.getElementById("sampleName");
   const selectedWell = document.getElementById("selectedWell");
   const saveBtn = document.getElementById("saveBtn");
 
+  /* ===== CREATE GRID ===== */
   for (let r = 0; r < rows; r++) {
     const tr = document.createElement("tr");
 
@@ -48,6 +47,7 @@ function initWellGrid(rows, cols) {
     wellGrid.appendChild(tr);
   }
 
+  /* ===== GET WELLS ===== */
   const wells = [];
   for (let c = 1; c <= cols; c++) {
     for (let r = 0; r < rows; r++) {
@@ -57,13 +57,17 @@ function initWellGrid(rows, cols) {
     }
   }
 
+  /* ===== STATE ===== */
   let currentIndex = 0;
-  let selecting = false;
   let selectedWells = [];
   let quickSetCounter = 1;
 
+  let isMouseDown = false;
+  let isTouching = false;
+
   function selectWell(index) {
     wells.forEach(w => w.classList.remove("active"));
+
     if (index < wells.length) {
       wells[index].classList.add("active");
       selectedWell.textContent = wells[index].dataset.pos;
@@ -72,25 +76,33 @@ function initWellGrid(rows, cols) {
 
   selectWell(currentIndex);
 
+  /* =========================================================
+     PC (MOUSE)
+  ========================================================= */
   wells.forEach(well => {
+
     well.addEventListener("mousedown", () => {
-      selecting = true;
+      isMouseDown = true;
       selectedWells = [well];
+
       wells.forEach(w => w.classList.remove("active"));
       well.classList.add("active");
     });
 
     well.addEventListener("mouseover", () => {
-      if (selecting && !selectedWells.includes(well)) {
+      if (!isMouseDown) return;
+
+      if (!selectedWells.includes(well)) {
         selectedWells.push(well);
         well.classList.add("active");
       }
     });
 
     well.addEventListener("mouseup", () => {
-      selecting = false;
+      isMouseDown = false;
     });
 
+    /* CLICK */
     well.addEventListener("click", () => {
       currentIndex = wells.indexOf(well);
       selectWell(currentIndex);
@@ -98,13 +110,56 @@ function initWellGrid(rows, cols) {
       sampleName.value = well.classList.contains("filled")
         ? well.textContent
         : "";
+
       sampleName.focus();
     });
+
   });
 
   document.addEventListener("mouseup", () => {
-    selecting = false;
+    isMouseDown = false;
   });
+
+  /* =========================================================
+     MOBILE (TOUCH) 🔥 FIX CHÍNH
+  ========================================================= */
+
+  function getWellFromTouch(touch) {
+    const el = document.elementFromPoint(touch.clientX, touch.clientY);
+    return el?.closest(".well");
+  }
+
+  wells.forEach(well => {
+    well.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+
+      isTouching = true;
+      selectedWells = [well];
+
+      wells.forEach(w => w.classList.remove("active"));
+      well.classList.add("active");
+    }, { passive: false });
+  });
+
+  document.addEventListener("touchmove", (e) => {
+    if (!isTouching) return;
+
+    const touch = e.touches[0];
+    const well = getWellFromTouch(touch);
+
+    if (well && !selectedWells.includes(well)) {
+      selectedWells.push(well);
+      well.classList.add("active");
+    }
+  }, { passive: false });
+
+  document.addEventListener("touchend", () => {
+    isTouching = false;
+  });
+
+  /* =========================================================
+     INPUT
+  ========================================================= */
 
   sampleName.addEventListener("keydown", (e) => {
     if (e.key !== "Enter") return;
@@ -129,6 +184,7 @@ function initWellGrid(rows, cols) {
       : "";
   });
 
+  /* ===== SET ===== */
   document.getElementById("setBtn").addEventListener("click", () => {
     const val = sampleName.value.trim();
     const well = wells[currentIndex];
@@ -142,19 +198,20 @@ function initWellGrid(rows, cols) {
     }
   });
 
+  /* ===== QUICK SET ===== */
   document.getElementById("quickSetBtn").addEventListener("click", () => {
     let target;
 
     if (selectedWells.length > 0) {
       target = selectedWells.slice().sort((a, b) => {
-        const [rowA, colA] = [
-          a.dataset.pos.charCodeAt(0),
-          parseInt(a.dataset.pos.slice(1))
-        ];
-        const [rowB, colB] = [
-          b.dataset.pos.charCodeAt(0),
-          parseInt(b.dataset.pos.slice(1))
-        ];
+
+        const rowA = a.dataset.pos.charCodeAt(0); // A,B,C,D
+        const colA = parseInt(a.dataset.pos.slice(1));
+
+        const rowB = b.dataset.pos.charCodeAt(0);
+        const colB = parseInt(b.dataset.pos.slice(1));
+
+        // SORT THEO CỘT TRƯỚC, RỒI TỚI HÀNG
         return colA - colB || rowA - rowB;
       });
     } else {
@@ -170,6 +227,7 @@ function initWellGrid(rows, cols) {
     selectedWells = [];
   });
 
+  /* ===== CLEAR ===== */
   document.getElementById("clearBtn").addEventListener("click", () => {
     wells.forEach(w => {
       w.textContent = "N/A";
@@ -185,8 +243,10 @@ function initWellGrid(rows, cols) {
     selectWell(currentIndex);
   });
 
+  /* ===== SAVE ===== */
   saveBtn.addEventListener("click", () => {
     const filledWells = wells.filter(w => w.classList.contains("filled"));
+
     if (filledWells.length === 0) {
       alert(t("ALERT_WELLNAME_MISSING"));
       return;
@@ -199,17 +259,13 @@ function initWellGrid(rows, cols) {
       w.classList.contains("filled") ? w.textContent : ""
     );
 
-    const RESULT_CELL_START = 1;
-
     socket.emit("save_wells_excel", {
       fileName,
       resultData,
-      resultCellStart: RESULT_CELL_START
+      resultCellStart: 1
     });
 
-    const confirmBack = confirm(
-      t("ALERT_CREATEFILE_DONE")
-    );
+    const confirmBack = confirm(t("ALERT_CREATEFILE_DONE"));
 
     if (confirmBack) {
       if (samplefile_create_direct == 0) {
@@ -256,21 +312,20 @@ function toggleSelect(item) {
   item.classList.add("selected");
   sampleSelectList = [fileName];
 
-  console.log("[Client] Auto-load sample file:", fileName);
-
   socket.emit("readExcelFile", {
     filePath: `/home/pi/Spotcheck/Sample_Files/${fileName}`,
     startCell: "B5",
-    count: NUMBER_OF_WELLS
+    count: 16
   });
 }
 
-/* ================= MAIN EXECUTION ================= */
+/* ================= MAIN ================= */
 
 document.addEventListener("DOMContentLoaded", () => {
+
   initWellGrid(4, 4);
 
-  document.querySelector(".delete-btn").addEventListener("click", () => {
+  document.getElementById("delete-btn").addEventListener("click", () => {
     if (sampleSelectList.length === 0) {
       alert(t("ALERT_DELETEFILE_MISSING"));
       return;
@@ -287,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("clearBtn").click();
   });
 
-  document.querySelector(".deleteall-btn").addEventListener("click", () => {
+  document.getElementById("deleteall-btn").addEventListener("click", () => {
     if (!confirm(t("ALERT_DELETEALL_FILE"))) return;
     socket.emit("delete_all_samplefile");
   });
@@ -319,7 +374,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const val = values[idx];
       well.textContent = val;
 
-      if (val === "N/A" || val === null || val === undefined) {
+      if (!val || val === "N/A") {
         well.classList.remove("filled");
       } else {
         well.classList.add("filled");
@@ -329,15 +384,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  btnBack.addEventListener("click", goBackPage);
-
-  function goBackPage() {
+  document.getElementById("btnBack").addEventListener("click", () => {
     if (samplefile_create_direct == 0) {
       goToPage("../index.html");
     } else {
       goToPage("../Sample_Selection/sample_selection.html");
     }
-  }
+  });
 
   socket.emit("scan_sample_files");
 

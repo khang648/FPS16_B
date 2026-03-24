@@ -43,6 +43,8 @@
   "LABEL_RECIPIENT_EMAIL": "Enter recipient email(s)",
   "BUTTON_CANCEL": "Cancel",
   "BUTTON_ANALYSIS_1": "Analysis",
+  "ALERT_AUTOEMAIL": "Do you want to automatically send the result by email ?",
+  "ALERT_PLACE_SAMPLE": "PLEASE ENSURE YOU HAVE PLACED THE SAMPLES IN THE CORRECT SELECTED POSITION",
   
 
   "HEADER_ANALYSIS": "ANALYSIS",

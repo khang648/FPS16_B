@@ -83,7 +83,7 @@ window.addEventListener("DOMContentLoaded", () => {
             samplefile_create_direct: 0,
             samplename_list: Array(16).fill("N/A"),
             automail: 0,
-            resultfile_name: null
+            resultfile_name: null,
         }
     });
 
