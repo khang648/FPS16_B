@@ -121,7 +121,7 @@ function initWellGrid(rows, cols) {
   });
 
   /* =========================================================
-     MOBILE (TOUCH) 🔥 FIX CHÍNH
+     MOBILE (TOUCH)
   ========================================================= */
 
   function getWellFromTouch(touch) {
@@ -136,8 +136,18 @@ function initWellGrid(rows, cols) {
       isTouching = true;
       selectedWells = [well];
 
+      currentIndex = wells.indexOf(well);
+
       wells.forEach(w => w.classList.remove("active"));
       well.classList.add("active");
+      
+      // update UI giống PC
+      selectedWell.textContent = well.dataset.pos;
+
+      sampleName.value = well.classList.contains("filled")
+        ? well.textContent
+        : "";
+
     }, { passive: false });
   });
 
