@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPS32B - Spotcheck 26001</title>
+
+  <link rel="stylesheet" href="../assets/fontawesome-7.1.0/css/all.min.css">
+  <!-- <link rel="stylesheet" href="../general_style.css"> -->
+  <link rel="stylesheet" href="./admin.css">
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="titlebar-top">
+      <span class="titlebar-version">VE100</span>
+    </div>
+
+    <div class="titlebar-bottom">
+      <span class="titlebar-page">
+        <i class="fa-solid fa-user-tie"></i> ADMIN
+      </span>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main>
+    <div class="main-container">
+
+      <!-- ===== CONTENT GRID ===== -->
+      <div class="content-grid">
+
+        <!-- ===== LEFT COLUMN ===== -->
+         
+        <div class="column">
+
+          <section class="panel">
+            <h3>Device Info</h3>
+
+            <div class="form-row">
+              <label>Host name</label>
+              <input type="text" id="host_name" class="small-input">
+            </div>
+
+            <div class="form-row">
+              <label>Seri number</label>
+              <input type="text" id="seri_number" class="small-input">
+            </div>
+          </section>
+
+        </div>
+
+        <!-- ===== RIGHT COLUMN ===== -->
+        <div class="column">
+
+          <section class="panel">
+            <h3>Coordinates</h3>
+
+            <!-- ===== X / Y ===== -->
+            <div class="form-row">
+              <label>x_coordinate_9</label>
+              <input type="number" step="any" id="x_coordinate_9" class="small-input">
+            </div>
+
+            <div class="form-row">
+              <label>x_coordinate_17</label>
+              <input type="number" step="any" id="x_coordinate_17" class="small-input">
+            </div>
+
+            <div class="form-row">
+              <label>y_coordinate</label>
+              <input type="number" step="any" id="y_coordinate" class="small-input">
+            </div>
+
+            <!-- ===== 9 WELL ===== -->
+            <div class="form-row">
+              <label>well_distance_9</label>
+              <input type="number" step="any" id="well_distance_9" class="small-input">
+            </div>
+
+            <div class="form-row">
+              <label>pace_9</label>
+              <input type="number" step="any" id="pace_9" class="small-input">
+            </div>
+
+            <!-- ===== 17 WELL ===== -->
+            <div class="form-row">
+              <label>well_distance_17</label>
+              <input type="number" step="any" id="well_distance_17" class="small-input">
+            </div>
+
+            <div class="form-row">
+              <label>pace_17</label>
+              <input type="number" step="any" id="pace_17" class="small-input">
+            </div>
+
+            <!-- ===== FONT ===== -->
+            <div class="form-row">
+              <label>font_size_9</label>
+              <input type="number" step="any" id="font_size_9" class="small-input">
+            </div>
+
+            <div class="form-row">
+              <label>font_size_17</label>
+              <input type="number" step="any" id="font_size_17" class="small-input">
+            </div>
+
+          </section>
+
+        </div>
+      </div>
+
+      <!-- ===== APPLY AREA ===== -->
+      <div class="apply-area">
+        <button id="btnApply">Apply</button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <button
+      id="btnBack"
+      type="button">
+      Back
+    </button>
+  </footer>
+
+  <!-- ================= SCRIPT ================= -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="admin.js"></script>
+  <script src="../Navigation/nav.js"></script>
+
+</body>
+</html>

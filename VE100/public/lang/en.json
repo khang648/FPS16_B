@@ -1,0 +1,75 @@
+{
+  "BUTTON_NEXT": "Next",
+  "BUTTON BACK": "Back", 
+
+  "HEADER_HOME": "HOME",
+  "BUTTON_RESULTS": "VIEW RESULTS",
+  "BUTTON_EMAIL": "EMAIL",
+  "BUTTON_WIFI": "WIFI",
+  "BUTTON_ELECTROPHORESIS": "ELECTROPHORESIS", 
+
+
+  "HEADER_FOLDER_NAMING": "FOLDER NAME",
+  "LABEL_FOLDER_NAMING": "Folder name",
+  "PLACEHOLDER_FOLDER_NAMING": "Enter folder name",
+  "ALERT_FOLDERNAME_MISSING": "🟡 Please enter the folder name",
+  "ALERT_FOLDERNAME_EXIST": "The folder already exists, do you want to overwrite it ?",
+  
+
+  "HEADER_SAMPLE_NAMING": "SAMPLE NAME",
+  "LABEL_NUMBEROFWELL": "Number of wells",
+  "LABEL_NO": "No." ,
+  "LABEL_SAMPLENAMES": "Sample Names",
+  "PLACEHOLDER_SAMPLENAME": "Enter sample name ",
+
+
+  "HEADER_PARAMETER_SETTING": "PARAMETER SETTING",
+  "LABEL_NUMBEROFSTAGE": "Number of stages",
+  "LABEL_STAGE": "Stage {n}",
+  "LABEL_VOLTAGE": "Voltage (DC)", 
+  "LABEL_TIMER": "Timer (min : sec)",
+  "BUTTON_TURNON": "TURN ON",
+  "BUTTON_TURNOFF": "TURN OFF",
+  "BUTTON_CANCEL": "Cancel",
+  "BUTTON_OK": "Next",
+  "PLACEGOLDER_EMAIL": "Enter recipient email(s)",
+  "BUTTON_SAVE": "Save", 
+  "ALERT_PARA_SAVE_SUCCESS": "🟢 Parameters saved successfully !",
+  "ALERT_EMAIL_MISSING": "🟡 Please enter at least one email address",
+  "ALERT_AUTOMAIL": "Do you want to automatically send the result file by email ?",
+  
+
+  "HEADER_ELECTROPHORESIS": "ELECTROPHORESIS", 
+  "LABEL_TIMELEFT": "TIME LEFT",
+  "LABEL_CURRENTSTAGE": "Stage",
+  "LABEL_VOLTAGEREAD": "Current Voltage: ",
+  "LABEL_CAMERA_PREVIEW": "Camera Preview",
+  "LABEL_COMPLETED": "COMPLETED",
+  "BUTTON_FINISH": "FINISH",
+  "BUTTON_STOP": "STOP",
+  "ALERT_STOP": "Are you sure you want to stop electrophoresis ?",
+  "ALERT_FINISH": "Do you want to return to the homepage ?",
+
+
+
+  "HEADER_RESULTS": "VIEW RESULTS", 
+  "BUTTON_BASE": "BASE LINE",
+  "BUTTON_FIRSTBAND": "FIRST BAND LINE",
+  "BUTTON_LASTBAND": "LAST BAND LINE",
+  "BUTTON_RESULTBAND": "RESULT BAND LINE",
+  "BUTTON_DOWNLOAD": "Download",
+  "BUTTON_DELETE": "Delete",
+  "LABEL_FIRSTBAND_VALUE": "First band value",
+  "LABEL_LASTBAND_VALUE": "Last band value",
+  "LABEL_BANDSIZE": "Band size",
+  "BUTTON_FIND": "Find",
+  "BUTTON_RESET": "Reset",
+  "LABEL_RESULTS": "Results",
+  "LABEL_IMAGESELECT": "Select an image from Results",
+  "ALERT_DELETEALL_FOLDER": "Are you sure to delete ALL folders ?",
+  "ALERT_DELETE_FOLDER": "Delete selected folder(s) ?",
+  "ALERT_FOLDER_MISSING": "🟡 You have not selected any folder",
+  "ALERT_DOWNLOAD_COMPLETE": "🟢 Download complete"
+
+
+}

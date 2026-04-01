@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPS32B - VE100 26001</title>
+
+  <!-- ================= STYLES ================= -->
+  <link rel="stylesheet" href="../assets/fontawesome-7.1.0/css/all.min.css">
+  <link rel="stylesheet" href="./parameter_setting.css">
+  <link rel="stylesheet" href="../general_style.css">
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="titlebar-top">
+      <span class="titlebar-version">VE100</span>
+    </div>
+
+    <div class="titlebar-bottom">
+      <span class="titlebar-page">
+        <i class="fa-solid fa-magnifying-glass-chart"></i>
+        <span data-i18n="HEADER_PARAMETER_SETTING"></span>
+      </span>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main class="container">
+
+    <div class="form-container stage-form">
+
+      <!-- ===== TOP SPINBOX ===== -->
+      <div class="stage-top">
+        <label data-i18n="LABEL_NUMBEROFSTAGE"></label>
+        <input type="number" id="stageCount" min="1" max="5" value="3">
+      </div>
+
+      <!-- ===== STAGE AREA ===== -->
+      <div class="stage-wrapper">
+        <div class="stage-container" id="stageContainer">
+
+          <!-- Stage 1 -->
+          <div class="stage-box" data-stage="1">
+
+            <div class="stage-title"> </div>
+
+            <!-- Voltage -->
+            <div class="stage-card">
+              <div class="card-header" data-i18n="LABEL_VOLTAGE"></div>
+              <div class="voltage-body">
+                <input type="number" class="voltage-input" value="0" min="0">
+                <button class="toggle-btn" data-state="off" data-i18n="BUTTON_TURNON"></button>
+              </div>
+            </div>
+
+            <!-- Timer -->
+            <div class="stage-card">
+              <div class="card-header" data-i18n="LABEL_TIMER"></div>
+              <div class="timer-body">
+                <input type="number" class="min-input" value="1" min="0">
+                <span>:</span>
+                <input type="number" class="sec-input" value="10" min="0" max="59">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ===== SAVE BUTTON ===== -->
+      <div class="stage-footer">
+        <button id="saveBtn" data-i18n="BUTTON_SAVE"></button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= EMAIL DIALOG ================= -->
+  <div id="email-dialog" class="email-dialog">
+    <div class="email-dialog-content">
+
+      <h3 data-i18n-placeholder="PLACEHOLDER_EMAIL"></h3>
+
+      <input
+        id="email-input"
+        type="text"
+        placeholder="email1@example.com, email2@example.com"
+      >
+
+      <div class="email-dialog-buttons">
+        <button id="email-cancel" data-i18n="BUTTON_CANCEL"></button>
+        <button id="email-ok" data-i18n="BUTTON_OK"></button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <button id="btnBack" type="button" data-i18n="BUTTON_BACK"></button>
+    <button id="btnNext" type="button" data-i18n="BUTTON_NEXT"></button>
+  </footer>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../Navigation/nav.js"></script>
+  <script src="../lang/i18n.js"></script>
+  <script src="parameter_setting.js"></script>
+
+</body>
+</html>

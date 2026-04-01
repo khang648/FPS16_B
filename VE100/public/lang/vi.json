@@ -1,0 +1,74 @@
+{
+  "BUTTON_NEXT": "Kế tiếp",
+  "BUTTON_BACK": "Trở lại",
+
+
+  "HEADER_HOME": "TRANG CHỦ",
+  "BUTTON_RESULTS": "XEM KẾT QUẢ",
+  "BUTTON_EMAIL": "EMAIL",
+  "BUTTON_WIFI": "WIFI",
+  "BUTTON_ELECTROPHORESIS": "ĐIỆN DI", 
+
+
+  "HEADER_FOLDER_NAMING": "TÊN THƯ MỤC",
+  "LABEL_FOLDER_NAMING": "Tên thư mục",
+  "PLACEHOLDER_FOLDER_NAMING": "Nhập tên phiên chạy",
+  "ALERT_FOLDERNAME_MISSING": "🟡 Xin nhập tên thư mục",
+  "ALERT_FOLDERNAME_EXIST": "Thư mục đã tồn tại, bạn có muốn ghi đè ?",
+  
+
+  "HEADER_SAMPLE_NAMING": "TÊN MẪU",
+  "LABEL_NUMBEROFWELL": "Số lượng giếng",
+  "LABEL_NO": "STT" ,
+  "LABEL_SAMPLENAMES": "Tên các mẫu",
+  "PLACEHOLDER_SAMPLENAME": "Nhập tên mẫu ",
+
+
+  "HEADER_PARAMETER_SETTING": "CÀI ĐẶT THÔNG SỐ",
+  "LABEL_NUMBEROFSTAGE": "Số giai đoạn",
+  "LABEL_STAGE": "Giai đoạn {n}",
+  "LABEL_VOLTAGE": "Điện áp (một chiều)", 
+  "LABEL_TIMER": "Thời gian (phút : giây)",
+  "BUTTON_TURNON": "BẬT",
+  "BUTTON_TURNOFF": "TẮT",
+  "BUTTON_CANCEL": "Hủy",
+  "BUTTON_OK": "Kế tiếp",
+  "PLACEGOLDER_EMAIL": "Nhập email người nhận",
+  "BUTTON_SAVE": "Lưu", 
+  "ALERT_PARA_SAVE_SUCCESS": "🟢 Các thông số đã được lưu !",
+  "ALERT_EMAIL_MISSING": "🟡 Xin hãy nhập ít nhất một địa chỉ email",
+  "ALERT_AUTOMAIL": "Bạn có muốn tự động gửi kết quả qua email ?",
+  
+
+  "HEADER_ELECTROPHORESIS": "ĐIỆN DI", 
+  "LABEL_TIMELEFT": "Thời gian còn lại",
+  "LABEL_CURRENTSTAGE": "Gia đoạn",
+  "LABEL_VOLTAGEREAD": "Điện áp hiện tại: ",
+  "LABEL_CAMERA_PREVIEW": "Camera xem trước",
+  "LABEL_COMPLETED": "HOÀN THÀNH",
+  "BUTTON_FINISH": "KẾT THÚC",
+  "BUTTON_STOP": "DỪNG",
+  "ALERT_STOP": "Bạn có chắc muốn dừng điện di ?",
+  "ALERT_FINISH": "Bạn muốn quay trở về trang chủ ?",
+
+
+  "HEADER_RESULTS": "XEM KẾT QUẢ", 
+  "BUTTON_BASE": "Đường nền",
+  "BUTTON_FIRSTBAND": "Đường band đầu",
+  "BUTTON_LASTBAND": "Đường band cuối",
+  "BUTTON_RESULTBAND": "Đường band kết quả",
+  "BUTTON_DOWNLOAD": "Tải về",
+  "BUTTON_DELETE": "Xóa",
+  "LABEL_FIRSTBAND_VALUE": "Giá trị band đầu",
+  "LABEL_LASTBAND_VALUE": "Giá trị band cuối",
+  "LABEL_BANDSIZE": "Kích thuóc band",
+  "BUTTON_FIND": "Tìm",
+  "BUTTON_RESET": "Đặt lại",
+  "LABEL_RESULTS": "Kết quả",
+  "LABEL_IMAGESELECT": "Chọn một ảnh từ Kết quả",
+  "ALERT_DELETEALL_FOLDER": "Bạn có chắc muốn xóa tất cả thư mục ?",
+  "ALERT_DELETE_FOLDER": "Xóa thư mục đã chọn ?",
+  "ALERT_FOLDER_MISSING": "🟡 Bạn chưa chọn thư mục nào",
+  "ALERT_DOWNLOAD_COMPLETE": "🟢 Đã tải xuống"
+
+}

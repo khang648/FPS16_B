@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPS32C - VE100 26001</title>
+
+  <!-- ================= STYLES ================= -->
+  <link rel="stylesheet" href="/assets/fontawesome-7.1.0/css/all.min.css">
+  <link rel="stylesheet" href="./index.css">
+  <link rel="stylesheet" href="./general_style.css">
+
+  <link rel="manifest" href="/assets/icon/manifest.json">
+  <link rel="icon" href="/assets/icon/icon.ico">
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="titlebar-top">
+      <span class="titlebar-version">VE100</span>
+
+      <!-- Language Switch -->
+      <select id="langSelect" class="lang-select">
+        <option value="vi">VI</option>
+        <option value="en">EN</option>
+      </select>
+    </div>
+
+    <div class="titlebar-bottom">
+      <span class="titlebar-page" id="homeBtn">
+        <i class="fa-solid fa-house"></i>
+        <span data-i18n="HEADER_HOME"></span>
+      </span>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main>
+    <div class="main-content">
+
+      <!-- popup message -->
+      <div id="popupMessage" class="popup hidden">
+        <span id="popupText"></span>
+      </div>
+
+      <!-- electrophoresis -->
+      <button class="main-button" id="btnElectrophoresis">
+        <span class="icon">
+          <i class="fa-solid fa-bolt"></i>
+        </span>
+        <span class="text" data-i18n="BUTTON_ELECTROPHORESIS"></span>
+      </button>
+
+      <!-- band finder -->
+      <button class="main-button" id="btnBandFinder">
+        <span class="icon">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+        <span class="text" data-i18n="BUTTON_RESULTS"></span>
+      </button>
+
+      <!-- email -->
+      <!-- <button class="main-button" id="btnEmail">
+        <span class="icon">
+          <i class="fa-solid fa-envelope"></i>
+        </span>
+        <span class="text" data-i18n="BUTTON_EMAIL"></span>
+      </button> -->
+
+      <!-- wifi -->
+      <!-- <button class="main-button" id="btnWifi">
+        <span class="icon">
+          <i class="fa-solid fa-wifi"></i>
+        </span>
+        <span class="text" data-i18n="BUTTON_WIFI"></span>
+      </button> -->
+
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <div class="footer-content">
+      <p>&copy; PHUSA - FPS</p>
+
+      <!--
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Contact</a>
+      </div>
+      -->
+    </div>
+  </footer>
+
+  <!-- ================= ELECTROPHORESIS MODE DIALOG ================= -->
+  <div id="overlay">
+    <div class="dialog">
+
+      <button class="close-button" id="btnCloseDialog">×</button>
+
+      <h3>Electrophoresis Mode</h3>
+
+      <button
+        class="mode mode1"
+        type="button"
+        id="btnSingleStage"
+      >
+        Single-Stage 
+      </button>
+
+      <button
+        class="mode mode2"
+        type="button"
+        id="btnMultiStage"
+      >
+        Multi-Stage
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="./Navigation/nav.js"></script>
+  <script src="index.js"></script>
+  <script src="./lang/i18n.js"></script>
+
+</body>
+</html>

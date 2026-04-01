@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPS32B - VE100 26001</title>
+
+  <!-- ================= STYLES ================= -->
+  <link rel="stylesheet" href="../assets/fontawesome-7.1.0/css/all.min.css">
+  <link rel="stylesheet" href="./folder_naming.css">
+  <link rel="stylesheet" href="../general_style.css">
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="titlebar-top">
+      <span class="titlebar-version">VE100</span>
+    </div>
+
+    <div class="titlebar-bottom">
+      <span class="titlebar-page">
+        <i class="fa-solid fa-magnifying-glass-chart"></i>
+        <span data-i18n="HEADER_FOLDER_NAMING"></span>
+      </span>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main>
+    <div class="form-container">
+      <!-- folder name -->
+      <div class="form-group">
+        <label for="foldername" data-i18n="LABEL_FOLDER_NAMING"></label>
+        <input
+          type="text"
+          id="foldername"
+          data-i18n-placeholder="PLACEHOLDER_FOLDER_NAME"
+        >
+      </div>
+    </div>
+  </main>
+
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <button id="btnBack" type="button" data-i18n="BUTTON_BACK"></button>
+    <button id="btnNext" type="button" data-i18n="BUTTON_NEXT"></button>
+  </footer>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../Navigation/nav.js"></script>
+  <script src="folder_naming.js"></script>
+  <script src="../lang/i18n.js"></script>
+
+</body>
+</html>

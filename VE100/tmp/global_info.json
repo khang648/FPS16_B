@@ -1,0 +1,73 @@
+{
+  "folder_name": "",
+  "session_createtime": "",
+  "number_of_wells": 9,
+  "well_names": [
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+  ],
+  "stage_count": 5,
+  "stages": {
+    "stage_1": {
+      "voltage": {
+        "value": 15,
+        "enabled": true
+      },
+      "timer": {
+        "minute": 0,
+        "second": 10
+      }
+    },
+    "stage_2": {
+      "voltage": {
+        "value": 20,
+        "enabled": true
+      },
+      "timer": {
+        "minute": 0,
+        "second": 10
+      }
+    },
+    "stage_3": {
+      "voltage": {
+        "value": 0,
+        "enabled": false
+      },
+      "timer": {
+        "minute": 0,
+        "second": 10
+      }
+    },
+    "stage_4": {
+      "voltage": {
+        "value": 50,
+        "enabled": true
+      },
+      "timer": {
+        "minute": 0,
+        "second": 10
+      }
+    },
+    "stage_5": {
+      "voltage": {
+        "value": 0,
+        "enabled": false
+      },
+      "timer": {
+        "minute": 0,
+        "second": 10
+      }
+    }
+  },
+  "email": "",
+  "appPass": "",
+  "automail": 0,
+  "recipient": "qtk0608@gmail.com"
+}

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPS32B - Spotcheck 26001</title>
+
+  <!-- ================= STYLES ================= -->
+  <link rel="stylesheet" href="../assets/fontawesome-7.1.0/css/all.min.css">
+  <link rel="stylesheet" href="band_finder.css">
+  <link rel="stylesheet" href="../general_style.css">
+</head>
+
+<body>
+
+<header>
+  <div class="titlebar-top">
+    <span class="titlebar-version">SPOTCHECK</span>
+  </div>
+
+  <div class="titlebar-bottom">
+    <span class="titlebar-page">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <span data-i18n="HEADER_RESULTS"></span>
+    </span>
+  </div>
+</header>
+
+<main class="bandfinder-main">
+
+  <div class="bandfinder-container">
+
+    <!-- LEFT LINE PANEL -->
+    <aside class="line-panel mobile-line-panel">
+
+      <button id="btnBase" class="line-btn" disabled>
+        <span class="line-color base"></span>
+        <span data-i18n="BUTTON_BASE"></span>
+      </button>
+
+      <button id="btnFirst" class="line-btn" disabled>
+        <span class="line-color first"></span>
+        <span data-i18n="BUTTON_FIRSTBAND"></span>
+      </button>
+
+      <button id="btnLast" class="line-btn" disabled>
+        <span class="line-color last"></span>
+        <span data-i18n="BUTTON_LASTBAND"></span>
+      </button>
+
+      <button id="btnResult" class="line-btn" disabled>
+        <span class="line-color result"></span>
+        <span data-i18n="BUTTON_RESULTBAND"></span>
+      </button>
+
+    </aside>
+
+    <!-- CENTER WORKSPACE -->
+    <section class="workspace">
+
+      <div class="image-view">
+
+        <img id="bandImage">
+        <canvas id="overlayCanvas"></canvas>
+
+        <div class="image-placeholder" data-i18n="LABEL_IMAGESELECT">
+        </div>
+
+      </div>
+
+
+      <!-- CONTROL PANEL -->
+      <div class="control-panel">
+
+        <div class="input-group">
+          <label data-i18n="LABEL_FIRSTBAND_VALUE"></label>
+          <input type="number" id="firstBandValue" value="100">
+        </div>
+
+        <div class="input-group">
+          <label data-i18n="LABEL_LASTBAND_VALUE"></label>
+          <input type="number" id="lastBandValue" value="2000">
+        </div>
+
+        <div class="input-group">
+          <label data-i18n="LABEL_BANDSIZE"></label>
+          <input type="number" id="bandSize">
+        </div>
+
+        <div class="action-buttons">
+          <button id="btnFind" disabled data-i18n="BUTTON_FIND"></button>
+          <button id="btnReset" disabled data-i18n="BUTTON_RESET"></button>
+          <button id="btnSave" disabled data-i18n="BUTTON_SAVE"></button>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- RIGHT FILE EXPLORER -->
+    <aside class="file-panel">
+      <div class="panel-header">
+        <h2 data-i18n="LABEL_RESULTS"></h2>
+        <button id="btn-back" class="back-btn">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+      </div>
+
+      <div class="path-bar" id="pathBar">
+        /home/pi/VE100/Results
+      </div>
+
+      <div class="panel-body">
+        <div id="result-grid" class="result-grid"></div>
+      </div>
+
+      <!-- ACTION BUTTONS -->
+      <div class="panel-footer">
+
+        <button id="btn-download" class="panel-btn">
+          <i class="fas fa-download"></i>
+          <span data-i18n="BUTTON_DOWNLOAD"></span>
+        </button>
+
+        <button id="btn-delete" class="panel-btn danger">
+          <i class="fas fa-trash"></i>
+          <span data-i18n="BUTTON_DELETE"></span>
+        </button>
+
+      </div>
+
+    </aside>
+
+  </div>
+</main>
+
+
+<footer>
+<button id="btnBack" type="button" data-i18n="BUTTON_BACK"></button>
+</footer>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="../Navigation/nav.js"></script>
+<script src="band_finder.js"></script>
+<script src="../lang/i18n.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,404 @@
+/* =========================================================
+   MAIN LAYOUT
+========================================================= */
+
+.main-layout {
+  display: flex;
+  gap: 16px;
+
+  /* height: 100%; */
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   LEFT STAGE PANEL
+========================================================= */
+
+.stage-panel {
+  flex: 0 0 260px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  padding: 16px;
+  border-radius: 10px;
+
+  height: 100%;
+
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--container-border-color);
+
+  overflow-y: auto;
+}
+
+/* stage item */
+.stage {
+  padding: 12px;
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--container-border-color);
+
+  transition: 0.25s ease;
+  cursor: pointer;
+}
+
+.stage:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.stage.active {
+  border-color: var(--button-hover);
+  box-shadow: 0 0 0 1px var(--button-hover);
+}
+
+.stage.disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.stage-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.stage-set {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 4px 0;
+}
+
+.stage-countdown-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.stage-countdown {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* =========================================================
+   RIGHT PANEL
+========================================================= */
+
+.right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+/* =========================================================
+   CAMERA HEADER
+========================================================= */
+
+.camera-header {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.camera-header .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff0000
+}
+
+/* =========================================================
+   CAMERA VIEW (MÀN HÌNH LỚN)
+========================================================= */
+
+.camera-view {
+  flex: 1;
+
+  min-height: 480px;   /* màn hình cao sẵn */
+  border-radius: 14px;
+
+  background: #000;    /* màn hình thật */
+  border: 1px solid var(--container-border-color);
+
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* viền trong nhẹ giống panel thiết bị */
+.camera-view::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+
+/* nếu có video */
+.camera-view video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* =========================================================
+   CONTROL BAR
+========================================================= */
+
+.control-bar {
+  height: 70px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 20px;
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--container-border-color);
+}
+
+.voltage-box {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+#currentVoltage {
+  margin-left: 6px;
+  color: var(--button-hover);
+}
+
+/* =========================================================
+   STAGE VOLTAGE STYLE UPGRADE
+========================================================= */
+
+.stage-voltage {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+
+  margin-top: 4px;
+}
+
+.voltage-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--button-hover);
+
+  letter-spacing: 1px;
+}
+
+.voltage-unit {
+  font-size: 1.4rem;     
+  font-weight: 700;      
+  color: var(--button-hover);
+}
+
+/* =========================================================
+   STAGE TIMER STYLE UPGRADE
+========================================================= */
+
+.stage-bottom {
+  margin-top: 8px;
+  text-align: center;
+}
+
+.stage-countdown-label {
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.stage-countdown {
+  margin-top: 4px;
+
+  font-size: 1.2rem;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+  color: #ffffff;
+
+  background: rgba(0, 0, 0, 0.35);
+  padding: 4px 8px;
+  border-radius: 6px;
+
+  display: inline-block;
+}
+
+
+
+.camera-view img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   /* hoặc contain nếu không muốn crop */
+}
+
+/* ================= CAMERA RESPONSIVE ================= */
+
+.camera-view {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.camera-wrapper {
+    position: relative;
+
+    width: 100%;
+    max-width: min(900px, 80vw);
+
+    aspect-ratio: 16 / 9;
+
+    max-height: 65vh;
+
+    background: black;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+/* Ảnh stream */
+#img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;   /* Không méo */
+    display: block;
+}
+
+/* Nút fullscreen */
+.fullscreen-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.6);
+    border: none;
+    color: white;
+    padding: 8px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.fullscreen-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+
+/* =========================================================
+   STAGE STATUS STATES
+========================================================= */
+
+/* ===== WAITING ===== */
+.stage.waiting {
+  opacity: 0.6;
+}
+
+/* ===== RUNNING (nổi bật nhất) ===== */
+.stage.running {
+  border-color: var(--button-hover);
+  box-shadow: 
+    0 0 0 1px var(--button-hover),
+    0 0 20px rgba(0, 255, 150, 0.25);
+
+  background: rgba(0, 255, 150, 0.05);
+
+  transform: translateY(-2px);
+}
+
+/* hiệu ứng nhấp nháy nhẹ cho countdown */
+.stage.running .stage-countdown {
+  animation: pulseRunning 1.2s infinite ease-in-out;
+}
+
+/* ===== COMPLETED ===== */
+.stage.completed {
+  opacity: 0.45;
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255,255,255,0.08);
+}
+
+.stage.completed .stage-countdown {
+  color: #aaa;
+}
+
+/* =========================================================
+   RUNNING ANIMATION
+========================================================= */
+
+@keyframes pulseRunning {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+
+/* =========================================================
+   RESPONSIVE - PORTRAIT / MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .main-layout {
+    flex-direction: column;
+  }
+
+  /* ===== STAGE PANEL nằm ngang ===== */
+  .stage-panel {
+    flex: none;
+    width: 100%;
+
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    gap: 12px;
+    padding: 12px;
+    margin-top: 180px;
+
+    height: auto;
+  }
+
+  .stage {
+    min-width: 140px;
+    flex-shrink: 0;
+  }
+
+  /* ===== RIGHT PANEL reset flex ===== */
+  .right-panel {
+    flex: none;
+    width: 100%;
+  }
+
+  /* ===== CAMERA VIEW chuẩn landscape ===== */
+  .camera-view {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;   /* GIỮ LANDSCAPE */
+    min-height: 0;          /* bỏ 480px */
+    flex: none;             /* QUAN TRỌNG */
+  }
+
+}
+
+
+.finish-button {
+  background-color: #00c853;
+}
+
+.finish-button:hover {
+  background-color: #00e676;
+}

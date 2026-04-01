@@ -1,0 +1,130 @@
+/* =========================================================
+   MAIN WRAPPER
+========================================================= */
+.well-container {
+  width: 100%;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* =========================================================
+   TOP CONTROL
+========================================================= */
+.well-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.well-control label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.well-control select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--container-border-color);
+  background: var(--container-bg);
+  color: var(--text-main);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+.well-table-wrapper {
+  background: var(--container-bg);
+  border-radius: 8px;
+  border: 1px solid var(--container-border-color);
+  overflow: hidden;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+.well-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* HEADER */
+.well-table thead {
+  background: linear-gradient(
+    90deg,
+    var(--gradient-start),
+    var(--gradient-end)
+  );
+}
+
+.well-table th {
+  padding: 10px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: white;
+}
+
+/* COLUMN WIDTH */
+.col-no {
+  width: 60px;
+}
+
+/* BODY */
+.well-table td {
+  border-top: 1px solid var(--container-border-color);
+  padding: 6px 8px;
+}
+
+/* NUMBER COLUMN */
+.well-table td:first-child {
+  text-align: center;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* INPUT FIELD */
+.well-table input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--container-border-color);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--input-text);
+  font-size: 0.9rem;
+}
+
+.well-table input:focus {
+  outline: none;
+  border-color: var(--gradient-end);
+  box-shadow: 0 0 5px rgba(0, 242, 255, 0.6);
+}
+
+/* Fix dropdown option màu trắng */
+.well-control select {
+  background-color: var(--container-bg);
+  color: var(--text-main);
+}
+
+/* Dropdown items */
+.well-control select option {
+  background-color: #1e1e1e;   /* nền tối rõ ràng */
+  color: #ffffff;              /* chữ trắng */
+}
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 600px) {
+  .well-control {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .col-no {
+    width: 45px;
+  }
+}

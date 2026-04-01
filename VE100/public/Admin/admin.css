@@ -1,0 +1,415 @@
+:root {
+  /* =========================================================
+     COLOR & THEME
+     ========================================================= */
+  --header-title-gradient-start: #e08600;
+  --header-title-gradient-end: #f90000;
+
+  --header-bg: #1820309a;
+  --footer-bg: #1820309a;
+  --main-bg: #0b0f17;
+
+  --container-bg: #ffffff0d;
+  --container-border-color: #ffffff33;
+
+  --button-bg: rgba(242, 109, 0, 0.85);
+  --button-hover: rgba(255, 193, 94, 0.85);
+  --button-active: rgba(255, 187, 40, 0.85);
+  --button-inactive: rgba(69, 103, 121, 0.85);
+
+  --icon-bg: rgba(26, 95, 140, 0.85);
+  --icon-hover: #5fe0de;
+
+  /* =========================================================
+     TEXT
+     ========================================================= */
+  --text-color: #ffffff;
+  --mutetext-color: #a8bcd6;
+
+  --text-size-normal: 1rem;
+  --text-size-big1: 1.1rem;
+  --text-size-big2: 1.2rem;
+  --text-size-small1: 0.9rem;
+  --text-size-small2: 0.8rem;
+
+  --font-weight-bold: 700;
+  --button-font_waight: 400;
+
+  /* =========================================================
+     LAYOUT
+     ========================================================= */
+  --widget-gap: 8px;
+  --footer-button-width: 140px;
+
+  --button-border-radius: 10px;
+  --container-border-radius: 8px;
+}
+
+/* =========================================================
+   GLOBAL RESET & BASE
+   ========================================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  font-family: "Poppins", "Segoe UI", Arial, sans-serif;
+  background: var(--main-bg);
+  color: var(--text-color);
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  background: var(--header-bg);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.titlebar-page {
+  margin: 8px;
+  font-size: var(--text-size-big1);
+}
+
+.titlebar-version {
+  width: 100%;
+  padding: 8px 0;
+
+  display: block;
+  text-align: center;
+
+  font-size: var(--text-size-big2);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 1px;
+
+  color: var(--text-color);
+  background: linear-gradient(
+    135deg,
+    var(--header-title-gradient-start),
+    var(--header-title-gradient-end)
+  );
+
+  box-shadow: 0 6px 18px rgba(58, 190, 188, 0.25);
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+footer {
+  width: 100%;
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+
+  padding: 12px 20px;
+
+  background: var(--footer-bg);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+footer button {
+  width: var(--footer-button-width);
+  padding: 10px 0;
+
+  font-size: var(--text-size-small1);
+  font-weight: var(--button-font_waight);
+
+  border: none;
+  border-radius: var(--button-border-radius);
+
+  background: var(--button-bg);
+  color: var(--text-color);
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+footer button:hover {
+  background: var(--button-hover);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+main {
+  flex: 1;
+  margin: 8px 0;
+}
+
+/* =========================================================
+   CONTAINER & GRID
+   ========================================================= */
+.main-container {
+  width: 100%;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* =========================================================
+   PANEL
+   ========================================================= */
+.panel {
+  min-height: 220px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  padding: 16px;
+
+  background: #ffffff11;
+  border-radius: var(--container-border-radius);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.panel h3 {
+  padding-bottom: 6px;
+  text-align: center;
+  font-size: 15px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+.table-grid {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.table-grid th,
+.table-grid td {
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.table-grid input {
+  width: 100%;
+  padding: 6px;
+
+  text-align: center;
+
+  border: none;
+  border-radius: 6px;
+
+  background: #6f6f6f1e;
+  color: #ffffff;
+}
+
+/* =========================================================
+   FORM
+   ========================================================= */
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.form-row label {
+  width: 80px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.form-row input {
+  flex: 1;
+  padding: 6px 10px;
+
+  text-align: center;
+
+  border: none;
+  border-radius: 6px;
+
+  background: #6f6f6f1e;
+  color: #ffffff;
+}
+
+/* =========================================================
+   COORDINATES
+   ========================================================= */
+.coord-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.coord-section span {
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+.coord-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.coord-grid input {
+  padding: 6px;
+
+  text-align: center;
+
+  border: none;
+  border-radius: 6px;
+
+  background: #6f6f6f1e;
+  color: #ffffff;
+}
+
+.coord-grid input:disabled {
+  background: #5c5c5c;
+  color: #aaaaaa;
+}
+
+/* =========================================================
+   APPLY BUTTON
+   ========================================================= */
+.apply-area {
+  display: flex;
+  justify-content: center;
+  padding-top: 16px;
+}
+
+#btnApply {
+  width: 100%;
+  padding: 10px;
+
+  font-size: 1rem;
+  font-weight: 400;
+
+  border: none;
+  border-radius: 10px;
+
+  background: var(--button-bg);
+  color: #ffffff;
+
+  cursor: pointer;
+}
+
+#btnApply:hover {
+  background: var(--button-hover);
+}
+
+/* =========================================================
+   SMALL INPUT
+   ========================================================= */
+.small-input {
+  max-width: 140px;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+/* =========================================================
+   COORDINATES WITH LABEL
+   ========================================================= */
+.coord-grid.labeled {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.coord-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.coord-item label {
+  text-align: center;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .coord-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .coord-grid.labeled {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .panel {
+    min-height: auto;
+  }
+
+  .small-input {
+    max-width: 100%;
+  }
+
+  footer button {
+    font-size: 1rem;
+  }
+
+  .titlebar-version {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  footer button {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  footer button {
+    font-size: 0.8rem;
+  }
+}
+
+/* =========================================================
+   REMOVE NUMBER INPUT ARROWS
+   ========================================================= */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
