@@ -162,7 +162,7 @@ function Update_Start_Protocol(data)
           cycles_pcr_prev[pcr_loop_index] = cycles_pcr[pcr_loop_index];
         }
     }
-    console.log(cycles_pcr);
+    //console.log(cycles_pcr);
     
     if(time_run != time_run_prev) { ui_TimeProgram.textContent = Format_time_setpoint(time_run, ' '); time_run_prev = time_run; }              // Cập nhật thời gian chạy chương trình
 
@@ -242,7 +242,8 @@ function Update_Stop_Protocol(data)
     block_temp_prev = 0;       // Nhiệt độ lóc trên trước đó
     Time_count_prev = 0;       // Thời gian giữ trước đó
     lid_temp_prev = 0;         // Nhiệt độ lóc trên trước đó
-    cycles_pcr_prev = new Array(PCR_LOOP).fill(1);   // reset số cycles trong pcr
+    cycles_pcr_prev = new Array(PCR_LOOP).fill(100);   // reset số cycles trong pcr
+    Fist_Reload_Page = true;
     pcr_loop_index_prev = 100; // Nhiệt độ lóc trên trước đó
     step_setpoint_prev = 100;  // Nhiệt độ lóc trên trước đó
     time_run_prev = 0;         // Nhiệt độ lóc trên trước đó
