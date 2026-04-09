@@ -1050,7 +1050,6 @@ function createStepBox(widthPercent, index) {
   return stepBox;
 }
 
-
 function Render_Chart_Temp() {
     const container = document.getElementById("Temp-Chart");
     if (!container) return;
@@ -1091,28 +1090,6 @@ function Render_Chart_Temp() {
             pinchZoomX: true
         })
     );
-
-    // ================= X AXIS =================
-    // const xAxis = chart.xAxes.push(
-    //     am5xy.ValueAxis.new(root, {
-    //         min: 0,
-    //         max: 8000,
-    //         strictMinMax: true,
-    //         renderer: am5xy.AxisRendererX.new(root, {
-    //             minGridDistance: 80
-    //         })
-    //     })
-    // );
-
-    // xAxis.get("renderer").labels.template.setAll({
-    //     fontFamily: "'Noto Serif', serif",
-    //     fontSize: 14
-    // });
-
-    // xAxis.get("renderer").labels.template.adapters.add("text", (text, target) => {
-    //     const v = target.dataItem?.get("value");
-    //     return v != null ? v + " s" : text;
-    // });
 
     // ================= X AXIS =================
     const xAxis = chart.xAxes.push(
@@ -1359,7 +1336,6 @@ function Render_Chart_Temp() {
     }
 }
 
-
 function Render_Tool(Panel_ID, option = "new") {
     const container = document.getElementById(Panel_ID)
 
@@ -1370,7 +1346,7 @@ function Render_Tool(Panel_ID, option = "new") {
     container.style.gap = "5px"; // khoảng cách giữa 2 hàng
     container.style.backgroundColor = "#ffffffff"; // khoảng cách giữa 2 hàng
 
-    const Two_Row = ["new", "saved", "history", "temp_calib"].includes(option); // Nếu 1 trong 3 thì tạo chiều cao 20% còn nếu là admin thì chiều cao 10%
+    const Two_Row = ["new", "saved", "history", "temp_calib"].includes(option); // Nếu 1 trong 5 thì tạo chiều cao 20% còn nếu là admin thì chiều cao 10%
     container.style.height = Two_Row ? "20%" : "10%";
 
     
@@ -1453,7 +1429,7 @@ function Render_Tool(Panel_ID, option = "new") {
           if(Position_Click != null)
           {
             Tab_prev = ui_LBSavedTitle.textContent;
-            Click_Btn_Open(Position_Click , option);
+            Click_Btn_Open(Position_Click , option , "new"); // click open thì hiện new binhg thường
           }
         });
         topRow.appendChild(ui_BtnOpen);
@@ -1481,7 +1457,7 @@ function Render_Tool(Panel_ID, option = "new") {
           if(Position_Click != null)
           {
             Tab_prev = ui_LBSavedTitle.textContent;
-            Click_Btn_Open(Position_Click, option);
+            Click_Btn_Open(Position_Click, option, "view");
           }
         });
         topRow.appendChild(ui_BtnOpen);
@@ -1533,7 +1509,7 @@ function Render_Tool(Panel_ID, option = "new") {
       // }
       container.appendChild(topRow);
     }
-
+  
     // --- Hàng 2: BACK + TIME RUN (nếu option === "new") ---
 const bottomRow = document.createElement("div");
 Object.assign(bottomRow.style, 
@@ -1547,6 +1523,56 @@ Object.assign(bottomRow.style,
 
 
 if (option === "new") // nếu là new thì render Time run
+{
+    bottomRow.style.flexDirection = "row";
+
+    // ---- Cột trái: BACK ----
+    const backBox = document.createElement("div");
+    Object.assign(backBox.style, {
+        width: "50%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "top",
+        background: "#ffffffff",
+        paddingLeft: "2%",   // <-- camelCase
+        paddingRight: "1%",  // <-- camelCase
+    });
+    ui_BtnBack = document.createElement("button");
+    ui_BtnBack.className = "back-btn";
+    ui_BtnBack.innerHTML = `<img src="../../assets/PCR_BACK_TOOL.png" style="width:16px; height:16px;"> BACK`; 
+    ui_BtnBack.addEventListener("click", function()  
+    { 
+        Click_Btn_Back(option, System.Tab_Prev); 
+    });
+
+    backBox.appendChild(ui_BtnBack);
+
+    // ---- Cột phải: TIME RUN ----
+    const timeBox = document.createElement("div");
+    Object.assign(timeBox.style, {
+        width: "50%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "top",
+        fontSize: "20px",
+        backgroundColor: "#ffffffff",
+        paddingLeft: "1%",   // <-- camelCase
+        paddingRight: "2%",  // <-- camelCase
+    });
+        
+    const timeDisplay = document.createElement("div");
+    timeDisplay.className = "time-display"; 
+
+    ui_TimeProgram = document.createElement("span");
+    ui_TimeProgram.id = "time";
+    ui_TimeProgram.textContent = "00 : 00 : 00";
+    timeDisplay.appendChild(ui_TimeProgram);
+    timeBox.appendChild(timeDisplay);
+
+    bottomRow.appendChild(backBox);
+    bottomRow.appendChild(timeBox);
+}
+else if (option === "view") // nếu là new thì render Time run
 {
     bottomRow.style.flexDirection = "row";
 

@@ -1,5 +1,4 @@
 function Update_Chart_Temp(newValue) {
-
     const series = window.Temp_Series;      // series toàn cục
     const BUFFER_SIZE = Chart_Buf.length;
 
@@ -265,7 +264,9 @@ function Update_Wait_Screen(data)
         block_temp_prev = block_temp;
     }
 
-    if(++Update_Chart_Cnt >= Time_Update_Char * 2) // Cập nhật dữ liệu mỗi 1s
+    // console.log(System.Option_Prev);
+    
+    if(++Update_Chart_Cnt >= Time_Update_Char * 2 && System.Option_Prev == "new") // Cập nhật dữ liệu mỗi 2s nếu đang ở giao diện new
     {
       Update_Chart_Cnt = 0;
       Update_Chart_Temp(block_temp); // Cập nhật biểu đồ nhiệt
@@ -449,6 +450,18 @@ function Lock_Panel(panel, lock)
     panel.style.pointerEvents = lock ? "none" : "auto";
 }
 
+
+function Update_Time_Done(data)
+{
+    let idx = 0;
+    let time_count_low  = data[idx++]; // lấy byte low
+    let time_count_high = data[idx++]; // lấy byet high
+    let time_run = (time_count_high << 8) | time_count_low;  // Lấy time
+
+    ui_TimeProgram.textContent = Format_time_setpoint(time_run, ' '); 
+                console.log(time_run);
+}
+
 // Export tất cả chỉ với 1 dòng
 export default {
   Update_Chart_Temp,
@@ -463,6 +476,7 @@ export default {
   Update_Save_Calib,
   Get_Chart_Buf,
   Update_Chart,
+  Update_Time_Done,
 
   Get_Saved_Protocol,
   Get_Saved_Calib,

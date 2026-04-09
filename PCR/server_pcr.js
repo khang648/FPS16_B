@@ -42,7 +42,7 @@ function sendToTFT(data) {
     }
     console.log("Hostname updated:", host);
     });
-  }
+}
 
 
 
@@ -54,6 +54,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 let Page_prev = "PCR/PCR_Base/pcr_base.html"; // Trang mặc định
 let Tab_prev = ""; 
+let Option_Prev = "new"; // Trang mặc định
 
 app.use(express.static(path.join(__dirname, "web_pcr")));
 
@@ -63,7 +64,7 @@ app.get("/", (req, res) => {
 
 io.on("connection", (socket) => // khi có client kết nối
 {
-  socket.emit("Go_To_Page_Web", Page_prev, Tab_prev); // Khi có client mới kết nối thì gửi Link web trước đó
+  socket.emit("Go_To_Page_Web", Page_prev, Tab_prev, Option_Prev); // Khi có client mới kết nối thì gửi Link web trước đó
   
   //console.log("Go_To_Page_Web ", Page_prev, Tab_prev);
   //console.log("New client: ", socket.id);
@@ -139,8 +140,6 @@ io.on("connection", (socket) => // khi có client kết nối
     }
   });
 
-
-
   // Khi web request Wi-Fi config
   socket.on("request_wifi_config", () => 
   {
@@ -159,7 +158,6 @@ io.on("connection", (socket) => // khi có client kết nối
     }
   });
   
- 
   socket.on("web_pcr_wifi_config", (data) => {
   try 
   {
@@ -200,8 +198,6 @@ io.on("connection", (socket) => // khi có client kết nối
   }
 });
 
-
-
   // Nhận lệnh restart wifi
   socket.on("web_pcr_wifi_restart", async () => {
 
@@ -218,18 +214,17 @@ io.on("connection", (socket) => // khi có client kết nối
     }
   });
 
-
-  socket.on("Save_Page_To_Server", (pagePath , TabPath) =>  // Khi nhận lệnh chuyển hướng trang
+  socket.on("Save_Page_To_Server", (pagePath , TabPath, Option) =>  // Khi nhận lệnh chuyển hướng trang
   {
-    Page_prev = pagePath;
-    Tab_prev = TabPath;
-    socket.emit('Go_To_Page_Web', Page_prev, Tab_prev); // Gửi lại page với client vừa yêu cầu 
+    Page_prev   = pagePath;
+    Tab_prev    = TabPath;
+    Option_Prev = Option;
+    socket.emit('Go_To_Page_Web', Page_prev, Tab_prev, Option_Prev); // Gửi lại page với client vừa yêu cầu 
+    console.log(Option_Prev);
   });
-
 
   /*====================================================================================*/
   /*====================================================================================*/ 
-
 
   socket.on("update_device_info", (data) => {
 

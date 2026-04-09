@@ -112,11 +112,13 @@ socket.on('wifi_config_saved', (res) =>
     }
 });
 
-socket.on("Go_To_Page_Web", (pagePath , TabPath) =>  // Nhận lệnh chuyển hướng trang từ server gửi lên
+socket.on("Go_To_Page_Web", (pagePath , TabPath, Option) =>  // Nhận lệnh chuyển hướng trang từ server gửi lên
 {
     if (pagePath.startsWith("/")) pagePath = pagePath.slice(1);
     const currentPath = window.location.pathname.replace(/^\//, "");
+    
     System.Tab_Prev = TabPath;
+    System.Option_Prev = Option;
     
     if (currentPath !== pagePath) 
     {
@@ -190,9 +192,14 @@ function Parsing_Data(id, func, data)
             if ((chart_buf_cnt.value == (chart_buf_total.value - 1) && chart_buf_cnt.value > 0) || chart_buf_cnt.value == 0) // nếu nhận đủ mảng
             {
                 PCR_UI.Update_Chart(Chart_Buf);
-                //Hide_Loading(); 
             }
             //console.log(chart_buf_cnt);
+            //console.log(System.History_Position);
+            break;
+
+        case PCR_REG.UPDATE_TIME_DONE: // Nhận được Saved hiện tại 
+            PCR_UI. Update_Time_Done(data);
+
             break;
 
         case PCR_REG.SAVE_OK_PROTOCOL: // Nhận lệch save thành công
@@ -273,11 +280,12 @@ function Parsing_Data(id, func, data)
     case PCR_REG.REQUEST_SAVED_UI: // Nhận được Saved hiện tại
           Get_Protocol(data); // Lấy giá trị
           Render_PCR_Program();       // Render lại Program
-          Hide_Loading(); 
-          Pack_Data(DEVICE.PCR_ID, PCR_REG.REQUEST_CHART_UI, null, 0, "Web_PCR");  // yêu cầu mảng buf
+          Hide_Loading();
+
+          const click_posi = new Uint8Array([System.History_Position]);
+          Pack_Data(DEVICE.PCR_ID, PCR_REG.REQUEST_CHART_UI, click_posi, click_posi.length, "Web_PCR");  // yêu cầu mảng buf
+
           break;
-
-
 
         default:
             console.log("Sai địa chỉ Func", func);

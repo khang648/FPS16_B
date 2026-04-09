@@ -1,4 +1,3 @@
-
 function Pack_Protocol(data) {
     let offset = 0;
 
@@ -114,7 +113,6 @@ function Pack_Date_Time(data, date, month, year, hour, minute, second) {
   return idx;
 }
 
-
 function Pack_Data(id, func, data, lenght, event) {
     const frame = new Uint8Array(3 + DATA_TX_SIZE + 2); // 3 Header + Data 
 
@@ -176,7 +174,6 @@ function Pack_Calib_Val(data, Heating_Val, Cooling_Val, Time_out, Temp_Hi, Temp_
   return packedData.length;
 }
 
-
 function crc16_modbus(buf) 
 {
     let crc = 0xFFFF;
@@ -196,7 +193,6 @@ function crc16_modbus(buf)
 
     return crc & 0xFFFF; // đảm bảo 16 bit
 }
-
 
 function Get_Protocol(data) {
     let idx = 0;
@@ -258,4 +254,6 @@ function Get_Protocol(data) {
 // console.log("HOLD_END_CNT  =", HOLD_END_CNT);
 
 }
+
+
 

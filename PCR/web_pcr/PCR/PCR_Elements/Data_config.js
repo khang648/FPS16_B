@@ -25,6 +25,7 @@ let System = {
     BlockTemp: 30,
     Tab_Prev: "",
     Request_Data: "",
+    History_Position: Number(localStorage.getItem("History_Position")) || 0,
 };
 
 //*================================ lẤY DỮ LIỆU BIỂU ĐỒ NHIỆT ========================================*//

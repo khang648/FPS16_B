@@ -173,7 +173,7 @@ function Pasing_Frame(frame)
       break;
 
     default:
-      console.log("Unknown FUNC:", func, data);
+      //console.log("Unknown FUNC:", func, data);
       break;
   }
   //console.log("PCR_Global:", PCR_Global);
@@ -207,15 +207,7 @@ function Parse_Start_Data(data)
   PCR_Global.time_run = (time_run_high << 8) | time_run_low;  // Lấy time
   PCR_Global.state_system = 1;
 
-  console.log(data)
-}
-
-
-function Parse_Wait_Data(data)
-{
-  PCR_Global.block_temp = data[0];
-  PCR_Global.pcr_loop_index = 0;
-  PCR_Global.state_system = 0;
+  // console.log(data)
 }
 
 function Parse_Stop_Data(data)
@@ -225,6 +217,13 @@ function Parse_Stop_Data(data)
   const time_run_high = data[idx++];
   PCR_Global.time_run = (time_run_high << 8) | time_run_low;
 
+  PCR_Global.pcr_loop_index = 0;
+  PCR_Global.state_system = 0;
+}
+
+function Parse_Wait_Data(data)
+{
+  PCR_Global.block_temp = data[0];
   PCR_Global.pcr_loop_index = 0;
   PCR_Global.state_system = 0;
 }
