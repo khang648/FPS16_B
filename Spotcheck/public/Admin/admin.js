@@ -3,6 +3,7 @@ window.socket = io();
 /* ================= GLOBAL INPUTS ================= */
 const host_name = document.getElementById("host_name");
 const seri_number = document.getElementById("seri_number");
+const version = document.getElementById("currentVersion");
 
 const aValue = document.getElementById("a_value");
 const bValue = document.getElementById("b_value");
@@ -152,6 +153,7 @@ socket.on("admin_extra_data", (data) => {
 
   host_name.value = data.device_info.host_name; 
   seri_number.value = data.device_info.seri_number; 
+  version.value = data.device_info.version;
 
 });
 
@@ -205,3 +207,115 @@ socket.on("admin_write_done", () => {
 });
 
 window.history.replaceState(null, "", window.location.href);
+
+
+
+
+/* ================= UPDATE LOGIC ================= */
+const modal = document.getElementById("updateModal");
+const statusText = document.getElementById("updateStatus");
+const progressFill = document.getElementById("progressFill");
+const btnCheck = document.getElementById("btnCheckUpdate"); // Đảm bảo ID này đúng trong HTML
+const btnStart = document.getElementById("btnStartUpdate");
+const btnClose = document.getElementById("btnCloseModal");
+
+// Nhấn nút Check Update
+btnCheck.onclick = () => {
+    modal.classList.remove("hidden");
+    statusText.innerText = "Checking for updates...";
+    statusText.style.color = "#fff";
+    progressFill.style.width = "0%";
+    btnStart.hidden = true;
+    btnClose.disabled = false;
+    
+    // Gửi yêu cầu check lên server
+    socket.emit("check_update");
+};
+
+// Nhận kết quả check từ Server
+socket.on("update_check_result", (data) => {
+    // Mất kết nối mạng
+    if (data.error === "no_network") {
+        statusText.innerText = "Wi-Fi Connection Required";
+        statusText.style.color = "#ff4d4d";
+
+        const confirmGo = confirm("This device is not connected to Wi-Fi. Please connect to a network to perform the update. Go to Wi-Fi Settings now?");
+        
+        if (confirmGo) {
+            window.location.href = "../Wifi_Setting/wifi_setting.html";
+        }
+        return;
+    }
+
+    // Các lỗi khác
+    if (data.error) {
+        statusText.innerText = "Error: " + data.error;
+        statusText.style.color = "#ff4d4d";
+        return;
+    }
+
+    // Có bản cập nhật mới
+    if (data.hasUpdate) {
+        statusText.innerText = `New version available: ${data.latest}`;
+        statusText.style.color = "#aaf917";
+        btnStart.hidden = false;
+    } 
+    // Đã là bản mới nhất
+    else {
+        statusText.innerText = "System is up to date.";
+        statusText.style.color = "#fff";
+        btnStart.hidden = true;
+    }
+});
+
+// Nhấn nút Start Update
+btnStart.onclick = () => {
+    btnStart.hidden = true;
+    btnClose.disabled = true; // Khóa nút Close để tránh người dùng thoát giữa chừng
+    statusText.innerText = "Initializing update...";
+    socket.emit("start_update");
+};
+
+// Cập nhật dòng trạng thái từ Server (Downloading, Installing...)
+socket.on("update_status", (message) => {
+    statusText.innerText = message;
+    statusText.style.color = "#ffce00"; // Màu vàng báo hiệu đang xử lý/chờ
+});
+
+// Cập nhật thanh % Progress
+socket.on("update_progress", (percent) => {
+    progressFill.style.width = percent + "%";
+});
+
+// Thông báo khi Server gửi tín hiệu Done (trước khi reboot)
+socket.on("update_done", () => {
+    statusText.innerText = "Update successful! Rebooting...";
+    statusText.style.color = "#00ff00";
+});
+
+// Xử lý lỗi trong quá trình Download/Install
+socket.on("update_error", (msg) => {
+    statusText.innerText = "Error: " + msg;
+    statusText.style.color = "#ff4d4d";
+    btnStart.hidden = false; // Hiện lại nút để thử lại nếu muốn
+    btnClose.disabled = false;
+});
+
+// Bắt sự kiện khi Server online trở lại sau khi Reboot
+socket.on("server_online", () => {
+    // Chỉ xử lý nếu người dùng vẫn đang mở Modal update
+    if (!modal.classList.contains("hidden")) {
+        statusText.innerText = "System is back online!";
+        statusText.style.color = "#00ff00";
+        progressFill.style.width = "100%";
+        btnClose.disabled = false;
+        btnClose.innerText = "Done";
+    }
+});
+
+// Đóng Modal
+btnClose.onclick = () => {
+    if (!btnClose.disabled) {
+        modal.classList.add("hidden");
+    }
+};

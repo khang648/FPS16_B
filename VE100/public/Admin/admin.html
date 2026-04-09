@@ -113,11 +113,28 @@
         </div>
       </div>
 
-      <!-- ===== APPLY AREA ===== -->
-      <div class="apply-area">
-        <button id="btnApply">Apply</button>
-      </div>
+    </div>
 
+    <!-- ===== APPLY AREA ===== -->
+    <div class="apply-area">
+      <button id="btnApply">Apply</button>
+    </div>
+
+    <!-- UPDATE -->
+    <div class="update-area">
+      <section class="panel">
+        <h3>UPDATE</h3>
+
+        <div class="update-row">
+          <label>Current Version</label>
+          <input id="currentVersion" disabled>
+        </div>
+
+        <div class="update-actions">
+          <button id="btnCheckUpdate">Check Update</button>
+        </div>
+
+      </section>
     </div>
   </main>
 
@@ -129,6 +146,34 @@
       Back
     </button>
   </footer>
+
+  <!-- POPUP UPDATE -->
+  <div id="updateModal" class="modal hidden">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h3>System Update</h3>
+              <div style="height: 1px; background: #3e4451; margin: 10px 0;"></div>
+          </div>
+
+          <div class="modal-body">
+              <p id="updateStatus">Sẵn sàng kiểm tra phiên bản mới...</p>
+              
+              <div class="progress-container">
+                  <div id="progressFill"></div>
+              </div>
+          </div>
+
+          <div class="modal-footer">
+              <button id="btnStartUpdate" class="btn-primary" hidden>
+                  Update Now
+              </button>
+              
+              <button id="btnCloseModal" class="btn-secondary">
+                  Close
+              </button>
+          </div>
+      </div>
+  </div>
 
   <!-- ================= SCRIPT ================= -->
   <script src="/socket.io/socket.io.js"></script>

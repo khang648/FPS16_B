@@ -76,6 +76,7 @@ const { registerExcelSocket } = require("./socket_handlers/excel_handler");
 const { registerFileDownloadSocket } = require("./socket_handlers/filedownload_handler");
 const { registerEmailSocket } = require("./socket_handlers/email_handler");
 const { registerResultSocket } = require("./socket_handlers/result_handler");
+const { registerUpdateSocket } = require("./socket_handlers/update_handler");
 
 
 io.on("connection", (socket) => {
@@ -88,6 +89,7 @@ io.on("connection", (socket) => {
   registerFileDownloadSocket(io, socket);
   registerEmailSocket(io, socket);
   registerResultSocket(io, socket);
+  registerUpdateSocket(io, socket);
 
   /*---------- WIFI CONFIG - START ----------*/
   // Wi-Fi config request received 
@@ -144,6 +146,7 @@ io.on("connection", (socket) => {
       console.error(err);
       socket.emit('wifi_config_saved', { success: false });
     }
+
   });
 
   // Nhận lệnh restart wifi

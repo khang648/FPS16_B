@@ -4,16 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FPS32B - Spotcheck 26001</title>
+  <title>FPS32B - Admin</title>
 
   <link rel="stylesheet" href="../assets/fontawesome-7.1.0/css/all.min.css">
-  <!-- <link rel="stylesheet" href="../general_style.css"> -->
   <link rel="stylesheet" href="./admin.css">
 </head>
 
 <body>
 
-  <!-- ================= HEADER ================= -->
+  <!-- HEADER -->
   <header>
     <div class="titlebar-top">
       <span class="titlebar-version">SPOTCHECK</span>
@@ -26,15 +25,15 @@
     </div>
   </header>
 
-  <!-- ================= MAIN ================= -->
+  <!-- MAIN -->
   <main>
+
     <div class="main-container">
 
-      <!-- ===== CONTENT GRID ===== -->
+      <!-- GRID -->
       <div class="content-grid">
 
-        <!-- ===== LEFT COLUMN ===== -->
-         
+        <!-- LEFT -->
         <div class="column">
 
           <section class="panel">
@@ -63,7 +62,7 @@
 
         </div>
 
-        <!-- ===== RIGHT COLUMN ===== -->
+        <!-- RIGHT -->
         <div class="column">
 
           <section class="panel">
@@ -71,22 +70,12 @@
 
             <div class="form-row">
               <label>a_value</label>
-              <input
-                type="number"
-                step="any"
-                id="a_value"
-                class="small-input"
-              >
+              <input type="number" id="a_value" class="small-input">
             </div>
 
             <div class="form-row">
               <label>b_value</label>
-              <input
-                type="number"
-                step="any"
-                id="b_value"
-                class="small-input"
-              >
+              <input type="number" id="b_value" class="small-input">
             </div>
           </section>
 
@@ -151,67 +140,88 @@
 
             <div class="form-row">
               <label>threshold_1</label>
-              <input
-                type="number"
-                step="any"
-                id="threshold_1"
-                class="small-input"
-              >
+              <input type="number" id="threshold_1">
             </div>
 
             <div class="form-row">
               <label>threshold_2</label>
-              <input
-                type="number"
-                step="any"
-                id="threshold_2"
-                class="small-input"
-              >
+              <input type="number" id="threshold_2">
             </div>
 
             <div class="form-row">
               <label>threshold_3</label>
-              <input
-                type="number"
-                step="any"
-                id="threshold_3"
-                class="small-input"
-              >
+              <input type="number" id="threshold_3">
             </div>
 
             <div class="form-row">
               <label>minus_value</label>
-              <input
-                type="number"
-                step="any"
-                id="minus_value"
-                class="small-input"
-              >
+              <input type="number" id="minus_value">
             </div>
           </section>
 
         </div>
-      </div>
 
-      <!-- ===== APPLY AREA ===== -->
-      <div class="apply-area">
-        <button id="btnApply">Apply</button>
-      </div>
+      </div> <!-- END GRID -->
 
+    </div> <!-- END CONTAINER -->
+
+    <!-- APPLY -->
+    <div class="apply-area">
+      <button id="btnApply">Apply</button>
     </div>
+
+    <!-- UPDATE -->
+    <div class="update-area">
+      <section class="panel">
+        <h3>UPDATE</h3>
+
+        <div class="update-row">
+          <label>Current Version</label>
+          <input id="currentVersion" disabled>
+        </div>
+
+        <div class="update-actions">
+          <button id="btnCheckUpdate">Check Update</button>
+        </div>
+
+      </section>
+    </div>
+
   </main>
 
-  <!-- ================= FOOTER ================= -->
+  <!-- FOOTER -->
   <footer>
-    <button
-      id="backBtn"
-      type="button"
-      onclick="Back_Clicked()">
-      Back
-    </button>
+    <button onclick="Back_Clicked()">Back</button>
   </footer>
 
-  <!-- ================= SCRIPT ================= -->
+  <!-- POPUP UPDATE -->
+  <div id="updateModal" class="modal hidden">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h3>System Update</h3>
+              <div style="height: 1px; background: #3e4451; margin: 10px 0;"></div>
+          </div>
+
+          <div class="modal-body">
+              <p id="updateStatus">Sẵn sàng kiểm tra phiên bản mới...</p>
+              
+              <div class="progress-container">
+                  <div id="progressFill"></div>
+              </div>
+          </div>
+
+          <div class="modal-footer">
+              <button id="btnStartUpdate" class="btn-primary" hidden>
+                  Update Now
+              </button>
+              
+              <button id="btnCloseModal" class="btn-secondary">
+                  Close
+              </button>
+          </div>
+      </div>
+  </div>
+
   <script src="/socket.io/socket.io.js"></script>
   <script src="admin.js"></script>
   <script src="../Navigation/nav.js"></script>

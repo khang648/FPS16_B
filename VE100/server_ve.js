@@ -16,6 +16,7 @@ const { registerADCSocket } = require("./socket_handlers/adc_handler");
 const { registerFolderSocket } = require("./socket_handlers/folder_handler");
 const { registerResultSocket, registerResultRoutes } = require("./socket_handlers/result_handler");
 const { registerEmailSocket } = require("./socket_handlers/email_handler");
+const { registerUpdateSocket } = require("./socket_handlers/update_handler");
 
 /*========== INIT ==========*/
 const app = express();
@@ -113,6 +114,7 @@ io.on("connection", (socket) => {
   registerResultSocket(io, socket);
   registerResultRoutes(app);
   registerEmailSocket(io, socket);
+  registerUpdateSocket(io, socket);
 
   /* ================= WIFI CONFIG ================= */
 

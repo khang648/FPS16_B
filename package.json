@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "archiver": "^7.0.1",
+    "axios": "^1.14.0",
+    "canvas": "^3.2.3",
     "express": "^5.1.0",
     "modbus-serial": "^8.0.23",
     "nodemailer": "^7.0.11",
