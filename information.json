@@ -1,7 +1,7 @@
 {
   "host_name": "FPS32B",
-  "seri_number": "26003",
+  "seri_number": "26002",
+  "version": "1.0.0",
   "ssid": "Ky Thuat",
-  "password": "phusagenomics",
-  "version": "v1.0.0"
+  "password": "phusagenomics"
 }

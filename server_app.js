@@ -279,11 +279,14 @@ function Write_Wifi_Config()
         // Giữ nguyên host_name và seri_number
         const hostName   = info.host_name || "";
         const seriNumber = info.seri_number || "";
+        const version = info.version || "unknown";
+
 
         // Chỉ xóa wifi
         const newInfo = {
             host_name: hostName,
             seri_number: seriNumber,
+            version: version,
             ssid: "",
             password: ""
         };

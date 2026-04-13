@@ -8,36 +8,52 @@ const GITHUB_API = "https://api.github.com/repos/khang648/FPS16_B/releases/lates
 function registerUpdateSocket(io, socket) {
 
     // Gửi version hiện tại cho Client ngay khi kết nối
-    try {
-        if (fs.existsSync(INFO_PATH)) {
-            const local = JSON.parse(fs.readFileSync(INFO_PATH));
-            socket.emit("current_version", local.version);
-        }
-    } catch (err) {
-        console.error("Error sending initial version:", err.message);
-    }
+    // try {
+    //     if (fs.existsSync(INFO_PATH)) {
+    //         const local = JSON.parse(fs.readFileSync(INFO_PATH));
+    //         socket.emit("current_version", local.version);
+    //     }
+    // } catch (err) {
+    //     console.error("Error sending initial version:", err.message);
+    // }
 
     // CHECK VERSION
     socket.on("check_update", async () => {
-        exec("hostname -I", async (error, stdout) => {
-            const ipAddresses = stdout.trim();
-
-            if (!ipAddresses) {
-                console.warn("[Update Check] No network connection detected.");
+        // Kiểm tra kết nối internet thực tế thay vì chỉ kiểm tra IP nội bộ
+        // Lệnh này thử gửi 1 gói tin ping đến Google DNS trong vòng 2 giây
+        exec("ping -c 1 -W 2 8.8.8.8", async (error) => {
+            
+            // Nếu error tồn tại, nghĩa là không thể ping ra ngoài (đang ở mode AP hoặc mất mạng)
+            if (error) {
+                console.warn("[Update Check] No internet access detected (Device might be in AP Mode).");
                 return socket.emit("update_check_result", { 
                     hasUpdate: false, 
                     error: "no_network" 
                 });
             }
 
+            // Nếu có mạng, bắt đầu thực hiện kiểm tra phiên bản
             try {
                 if (!fs.existsSync(INFO_PATH)) {
-                    return socket.emit("update_check_result", { hasUpdate: false, error: "Local file missing" });
+                    console.error("[Update Check] File information.json not found at:", INFO_PATH);
+                    return socket.emit("update_check_result", { 
+                        hasUpdate: false, 
+                        error: "Local file missing" 
+                    });
                 }
 
-                const local = JSON.parse(fs.readFileSync(INFO_PATH));
+                // Đọc file local
+                const rawData = fs.readFileSync(INFO_PATH, "utf8");
+                const local = JSON.parse(rawData);
+                
+                // Bảo vệ: Nếu file hỏng hoặc không có version, dừng lại để tránh lỗi so sánh
+                if (!local.version) {
+                    throw new Error("Key 'version' not found in information.json");
+                }
+
                 const localVersion = String(local.version).trim();
 
+                // Gọi GitHub API
                 const res = await axios.get(GITHUB_API, {
                     headers: {
                         'User-Agent': 'Mozilla/5.0',
@@ -47,7 +63,9 @@ function registerUpdateSocket(io, socket) {
                 });
 
                 const latest = String(res.data.tag_name).trim();
-                const hasUpdate = localVersion !== latest;
+                const hasUpdate = (localVersion !== latest);
+
+                console.log(`[Update Check] Local: ${localVersion}, Latest: ${latest}`);
 
                 socket.emit("update_check_result", {
                     hasUpdate: hasUpdate,
@@ -56,10 +74,10 @@ function registerUpdateSocket(io, socket) {
                 });
 
             } catch (err) {
-                console.error("GitHub API Error:", err.message);
+                console.error("GitHub API or File Error:", err.message);
                 socket.emit("update_check_result", { 
                     hasUpdate: false, 
-                    error: "GitHub API Error" 
+                    error: "Update check failed" 
                 });
             }
         });

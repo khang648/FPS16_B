@@ -1,142 +1,215 @@
-/* ================= SOCKET ================= */
-const socket = io();
+window.socket = io();
 
-let writeCount = 0;
+/* ================= GLOBAL INPUTS ================= */
+const host_name = document.getElementById("host_name");
+const seri_number = document.getElementById("seri_number");
+const version = document.getElementById("currentVersion");
 
-/* ================= PATH ================= */
-const GLOBALVAR_PATH = "/home/pi/FPS16_B/information.json";
-const COORD_PATH = "/home/pi/VE100/Global/coordinates.json";
+const aValue = document.getElementById("a_value");
+const bValue = document.getElementById("b_value");
 
-/* ================= REQUEST HELPER ================= */
-function loadJson(filePath) {
-  return new Promise((resolve, reject) => {
+const x1 = document.getElementById("x1");
+const y1 = document.getElementById("y1");
+const x2 = document.getElementById("x2");
+const y2 = document.getElementById("y2");
 
-    const handler = (data) => {
-      socket.off("jsonData", handler);
+const x1_0 = document.getElementById("x1_0");
+const y1_0 = document.getElementById("y1_0");
+const x2_0 = document.getElementById("x2_0");
+const y2_0 = document.getElementById("y2_0");
 
-      if (data?.error) {
-        reject(data.error);
-      } else {
-        resolve(data);
+const threshold1 = document.getElementById("threshold_1");
+const threshold2 = document.getElementById("threshold_2");
+const threshold3 = document.getElementById("threshold_3");
+const minusValue = document.getElementById("minus_value");
+
+const btnApply = document.getElementById("btnApply");
+
+/* ================= CREATE 4x4 TABLE ================= */
+function createTable(tableId) {
+  const table = document.getElementById(tableId);
+  table.innerHTML = "";
+
+  for (let r = 0; r < 4; r++) {
+    const tr = document.createElement("tr");
+
+    for (let c = 0; c < 4; c++) {
+      const td = document.createElement("td");
+      const input = document.createElement("input");
+      input.type = "text";
+
+      // handle excel-like paste
+      input.addEventListener("paste", (e) => {
+        e.preventDefault();
+        const text = e.clipboardData.getData("text");
+        pasteExcel(tableId, r, c, text);
+      });
+
+      td.appendChild(input);
+      tr.appendChild(td);
+    }
+
+    table.appendChild(tr);
+  }
+}
+
+createTable("coeffTable");
+createTable("baseTable");
+
+/* ================= PASTE EXCEL ================= */
+function pasteExcel(tableId, startR, startC, text) {
+  const rows = text
+    .trim()
+    .split("\n")
+    .map((r) => r.split("\t"));
+
+  const table = document.getElementById(tableId);
+
+  rows.forEach((row, rOffset) => {
+    row.forEach((val, cOffset) => {
+      const r = startR + rOffset;
+      const c = startC + cOffset;
+
+      if (r < 4 && c < 4) {
+        table.rows[r].cells[c].querySelector("input").value = val.trim();
       }
-    };
-
-    socket.on("jsonData", handler);
-    socket.emit("loadJsonFile", filePath);
+    });
   });
 }
 
-/* ================= INIT ================= */
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    const deviceData = await loadJson(GLOBALVAR_PATH);
-    renderDeviceInfo(deviceData);
-  } catch (err) {
-    console.warn("[LOAD DEVICE ERROR]", err);
+/* ================= FILL / READ TABLE ================= */
+function fillTable(id, data) {
+  const table = document.getElementById(id);
+
+  if (!Array.isArray(data) || data.length === 0) {
+    console.warn(`[${id}] Invalid data received:`, data);
+    data = Array(4)
+      .fill(0)
+      .map(() => Array(4).fill(0));
   }
 
-  try {
-    const coordData = await loadJson(COORD_PATH);
-    renderCoordinates(coordData);
-  } catch (err) {
-    console.warn("[LOAD COORD ERROR]", err);
+  for (let r = 0; r < 4; r++) {
+    for (let c = 0; c < 4; c++) {
+      const value =
+        Array.isArray(data[r]) && data[r][c] !== undefined
+          ? data[r][c]
+          : 0;
+
+      table.rows[r].cells[c].querySelector("input").value = value;
+    }
+  }
+}
+
+function readTable(id) {
+  const table = document.getElementById(id);
+  const out = [];
+
+  for (let r = 0; r < 4; r++) {
+    const row = [];
+
+    for (let c = 0; c < 4; c++) {
+      const val = parseFloat(
+        table.rows[r].cells[c].querySelector("input").value
+      );
+      row.push(isNaN(val) ? 0 : val);
+    }
+
+    out.push(row);
   }
 
-  socket.on("writeResult", (res) => {
-    if (!res.success) {
-      alert(`Save error:\n${res.error}`);
-      return;
-    }
-    writeCount++;
-    if (writeCount === 2) {
-      alert("🟢 Save done !");
-      writeCount = 0;
-    }
-  });
+  return out;
+}
 
-  /* ---------- BACK BUTTON ---------- */
-  document.getElementById("btnBack")?.addEventListener("click", () => {
-      goToPage("../index.html");
-  });
+/* ================= LOAD ALL DATA ================= */
+socket.emit("admin_load_excel");
+socket.emit("admin_load_extra");
+
+socket.on("admin_excel_data", ({ coeff, base }) => {
+  console.log("Received admin_excel_data:", { coeff, base });
+  fillTable("coeffTable", coeff);
+  fillTable("baseTable", base);
+});
+
+socket.on("admin_extra_data", (data) => {
+  console.log("Received admin_extra_data:", data);
+
+  aValue.value = data?.threshold?.a ?? 0;
+  bValue.value = data?.threshold?.b ?? 0;
+
+  x1.value = data?.coord?.x1 ?? 0;
+  y1.value = data?.coord?.y1 ?? 0;
+  x2.value = data?.coord?.x2 ?? 0;
+  y2.value = data?.coord?.y2 ?? 0;
+
+  x1_0.value = data?.coord0?.x1 ?? 0;
+  y1_0.value = data?.coord0?.y1 ?? 0;
+  x2_0.value = data?.coord0?.x2 ?? 0;
+  y2_0.value = data?.coord0?.y2 ?? 0;
+
+  threshold1.value = data?.fam?.threshold_1 ?? 0;
+  threshold2.value = data?.fam?.threshold_2 ?? 0;
+  threshold3.value = data?.fam?.threshold_3 ?? 0;
+  minusValue.value = data?.fam?.minus_value ?? 0;
+
+  host_name.value = data.device_info.host_name; 
+  seri_number.value = data.device_info.seri_number; 
+  version.value = data.device_info.version;
 
 });
 
-/* ================= RENDER ================= */
-function renderDeviceInfo(data) {
-  document.getElementById("host_name").value = data.host_name || "";
-  document.getElementById("seri_number").value = data.seri_number || "";
-  document.getElementById("currentVersion").value = data.version || "";
-}
+/* ================= APPLY BUTTON ================= */
+btnApply.addEventListener("click", () => {
+  const coeffData = readTable("coeffTable");
+  const baseData = readTable("baseTable");
 
-function renderCoordinates(data) {
-  setValue("x_coordinate_9", data.x_coordinate_9);
-  setValue("x_coordinate_17", data.x_coordinate_17);
-  setValue("y_coordinate", data.y_coordinate);
+  const extraData = {
+    threshold: {
+      a: parseFloat(aValue.value) || 0,
+      b: parseFloat(bValue.value) || 0
+    },
+    coordinates: {
+      x1: parseFloat(x1.value) || 0,
+      y1: parseFloat(y1.value) || 0,
+      x2: parseFloat(x2.value) || 0,
+      y2: parseFloat(y2.value) || 0
+    },
+    fam: {
+      threshold_1: parseFloat(threshold1.value) || 0,
+      threshold_2: parseFloat(threshold2.value) || 0,
+      threshold_3: parseFloat(threshold3.value) || 0,
+      minus_value: parseFloat(minusValue.value) || 0
+    },
+    device_info: {
+      host_name: host_name.value,
+      seri_number: seri_number.value
+    }
+  };
 
-  setValue("well_distance_9", data.well_distance_9);
-  setValue("pace_9", data.pace_9);
+  console.log("Emitting admin_write_excel:", coeffData, baseData);
+  console.log("Emitting admin_write_extra:", extraData);
 
-  setValue("well_distance_17", data.well_distance_17);
-  setValue("pace_17", data.pace_17);
+  socket.emit("admin_write_excel", {
+    coeff: coeffData,
+    base: baseData
+  });
 
-  setValue("font_size_9", data.font_size_9);
-  setValue("font_size_17", data.font_size_17);
-}
-
-/* ================= APPLY ================= */
-document.getElementById("btnApply").addEventListener("click", () => {
-  writeCount = 0;
-
-  saveDeviceInfo();
-  saveCoordinates();
+  socket.emit("admin_write_extra", extraData);
 });
 
-/* ================= SAVE ================= */
-function saveDeviceInfo() {
-  const data = {
-    host_name: document.getElementById("host_name").value.trim(),
-    seri_number: document.getElementById("seri_number").value.trim(),
-  };
+/* ================= BACK BUTTON ================= */
+document.getElementById("backBtn")?.addEventListener("click", () => {
+  location.replace("../index.html");
+});
 
-  socket.emit("writeJsonFile", {
-    filePath: GLOBALVAR_PATH,
-    data: data,
-  });
-}
+/* ================= SUCCESS ================= */
+socket.on("admin_write_done", () => {
+  alert("🟢 Update successful");
+});
 
-function saveCoordinates() {
-  const data = {
-    x_coordinate_9: getFloat("x_coordinate_9"),
-    x_coordinate_17: getFloat("x_coordinate_17"),
-    y_coordinate: getFloat("y_coordinate"),
+window.history.replaceState(null, "", window.location.href);
 
-    well_distance_9: getFloat("well_distance_9"),
-    pace_9: getFloat("pace_9"),
 
-    well_distance_17: getFloat("well_distance_17"),
-    pace_17: getFloat("pace_17"),
 
-    font_size_9: getFloat("font_size_9"),
-    font_size_17: getFloat("font_size_17"),
-  };
-
-  socket.emit("writeJsonFile", {
-    filePath: COORD_PATH,
-    data: data,
-  });
-
-  
-}
-
-/* ================= HELPER ================= */
-function setValue(id, value) {
-  document.getElementById(id).value = value ?? "";
-}
-
-function getFloat(id) {
-  const val = parseFloat(document.getElementById(id).value);
-  return isNaN(val) ? 0 : val;
-}
 
 /* ================= UPDATE LOGIC ================= */
 const modal = document.getElementById("updateModal");

@@ -222,7 +222,7 @@ function registerExcelSocket(io, socket) {
     let coord = { x1: 0, y1: 0, x2: 0, y2: 0 };
     let coord0 = { x1: 0, y1: 0, x2: 0, y2: 0 };
     let fam = { threshold_1: 0, threshold_2: 0, threshold_3: 0, minus_value: 0 };
-    let device_info = {host_name: "FPS", seri_number: "xxxxx", version: "err"};
+    let device_info = {host_name: "FPS", seri_number: "xxxxx", version: "..."};
 
     try { threshold = JSON.parse(fs.readFileSync(THRESHOLD_PATH, "utf8")); } catch {}
     try { coord = JSON.parse(fs.readFileSync(COORD_PATH, "utf8")); } catch {}
@@ -232,7 +232,7 @@ function registerExcelSocket(io, socket) {
       const info = JSON.parse(fs.readFileSync(WIFI_PATH, "utf8"));
       device_info.host_name = info.host_name ?? "FPS";
       device_info.seri_number = info.seri_number ?? "xxxxx"; 
-      device_info.version = info.version ?? "err"; } 
+      device_info.version = info.version ?? "..."; } 
     catch {}
 
     console.log("Sending admin_extra_data:", { threshold, coord, coord0, fam, device_info});
@@ -317,6 +317,7 @@ function registerExcelSocket(io, socket) {
           if (data.device_info.seri_number !== undefined) {
             wifiRaw.seri_number = data.device_info.seri_number;
           }
+
 
           // ghi lại toàn bộ (đã merge)
           fs.writeFileSync(WIFI_PATH, JSON.stringify(wifiRaw, null, 2));
