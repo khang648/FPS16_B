@@ -1,5 +1,5 @@
 {
-  "sensitivity": null,
+  "sensitivity": "high",
   "kit_value_a": null,
   "kit_value_b": null,
   "kit_selected": null,
@@ -33,7 +33,7 @@
   "automail": 0,
   "recipient": "",
   "resultfile_name": null,
-  "lasttime_check": "2026-02-25 11:00:48",
-  "samplefile_name": "ttt",
-  "famfolder_name": "Optical (2026-01-08_12-43-05)"
+  "lasttime_check": "2026-04-16 08:59:13",
+  "samplefile_name": "ems wssv ",
+  "famfolder_name": "Optical (2026-04-16_14-58-05)"
 }

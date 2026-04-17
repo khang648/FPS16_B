@@ -46,6 +46,7 @@
   "BUTTON_ANALYSIS_1": "Phân tích",
   "ALERT_AUTOEMAIL": "Bạn có muốn tự động gửi email kết quả ?",
   "ALERT_PLACE_SAMPLE": "XIN HÃY ĐẢM BẢO BẠN ĐÃ ĐẶT MẪU VÀO ĐÚNG VỊ TRÍ ĐÃ CHỌN",
+  "ALERT_FOLDER_EXIST": "Thư mục đã tồn tại, bạn có muốn ghi đè ?",
   
 
   "HEADER_ANALYSIS": "PHÂN TÍCH",

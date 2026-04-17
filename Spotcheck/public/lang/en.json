@@ -24,6 +24,7 @@
   "PLACEHOLDER_SESSION_NAME": "Enter session name",
   "PLACEHOLDER_TECHNICIAN_NAME": "Enter technician name",
   "ALERT_INFOR_MISSING": "🟡 Please enter all the information",
+  "ALERT_FOLDER_EXIST": "Folder already exists. Do you want to overwrite it ?",
   
 
 

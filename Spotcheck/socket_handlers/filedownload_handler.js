@@ -184,6 +184,22 @@ function registerFileDownloadSocket(io, socket) {
     socket.emit("delete_all_done");
   });
 
+
+
+  /* ------------------- KIỂM TRA THƯ MỤC TỒN TẠI  ------------------- */
+  socket.on("checkFolderRequest", (data) => {
+      const baseDir = "/home/pi/Spotcheck/Results";
+      const targetPath = path.join(baseDir, data.filename);
+
+      // Kiểm tra xem đường dẫn có tồn tại và có phải là thư mục không
+      const exists = fs.existsSync(targetPath) && fs.lstatSync(targetPath).isDirectory();
+
+      // Gửi kết quả ngược lại cho client
+      socket.emit("checkFolderResponse", {
+          exists: exists,
+          filename: data.filename
+      });
+  });
 }
 
 module.exports = { registerFileDownloadSocket };

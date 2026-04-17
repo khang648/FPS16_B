@@ -44,18 +44,43 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // Gửi yêu cầu kiểm tra thư mục lên server trước khi ghi
+        socket.emit("checkFolderRequest", { filename: filename });
+    });
+
+
+
+    // Lắng nghe phản hồi từ server
+    socket.on("checkFolderResponse", (response) => {
+        const { exists, filename } = response;
+        const technician = document.getElementById("technician").value.trim();
         const now = new Date();
         const formattedTime = formatLocalDateTime(now);
 
-        socket.emit("writeJsonFile", {
-            filePath: globalvar_tmp_path,
-            data: {
-                session_info: [filename, technician],
-                session_createtime: formattedTime
-            }
-        });
+        let proceed = true;
 
-        goToPage("./Kit_Selection/kit_selection.html");
+        if (exists) {
+            // Nếu tồn tại, hiển thị thông báo xác nhận ghi đè
+            // Bạn có thể dùng t("CONFIRM_OVERWRITE") nếu có đa ngôn ngữ
+            proceed = confirm(t("ALERT_FOLDER_EXIST"));
+        }
+
+        if (proceed) {
+            // Nếu user đồng ý hoặc folder chưa tồn tại thì mới ghi JSON
+            const now = new Date();
+            const formattedTime = formatLocalDateTime(now);
+
+            socket.emit("writeJsonFile", {
+                filePath: globalvar_tmp_path,
+                data: {
+                    session_info: [filename, technician],
+                    session_createtime: formattedTime
+                }
+            });
+            
+            goToPage("./Kit_Selection/kit_selection.html");
+
+        }
     });
 
     /* ---------- BACK BUTTON ---------- */

@@ -68,13 +68,13 @@ function StopBlinkLED() {
 // }
 
 function runCommand(cmd) {
-    console.log(`[CMD] ${cmd}`);
+    // console.log(`[CMD] ${cmd}`);
 
     return new Promise((resolve, reject) => 
     {
         exec(cmd, { timeout: 8000 }, (err, stdout, stderr) => 
         {
-            if (stdout) console.log(`[OUT] ${stdout.trim()}`);
+            // if (stdout) console.log(`[OUT] ${stdout.trim()}`);
             if (stderr) console.log(`[ERR] ${stderr.trim()}`);
 
             if (err) 
@@ -84,7 +84,7 @@ function runCommand(cmd) {
             }
             else 
             {
-                console.log(`[DONE] ${cmd}`);
+                // console.log(`[DONE] ${cmd}`);
                 resolve(stdout);
             }
         });
