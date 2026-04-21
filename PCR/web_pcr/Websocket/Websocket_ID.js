@@ -49,5 +49,9 @@ const PCR_REG = {
  SAVED_UI                 : 0X36, // Lưu các thông số ở tab saved
  REQUEST_SAVED_UI         : 0X37,  // Yêu cầu dữ liệu 
  REQUEST_CHART_UI         : 0X38, // Yêu cầu dữ liệu đã lưu
- UPDATE_TIME_DONE         : 0X39 // Yêu cầu cập nhật tổng thời gian chạy
+ UPDATE_TIME_DONE         : 0X39 , // Yêu cầu cập nhật tổng thời gian chạy
+ 
+ POWER_OUTAGE             : 0X40,  // Mất điện
+ POWER_OUTAGE_RESTART     : 0X41,  // Chạy lại chương trình mất điện
+ POWER_OUTAGE_NONE        : 0X42,  // Bỏ qua sự cố mất điện
 };

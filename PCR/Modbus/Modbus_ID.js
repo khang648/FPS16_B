@@ -44,9 +44,18 @@ const PCR_REG = {
  ERROR_PEL1               : 0X32,  // Lỗi dây cảm biến Pel1
  ERROR_PEL2               : 0X33,  // Lỗi dây cảm biến Pel2
  ERROR_HEAT_BLOCK         : 0X34,  // Lỗi dây cảm biến heat block
- ERROR_TCA9548            : 0X35 // Lỗi khởi tạo DAC
-
+ ERROR_TCA9548            : 0X35, // Lỗi khởi tạo DAC
+ 
+ SAVED_UI                 : 0X36, // Lưu các thông số ở tab saved
+ REQUEST_SAVED_UI         : 0X37,  // Yêu cầu dữ liệu 
+ REQUEST_CHART_UI         : 0X38, // Yêu cầu dữ liệu đã lưu
+ UPDATE_TIME_DONE         : 0X39, // Yêu cầu cập nhật tổng thời gian chạy
+ 
+ POWER_OUTAGE             : 0X40,  // Mất điện
+ POWER_OUTAGE_RESTART     : 0X41,  // Chạy lại chương trình mất điện
+ POWER_OUTAGE_NONE        : 0X42,  // Bỏ qua sự cố mất điện
 };
+
 
 
 // ========================= Export =========================

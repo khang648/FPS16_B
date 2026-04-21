@@ -54,7 +54,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 let Page_prev = "PCR/PCR_Base/pcr_base.html"; // Trang mặc định
 let Tab_prev = ""; 
-let Option_Prev = "new"; // Trang mặc định
+let Option_Prev = "new"; // Trang mặc định trước đó
 
 app.use(express.static(path.join(__dirname, "web_pcr")));
 
@@ -65,7 +65,10 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => // khi có client kết nối
 {
   socket.emit("Go_To_Page_Web", Page_prev, Tab_prev, Option_Prev); // Khi có client mới kết nối thì gửi Link web trước đó
-  
+  const frame = modbus.Pack_Data(ID.DEVICE.PCR_ID, ID.PCR_REG.POWER_OUTAGE, null, 0);
+  modbus.Send_To_Uart(frame);
+
+
   //console.log("Go_To_Page_Web ", Page_prev, Tab_prev);
   //console.log("New client: ", socket.id);
   // Gửi host_name + seri_number khi client vừa kết nối
@@ -277,6 +280,15 @@ modbus.onFrame((frame) =>
     sendToTFT(tftData);
   }
  //console.log(frame);
+});
+
+modbus.registerPowerOutageHandler((navData) => 
+{
+  Page_prev   = navData.page;
+  Tab_prev    = navData.tab;
+  Option_Prev = navData.option;
+
+  io.emit("Go_To_Page_Web", Page_prev, Tab_prev, Option_Prev);
 });
 
 //=================== GỬI REQUEST ĐỊNH KỲ LẤY DỮ LIỆU =====================//

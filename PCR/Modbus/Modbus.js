@@ -172,6 +172,22 @@ function Pasing_Frame(frame)
       ModbusState.needUpdateTFT = true;
       break;
 
+    case ID.PCR_REG.POWER_OUTAGE: // Thông báo bị mất điện
+      powerOutageHandler({
+          page: "PCR/PCR_Base/pcr_base.html",
+          tab: "",
+          option: "new"
+      });
+      break;
+
+    case ID.PCR_REG.POWER_OUTAGE_RESTART: // Nhận lệnh lấy lại giao diện đnag chạy trước đó
+      powerOutageHandler({
+          page: "PCR/PCR_New/pcr_new.html",
+          tab: "new",
+          option: "new"
+      });
+      break;
+
     default:
       //console.log("Unknown FUNC:", func, data);
       break;
@@ -266,10 +282,18 @@ function onFrame(callback)
   onFrameCallback = callback;
 }
 
+let powerOutageHandler = null;  // tên khác rõ ràng
+
+function registerPowerOutageHandler(callback) 
+{
+  powerOutageHandler = callback;
+}
+
 module.exports = {
   Pack_Data,
   Send_To_Uart,
   onFrame,
+  registerPowerOutageHandler,
   PCR_Global,
   ModbusState
 };

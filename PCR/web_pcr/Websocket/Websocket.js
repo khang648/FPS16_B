@@ -144,7 +144,7 @@ socket.on("disconnect", (reason) => {
 /*=============================================================================*/
 
 // Hàm phân tích dữ liệu nhận được từ server gửi lên
-function Parsing_Data(id, func, data) 
+async function Parsing_Data(id, func, data) 
 {
     //console.log(data);
     
@@ -286,6 +286,15 @@ function Parsing_Data(id, func, data)
           Pack_Data(DEVICE.PCR_ID, PCR_REG.REQUEST_CHART_UI, click_posi, click_posi.length, "Web_PCR");  // yêu cầu mảng buf
 
           break;
+
+    case PCR_REG.POWER_OUTAGE: // Nhận được thông báo mất điện từ thiết bị
+          const confirmed = await Show_Notification("Do you want to continue the program?", "Yes_No",);
+          if (confirmed) 
+            Pack_Data(DEVICE.PCR_ID, PCR_REG.POWER_OUTAGE_RESTART, null, 0, "Web_PCR"); // Gửi thông báo là nhấn okie
+          else 
+            Pack_Data(DEVICE.PCR_ID, PCR_REG.POWER_OUTAGE_NONE, null, 0, "Web_PCR");  // Gửi thông bao là nhấn hủy
+          break;
+
 
         default:
             console.log("Sai địa chỉ Func", func);
