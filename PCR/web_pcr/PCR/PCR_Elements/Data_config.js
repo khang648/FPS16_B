@@ -51,6 +51,7 @@ let Calib_Val_Saved = Array.from(
 );
 
 let Chart_Buf = new Array(Chart_Buf_Size).fill(0);
+let Chart_Estimate_Buf = new Array(Chart_Buf_Size).fill(0);
 
 // Các biến nhận điều khiển
 let saved_calib_total = { value: 0 };  // Biến đếm tổng protocol đã lưu
@@ -64,6 +65,9 @@ let history_cnt   =  { value: 0};
 
 let chart_buf_total =  { value: 0};
 let chart_buf_cnt   =  { value: 0};
+
+let chart_estimate_buf_total =  { value: 0};
+let chart_estimate_buf_cnt   =  { value: 0};
 
 const save_new = 1;
 const save_old = 2;

@@ -54,6 +54,7 @@ const PCR_REG = {
  POWER_OUTAGE             : 0X40,  // Mất điện
  POWER_OUTAGE_RESTART     : 0X41,  // Chạy lại chương trình mất điện
  POWER_OUTAGE_NONE        : 0X42,  // Bỏ qua sự cố mất điện
+ REQUEST_ESTIMATE_CHART_UI: 0X43, // Yêu cầu dữ liệu dự đoán
 };
 
 

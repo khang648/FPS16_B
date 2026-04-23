@@ -1,26 +1,35 @@
-function Update_Chart_Temp(newValue) {
-    const series = window.Temp_Series;      // series toàn cục
-    const BUFFER_SIZE = Chart_Buf.length;
+function Update_Chart_Temp(newValue, estimateValue) {
+    const series = window.Temp_Series;
+    const estimateSeries = window.Temp_Estimate_Series;
 
-    // ===== CẬP NHẬT BUFFER =====
+    const BUFFER_SIZE = Chart_Buf_Size; // dùng size cố định
+
+    // ===== UPDATE BUFFER =====
     Chart_Buf.push(newValue);
-    if (Chart_Buf.length > BUFFER_SIZE) 
-    {
-        Chart_Buf.shift(); 
+    Chart_Estimate_Buf.push(estimateValue);
+
+    if (Chart_Buf.length > BUFFER_SIZE) {
+        Chart_Buf.shift();
     }
 
-    // ===== CHUYỂN BUFFER THÀNH DỮ LIỆU CHO SERIES =====
-    const chartData = Chart_Buf.map((v, i) => 
-    ({
-        // x: (i + 1) * 2,
-        x: -((Chart_Buf_Size - 1 - i) * 2), 
-        value: v
+    if (Chart_Estimate_Buf.length > BUFFER_SIZE) {
+        Chart_Estimate_Buf.shift();
+    }
+
+    // ===== BUILD DATA RIÊNG =====
+    const historyData = Chart_Buf.map((v, i) => ({
+        x: -((BUFFER_SIZE - 1 - i) * 2),
+        sample: v
     }));
 
-    if(series)
-    {
-     series.data.setAll(chartData); 
-    }
+    const estimateData = Chart_Estimate_Buf.map((v, i) => ({
+        x: -((BUFFER_SIZE - 1 - i) * 2),
+        estimate: v
+    }));
+
+    // ===== UPDATE RIÊNG =====
+    series?.data.setAll(historyData);
+    estimateSeries?.data.setAll(estimateData);
 }
 
 function Update_Chart(data) {
@@ -30,9 +39,21 @@ function Update_Chart(data) {
 
     const chartData = data.map((v, i) => 
     ({
-        // x: (i + 1) * 2,  
         x: -((Chart_Buf_Size - 1 - i) * 2), 
-        value: v
+        sample: v
+    }));
+
+    series.data.setAll(chartData);
+}
+
+function Update_Chart_Estimate(data) {
+
+    const series = window.Temp_Estimate_Series;
+    if (!series) return;
+
+    const chartData = data.map((v, i) => ({
+        x: -((Chart_Buf_Size - 1 - i) * 2),
+        estimate: v
     }));
 
     series.data.setAll(chartData);
@@ -81,6 +102,7 @@ function Update_Start_Protocol(data)
 {
     let idx = 0;
     let block_temp      = data[idx++]; // lấy nhiệt độ block
+    let Estimate_temp   = data[idx++]; // lấy nhiệt độ dự đoán
     let time_count_low  = data[idx++]; // lấy byte low
     let time_count_high = data[idx++]; // lấy byet high
     let Time_count = (time_count_high << 8) | time_count_low;  // Lấy time
@@ -120,7 +142,7 @@ function Update_Start_Protocol(data)
     if(++Update_Chart_Cnt >= Time_Update_Char * 2) // Cập nhật dữ liệu mỗi 1s
     {
       Update_Chart_Cnt = 0;
-      Update_Chart_Temp(block_temp); // Cập nhật biểu đồ nhiệt
+      Update_Chart_Temp(block_temp, Estimate_temp); // Cập nhật biểu đồ nhiệt
     }
 
     if(step_setpoint != step_setpoint_prev) // chuyển màu step và reset time
@@ -253,7 +275,10 @@ function Update_Wait_Screen(data)
 {
     let idx = 0;
     let block_temp = data[idx]; // lấy nhiệt độ block
+    idx++;
+    let Estimate_Temp = data[idx]; // lấy nhiệt độ dự đoán
 
+    
     if(block_temp != block_temp_prev) 
     { 
         let label = document.querySelector(".label-Sample-Temp");
@@ -269,7 +294,7 @@ function Update_Wait_Screen(data)
     if(++Update_Chart_Cnt >= Time_Update_Char * 2 && System.Option_Prev == "new") // Cập nhật dữ liệu mỗi 2s nếu đang ở giao diện new
     {
       Update_Chart_Cnt = 0;
-      Update_Chart_Temp(block_temp); // Cập nhật biểu đồ nhiệt
+      Update_Chart_Temp(block_temp, Estimate_Temp); // Cập nhật biểu đồ nhiệt
     }
 }
 function Get_Saved_Protocol(data, Save_cnt, Save_total, infor, Setpoint) {
@@ -459,7 +484,7 @@ function Update_Time_Done(data)
     let time_run = (time_count_high << 8) | time_count_low;  // Lấy time
 
     ui_TimeProgram.textContent = Format_time_setpoint(time_run, ' '); 
-                console.log(time_run);
+                // console.log(time_run);
 }
 
 // Export tất cả chỉ với 1 dòng
@@ -476,6 +501,7 @@ export default {
   Update_Save_Calib,
   Get_Chart_Buf,
   Update_Chart,
+  Update_Chart_Estimate,
   Update_Time_Done,
 
   Get_Saved_Protocol,

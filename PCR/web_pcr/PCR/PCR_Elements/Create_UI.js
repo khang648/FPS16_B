@@ -1148,7 +1148,7 @@ function Render_Chart_Temp() {
             xAxis,
             yAxis,
             valueXField: "x",
-            valueYField: "value",
+            valueYField: "sample",
             stroke: am5.color(0xff0000),
             tooltip: am5.Tooltip.new(root, {
                 //labelText: "{valueY.formatNumber('#.0')} °C\n{valueX.formatNumber('0')} s",
@@ -1158,6 +1158,23 @@ function Render_Chart_Temp() {
             })
         })
     );
+
+    const estimateSeries = chart.series.push(
+          am5xy.LineSeries.new(root, {
+              xAxis,
+              yAxis,
+              valueXField: "x",
+              valueYField: "estimate", // khác field
+              stroke: am5.color(0x0000ff), // màu xanh cho dễ phân biệt
+              tooltip: am5.Tooltip.new(root, {
+                //labelText: "{valueY.formatNumber('#.0')} °C\n{valueX.formatNumber('0')} s",
+                getFillFromSprite: false,   
+                getStrokeFromSprite: false,
+                autoTextColor: false       
+            })
+        })
+      );
+      window.Temp_Estimate_Series = estimateSeries;
 
     const Tooltip = series.get("tooltip");
     Tooltip.label.adapters.add("text", (text, target) => {
@@ -1181,6 +1198,13 @@ function Render_Chart_Temp() {
         fillOpacity: 0.3,
      });
 
+
+    estimateSeries.strokes.template.set("strokeWidth", 2);
+    estimateSeries.fills.template.setAll({
+        visible: true,
+        fillOpacity: 0.3,
+     });
+
     const tooltip = series.get("tooltip");
     tooltip.set("background", am5.RoundedRectangle.new(root, {
         fill: am5.color(0xD1D1D1),   // nền xám
@@ -1199,14 +1223,20 @@ function Render_Chart_Temp() {
         fontSize: 14
     });
 
-    // ================= Mảng nhiệt độ=================
-    window.Temp_Buf = new Array(Chart_Buf_Size).fill(0);
-    const initialData = window.Temp_Buf.map((v, i) => 
-    ({
-        x: -((Chart_Buf_Size - 1 - i) * 2), 
-        value: v
-    }));
-    series.data.setAll(initialData);
+  window.Temp_Buf = new Array(Chart_Buf_Size).fill(0);
+  window.Chart_Estimate_Buf = new Array(Chart_Buf_Size).fill(0);
+
+  // CHỈ 1 initialData duy nhất
+  const initialData = window.Temp_Buf.map((v, i) => ({
+      x: -((Chart_Buf_Size - 1 - i) * 2),
+      value: v,
+      estimate: window.Chart_Estimate_Buf[i]
+  }));
+
+  // set cho cả 2 series
+  series.data.setAll(initialData);
+  estimateSeries.data.setAll(initialData);
+    
 
     // ================= TAP HIỂN THỊ NHIỆT ĐỘ =================
 
@@ -1264,6 +1294,81 @@ function Render_Chart_Temp() {
   // ================= ANIMATION =================
   chart.appear(600, 100);
 
+
+const container_object = document.getElementById("pcr-chart");
+container_object.style.position = "relative";
+
+// xóa control cũ nếu có
+const oldControl = container.querySelector(".chart-control");
+if (oldControl) oldControl.remove();
+
+const controlDiv = document.createElement("div");
+controlDiv.className = "chart-control";
+
+controlDiv.style.position = "absolute";
+controlDiv.style.right  = "5px";
+controlDiv.style.top = "5px";
+controlDiv.style.background = "rgba(255, 255, 255, 0.3)";
+controlDiv.style.border = "1px solid rgba(0,0,0,0.6)";
+controlDiv.style.backdropFilter = "blur(4px)";   
+controlDiv.style.padding = "6px 10px";
+controlDiv.style.borderRadius = "6px";
+controlDiv.style.fontFamily = "serif";
+controlDiv.style.fontSize = "14px";
+controlDiv.style.zIndex = "100";
+
+
+controlDiv.style.display = "flex";
+controlDiv.style.flexDirection = "column"; 
+controlDiv.style.alignItems = "flex-start"; 
+controlDiv.style.gap = "5px";
+
+// ===== SYSTEM =====
+const sysLabel = document.createElement("label");
+sysLabel.style.cursor = "pointer";
+
+const sysCheckbox = document.createElement("input");
+sysCheckbox.type = "checkbox";
+sysCheckbox.checked = true;
+
+const sysIcon = document.createElement("span");
+sysIcon.innerHTML = " ● ";
+sysIcon.style.color = "red";
+
+sysLabel.appendChild(sysCheckbox);
+sysLabel.appendChild(sysIcon);
+sysLabel.appendChild(document.createTextNode("Sample"));
+
+// ===== ESTIMATE =====
+const estLabel = document.createElement("label");
+estLabel.style.cursor = "pointer";
+
+const estCheckbox = document.createElement("input");
+estCheckbox.type = "checkbox";
+estCheckbox.checked = true;
+
+const estIcon = document.createElement("span");
+estIcon.innerHTML = " ● ";
+estIcon.style.color = "blue";
+
+estLabel.appendChild(estCheckbox);
+estLabel.appendChild(estIcon);
+estLabel.appendChild(document.createTextNode("Estimate"));
+
+// ===== ADD =====
+controlDiv.appendChild(sysLabel);
+controlDiv.appendChild(estLabel);
+
+container.appendChild(controlDiv);
+
+// ===== EVENT =====
+sysCheckbox.addEventListener("change", () => {
+    sysCheckbox.checked ? series.show() : series.hide();
+});
+
+estCheckbox.addEventListener("change", () => {
+    estCheckbox.checked ? estimateSeries.show() : estimateSeries.hide();
+});
 
 
   // ================== NÚT ZOOM IN/OUT NGOÀI CHART ==================

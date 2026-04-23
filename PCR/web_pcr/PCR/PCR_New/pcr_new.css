@@ -118,11 +118,18 @@
     transform: translateX(-50%);
 }
 
+/* .zoom-group {
+    display: flex;
+    gap: 5px;
+    position: absolute;
+    right: 8px; 
+} */
+
 .zoom-group {
     display: flex;
     gap: 5px;
     position: absolute;
-    right: 8px; /* cách mép phải 8px */
+    left: 8px;   /* 👉 chuyển sang trái */
 }
 
 .zoom-btn {

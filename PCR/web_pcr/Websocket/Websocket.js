@@ -197,6 +197,16 @@ async function Parsing_Data(id, func, data)
             //console.log(System.History_Position);
             break;
 
+        case PCR_REG.REQUEST_ESTIMATE_CHART_UI: // Nhận được Saved hiện tại 
+            PCR_UI.Get_Chart_Buf(data, chart_estimate_buf_cnt , chart_estimate_buf_total, Chart_Estimate_Buf);  // Nhận các mảng đã đã lưu
+            if ((chart_estimate_buf_cnt.value == (chart_estimate_buf_total.value - 1) && chart_estimate_buf_cnt.value > 0) || chart_estimate_buf_cnt.value == 0) // nếu nhận đủ mảng
+            {
+                PCR_UI.Update_Chart_Estimate(Chart_Estimate_Buf);
+            }
+            //console.log(chart_buf_cnt);
+            //console.log(System.History_Position);
+            break;
+
         case PCR_REG.UPDATE_TIME_DONE: // Nhận được Saved hiện tại 
             PCR_UI. Update_Time_Done(data);
 
