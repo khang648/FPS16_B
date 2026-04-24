@@ -1451,7 +1451,9 @@ function Render_Tool(Panel_ID, option = "new") {
     container.style.gap = "5px"; // khoảng cách giữa 2 hàng
     container.style.backgroundColor = "#ffffffff"; // khoảng cách giữa 2 hàng
 
-    const Two_Row = ["new", "saved", "history", "temp_calib"].includes(option); // Nếu 1 trong 5 thì tạo chiều cao 20% còn nếu là admin thì chiều cao 10%
+    // const Two_Row = ["new", "saved", "history", "temp_calib"].includes(option); // Nếu 1 trong 5 thì tạo chiều cao 20% còn nếu là admin thì chiều cao 10%
+    
+    const Two_Row = ["new", "saved", "history"].includes(option); // Nếu 1 trong 5 thì tạo chiều cao 20% còn nếu là admin thì chiều cao 10%
     container.style.height = Two_Row ? "20%" : "10%";
 
     
@@ -1567,29 +1569,29 @@ function Render_Tool(Panel_ID, option = "new") {
         });
         topRow.appendChild(ui_BtnOpen);
       }
-      else if( option === "temp_calib")
-      {
-        // Nút Reload
-        ui_BtnReload = document.createElement("button");
-        ui_BtnReload.className = "ctrl-btn";
-        ui_BtnReload.innerHTML = `<img src="../../assets/PCR_RELOAD_TOOL.png" style="width:16px; height:16px;"> RELOAD`;        
-        ui_BtnReload.addEventListener("click", function() 
-        {
-          Click_Btn_Reload();               // Truyền tên vào hàm
-        });
+      // else if( option === "temp_calib")
+      // {
+      //   // Nút Reload
+      //   ui_BtnReload = document.createElement("button");
+      //   ui_BtnReload.className = "ctrl-btn";
+      //   ui_BtnReload.innerHTML = `<img src="../../assets/PCR_RELOAD_TOOL.png" style="width:16px; height:16px;"> RELOAD`;        
+      //   ui_BtnReload.addEventListener("click", function() 
+      //   {
+      //     Click_Btn_Reload();               // Truyền tên vào hàm
+      //   });
 
-        topRow.appendChild(ui_BtnReload);
+      //   topRow.appendChild(ui_BtnReload);
 
-        // Nút Upload
-        ui_BtnUpload = document.createElement("button");
-        ui_BtnUpload.className = "ctrl-btn";
-        ui_BtnUpload.innerHTML = `<img src="../../assets/PCR_UPLOAD_TOOL.png" style="width:16px; height:16px;"> UPLOAD`;        
-        ui_BtnUpload.addEventListener("click", function() 
-        {
-          Click_Btn_Upload();          
-        });
-        topRow.appendChild(ui_BtnUpload);
-      }
+      //   // Nút Upload
+      //   ui_BtnUpload = document.createElement("button");
+      //   ui_BtnUpload.className = "ctrl-btn";
+      //   ui_BtnUpload.innerHTML = `<img src="../../assets/PCR_UPLOAD_TOOL.png" style="width:16px; height:16px;"> UPLOAD`;        
+      //   ui_BtnUpload.addEventListener("click", function() 
+      //   {
+      //     Click_Btn_Upload();          
+      //   });
+      //   topRow.appendChild(ui_BtnUpload);
+      // }
       // else if( option === "wifi_config")
       // {
       //   // Nút Submit

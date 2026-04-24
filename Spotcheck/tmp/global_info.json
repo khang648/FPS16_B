@@ -1,14 +1,15 @@
 {
-  "sensitivity": "high",
-  "kit_value_a": -0.147,
-  "kit_value_b": 1.74,
-  "kit_selected": "test_kit",
+  "sensitivity": null,
+  "kit_value_a": null,
+  "kit_value_b": null,
+  "kit_selected": null,
   "session_info": [
-    "test_session",
-    "gag"
+    "",
+    "",
+    ""
   ],
   "samplefile_create_direct": 0,
-  "session_createtime": "2026-03-23 16:34:41",
+  "session_createtime": "",
   "samplename_list": [
     "N/A",
     "N/A",

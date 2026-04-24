@@ -8,6 +8,8 @@ function loadHeader() {
     });
 }
 
+
+
 function initHeaderLogic() {
   const buttons = document.querySelectorAll("#sideMenu button");
 
@@ -18,31 +20,33 @@ function initHeaderLogic() {
     });
   });
 
-
-  // Kiểm tra nhấn đủ 5s
   const title = document.getElementById("deviceTitle");
 
   let holdTimer = null;
 
-  function startHold() {
+  function startHold(e) {
+    e.preventDefault(); // 🔥 chặn select + context menu
 
     holdTimer = setTimeout(() => {
-      // console.log("Đã click giữ 5 giây");
       goToPage("PCR/PCR_Config/pcr_config.html", "none");
-    }, 5000);
-
+    }, 100);
   }
 
   function cancelHold() {
-
     if (holdTimer) {
       clearTimeout(holdTimer);
       holdTimer = null;
     }
-
   }
 
-  title.addEventListener("pointerdown", startHold);
+  // ✅ pointer events
+  title.addEventListener("pointerdown", startHold, { passive: false });
   title.addEventListener("pointerup", cancelHold);
   title.addEventListener("pointerleave", cancelHold);
+
+  // 🔥 FIX iOS (bắt buộc)
+  title.addEventListener("touchstart", (e) => e.preventDefault(), { passive: false });
+
+  // 🔥 chặn menu chuột phải / long press
+  title.addEventListener("contextmenu", (e) => e.preventDefault());
 }

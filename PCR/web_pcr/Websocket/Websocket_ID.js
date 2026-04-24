@@ -56,4 +56,6 @@ const PCR_REG = {
  POWER_OUTAGE_NONE        : 0X42,  // Bỏ qua sự cố mất điện
 
  REQUEST_ESTIMATE_CHART_UI: 0X43, // Yêu cầu dữ liệu dự đoán
+ AUTO_CALIB_SPEED         : 0x44, // Bắt đầu tự động calib tốc độ nhiệt
+ AUTO_CALIB_SPEED_DONE    : 0x45  // Thông báo đã calib thành công
 };

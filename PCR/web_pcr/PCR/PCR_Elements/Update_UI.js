@@ -394,6 +394,8 @@ function Update_System_log(Calib_Buf, saved_total) {
   document.getElementById("Pel2_Lo").value          = (Math.round(calib[7] * 10) / 10);
   document.getElementById("HeatBlock_Lo").value     = (Math.round(calib[8] * 10) / 10)
 
+  document.getElementById("Heating_Speed").value = (Math.round(calib[9] * 10) / 10);
+  document.getElementById("Cooling_Speed").value = (Math.round(calib[10] * 10) / 10);
 
   // --- Cập nhật lịch sử calibration vào label
     const historyLabel = document.getElementById("system-content");
@@ -415,12 +417,15 @@ function Update_System_log(Calib_Buf, saved_total) {
                       "Peltier1                 : " + entry[3].toFixed(1) + "°C ---- " + entry[6].toFixed(1) + "°C\n" +
                       "Peltier2                 : " + entry[4].toFixed(1) + "°C ---- " + entry[7].toFixed(1) + "°C\n" +
                       "Heat block            : " + entry[5].toFixed(1) + "°C ---- " + entry[8].toFixed(1) + "°C\n" +
-                      "Heating process    : " + entry[0].toFixed(1) + "\n" +
-                      "Cooling process    : " + entry[1].toFixed(1) + "\n" +
-                      "Time out               : " + entry[2].toFixed(1) + "s\n";
+                      "OverHeating         : " + entry[0].toFixed(1) + "\n" +
+                      "Over Cooling        : " + entry[1].toFixed(1) + "\n" +
+                      "Time out               : " + entry[2].toFixed(1) + "s\n" +
+                      "Heating speed       : " + entry[9].toFixed(1) + "°C/s\n" +
+                      "Cooling speed       : " + entry[10].toFixed(1) + "°C/s\n";
       }
     }
   historyLabel.textContent = historyText;
+  
   Rule_Input_Calib(); // Gọi hàm này để người dùng nhập số không bị sai
 }
 function Get_Saved_Calib(data, Save_cnt, Save_total, Calib_Buf) {

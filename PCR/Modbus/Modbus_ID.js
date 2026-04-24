@@ -51,10 +51,12 @@ const PCR_REG = {
  REQUEST_CHART_UI         : 0X38, // Yêu cầu dữ liệu đã lưu
  UPDATE_TIME_DONE         : 0X39, // Yêu cầu cập nhật tổng thời gian chạy
  
- POWER_OUTAGE             : 0X40,  // Mất điện
- POWER_OUTAGE_RESTART     : 0X41,  // Chạy lại chương trình mất điện
- POWER_OUTAGE_NONE        : 0X42,  // Bỏ qua sự cố mất điện
+ POWER_OUTAGE             : 0X40, // Mất điện
+ POWER_OUTAGE_RESTART     : 0X41, // Chạy lại chương trình mất điện
+ POWER_OUTAGE_NONE        : 0X42, // Bỏ qua sự cố mất điện
  REQUEST_ESTIMATE_CHART_UI: 0X43, // Yêu cầu dữ liệu dự đoán
+ AUTO_CALIB_SPEED         : 0x44, // Bắt đầu tự động calib tốc độ nhiệt
+ AUTO_CALIB_SPEED_DONE    : 0x45  // Thông báo đã calib thành công
 };
 
 

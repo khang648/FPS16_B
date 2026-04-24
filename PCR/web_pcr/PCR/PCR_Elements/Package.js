@@ -149,28 +149,72 @@ function Pack_Data(id, func, data, lenght, event) {
     } 
 }
 
-function Pack_Calib_Val(data, Heating_Val, Cooling_Val, Time_out, Temp_Hi, Temp_Lo) {
-  const totalFloats = 3 + 3 + 3; // 3 giá trị chính + 3 hi + 3 lo
+// function Pack_Calib_Val(data, Heating_Val, Cooling_Val, Time_out, Temp_Hi, Temp_Lo) {
+//   const totalFloats = 3 + 3 + 3; // 3 giá trị chính + 3 hi + 3 lo
+//   const buffer = new ArrayBuffer(totalFloats * 4);
+//   const view = new DataView(buffer);
+//   let idx = 0;
+
+//   // --- Đóng gói dữ liệu ---
+//   view.setFloat32(idx, Heating_Val, true); idx += 4;
+//   view.setFloat32(idx, Cooling_Val, true); idx += 4;
+//   view.setFloat32(idx, Time_out, true);    idx += 4;
+
+//   for (let i = 0; i < 3; i++) { view.setFloat32(idx, Temp_Hi[i], true); idx += 4; }
+//   for (let i = 0; i < 3; i++) { view.setFloat32(idx, Temp_Lo[i], true); idx += 4; }
+
+//   const packedData = new Uint8Array(buffer);
+
+//   // --- Copy dữ liệu vào mảng data ---
+//   for (let i = 0; i < packedData.length; i++) 
+//   {
+//     data[i] = packedData[i];
+//   }
+
+//   return packedData.length;
+// }
+
+
+function Pack_Calib_Val(data, Heating_Val, Cooling_Val, Time_out, Temp_Hi, Temp_Lo, Heating_Speed, Cooling_Speed) 
+{
+  const totalFloats = 3 + 3 + 3 + 2; // = 11 float
   const buffer = new ArrayBuffer(totalFloats * 4);
   const view = new DataView(buffer);
   let idx = 0;
 
-  // --- Đóng gói dữ liệu ---
+  // --- main ---
   view.setFloat32(idx, Heating_Val, true); idx += 4;
   view.setFloat32(idx, Cooling_Val, true); idx += 4;
   view.setFloat32(idx, Time_out, true);    idx += 4;
 
-  for (let i = 0; i < 3; i++) { view.setFloat32(idx, Temp_Hi[i], true); idx += 4; }
-  for (let i = 0; i < 3; i++) { view.setFloat32(idx, Temp_Lo[i], true); idx += 4; }
+  // --- Temp Hi ---
+  for (let i = 0; i < 3; i++) 
+  { 
+    view.setFloat32(idx, Temp_Hi[i], true); 
+    idx += 4; 
+  }
+
+  // --- Temp Lo ---
+  for (let i = 0; i < 3; i++) 
+  { 
+    view.setFloat32(idx, Temp_Lo[i], true); 
+    idx += 4; 
+  }
+
+  // 🔥 --- Speed ---
+  view.setFloat32(idx, Heating_Speed, true); idx += 4;
+  view.setFloat32(idx, Cooling_Speed, true); idx += 4;
 
   const packedData = new Uint8Array(buffer);
 
-  // --- Copy dữ liệu vào mảng data ---
+  // copy ra data
   for (let i = 0; i < packedData.length; i++) 
   {
     data[i] = packedData[i];
   }
 
+
+  console.log(packedData);
   return packedData.length;
 }
 

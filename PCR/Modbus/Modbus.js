@@ -200,7 +200,7 @@ function Parse_Start_Data(data)
   let idx = 0;
 
   PCR_Global.block_temp = data[idx++];
-
+  idx++; // Bỏ biến Estimate
   const time_count_low  = data[idx++];
   const time_count_high = data[idx++];
   const lid_temp = data[idx++];
