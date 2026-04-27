@@ -165,4 +165,5 @@ const SystemState = {
     System_Stop: 0,
     System_Start: 1,
     System_Pause: 2,
+    System_Auto: 3
 };

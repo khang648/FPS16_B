@@ -305,6 +305,22 @@ async function Parsing_Data(id, func, data)
             Pack_Data(DEVICE.PCR_ID, PCR_REG.POWER_OUTAGE_NONE, null, 0, "Web_PCR");  // Gửi thông bao là nhấn hủy
           break;
 
+    case PCR_REG.AUTO_CALIB_SPEED_DONE:     
+            
+    
+            // 1. Hiện thông báo và chờ user bấm
+            await Show_Notification("The calibration process is complete!", "Cancel",);
+           
+            // 2. Sau khi user bấm Cancel → hiện loading
+            Show_Loading();
+
+            // 3. Delay 2s rồi reload
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+
+
+         break;
 
         default:
             console.log("Sai địa chỉ Func", func);

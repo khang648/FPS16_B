@@ -156,21 +156,6 @@ function Show_Notification(message, type = "Yes_No") {
         document.head.appendChild(style);
       }
     } 
-    // else if (type === "Save_Protocol") {
-    //   contentHTML = `
-    //     <p style="font-size:18px; font-family:'Noto Serif', serif; margin-bottom:10px;">${message}</p>
-    //     <input id="protocol-name" type="text" placeholder="Protocol Name"
-    //       style="width:90%; padding:6px; border:1px solid #ccc; border-radius:6px;
-    //              margin-bottom:15px; font-size:18px; font-family:'Noto Serif', serif; outline:none; -webkit-text-size-adjust:100%;" 
-    //              maxlength="27"
-    //              oninput="limitUTF8Bytes(this, 27)" 
-    //              />
-    //     <div style="display:flex; gap:10px; width:90%; margin:0 auto;">
-    //       <button id="notify-save" style="${buttonStyle}; background:#28a745;">Save</button>
-    //       <button id="notify-cancel" style="${buttonStyle}; background:#dc3545;">Cancel</button>
-    //     </div>
-    //   `;
-    // }
 
     else if (type === "Save_Protocol") {
   contentHTML = `

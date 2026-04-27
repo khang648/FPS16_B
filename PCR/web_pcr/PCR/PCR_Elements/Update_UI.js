@@ -127,6 +127,24 @@ function Update_Start_Protocol(data)
     let time_run       = (time_run_high << 8) | time_run_low;  // Lấy time
     state_system       = data[idx++]; // trạng thái máy
 
+    if (state_system === SystemState.System_Auto)
+    {
+        // 🕒 update time trên notification
+        if (time_run != time_run_prev)
+        {
+            Show_Notification( `Auto calibrating...\nTime:[${Format_time_setpoint(time_run)}]`,"Loading");
+            time_run_prev = time_run;
+        }
+
+        // 🔔 đảm bảo state chỉ set 1 lần
+        if (state_system !== state_system_prev)
+        {
+            state_system_prev = state_system;
+        }
+
+        return;
+    }
+
     if(block_temp != block_temp_prev) 
     { 
         let label = document.querySelector(".label-Sample-Temp");
