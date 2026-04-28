@@ -152,3 +152,17 @@ function Rule_Input_Calib() {
 document.querySelector(".btn-auto-speed")?.addEventListener("click", () => {
     Click_Btn_Auto();
 });
+
+
+
+/* ===== APPLY ===== */
+
+document.getElementById("deviceApplyBtn")?.addEventListener("click", () => {
+    const host = hostInput.value;
+    const seri = seriInput.value;
+
+    socket.emit("update_device_info", {
+        host_name: host,
+        seri_number: seri
+    });
+});
