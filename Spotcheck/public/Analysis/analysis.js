@@ -18,7 +18,7 @@ function createTable(rows, cols) {
   for (let r = 0; r < rows; r++) {
     const rowHeader = document.createElement("div");
     rowHeader.classList.add("row-header");
-    rowHeader.textContent = r+1;
+    rowHeader.textContent = r + 1;
     table.appendChild(rowHeader);
 
     for (let c = 0; c < cols; c++) {
@@ -44,13 +44,14 @@ function createTable(rows, cols) {
 
 // ====================== UTILS ======================
 function classifyColorFromText(text) {
-  if(!text) return "nosample";
+  if (!text) return "nosample";
   text = text.trim();
-  if(text === "N/A") return "nosample";
-  if(text === "0") return "negative";
-  if(text === "1-100") return "lowcopy";
-  if(text === "101-1000") return "mediumcopy";
-  if(text === "1001-10000" || text === ">10000") return "positive";
+  if (text === "N/A") return "nosample";
+  if (text === "0") return "negative";
+  if (text === "1-10") return "doubt";
+  if (text === "11-100") return "lowcopy";
+  if (text === "101-1000") return "mediumcopy";
+  if (text === "1001-10000" || text === "> 10000") return "positive";
   return "nosample";
 }
 
@@ -62,30 +63,18 @@ function showFooterButtons() {
   const btnContainer = document.createElement("div");
   btnContainer.classList.add("footer-buttons");
 
-  // const btnDownload = document.createElement("button");
-  // btnDownload.id = "btnDownload";
-  // btnDownload.textContent = "Download";
-
   const btnFinish = document.createElement("button");
   btnFinish.id = "btnFinish";
   btnFinish.textContent = "Finish";
 
-  // btnContainer.appendChild(btnDownload);
   btnContainer.appendChild(btnFinish);
   footer.appendChild(btnContainer);
 
-  // Finish Clicked
   document.getElementById("btnFinish")?.addEventListener("click", () => {
     if (confirm(t("ALERT_BACKHOME"))) {
       goToPage("../index.html");
-    } 
+    }
   });
-
-  // Download Clicked
-  // document.getElementById("btnDownload")?.addEventListener("click", () => {
-  //     // Yêu cầu server nén và download
-  //     socket.emit("request_download");
-  // });
 }
 
 // ====================== UPDATE IMAGE TAB ======================
@@ -104,9 +93,9 @@ function updateImageTab() {
     img.src = window.analysisImage.startsWith("data:") 
                 ? window.analysisImage 
                 : "data:image/png;base64," + window.analysisImage;
+    imgContainer.appendChild(img);
   }
 
-  imgContainer.appendChild(img);
   content.appendChild(imgContainer);
 }
 
@@ -116,6 +105,7 @@ function updateButtonsInDOM(current_tab) {
   const subresults = Array.isArray(window.analysisSubResult) ? window.analysisSubResult : [];
   const screenings = Array.isArray(window.analysisScreening) ? window.analysisScreening : [];
 
+  // Chỉ lấy ID của tab1 (vì tab2 đã bị loại bỏ khỏi giao diện)
   const tabId = current_tab === "tab1" ? "wellTable-tab1" : "wellTable-tab2";
   const tabContainer = document.getElementById(tabId);
   if (!tabContainer) return;
@@ -128,10 +118,10 @@ function updateButtonsInDOM(current_tab) {
     if (val === undefined || val === null || val === "") val = "...";
 
     mainBtns[i].textContent = String(val).trim();
-    mainBtns[i].classList.remove("nosample","negative","lowcopy","mediumcopy", "positive");
+    mainBtns[i].classList.remove("nosample", "negative", "doubt", "lowcopy", "mediumcopy", "positive");
     mainBtns[i].classList.add(classifyColorFromText(mainBtns[i].textContent));
 
-    subBtns[i].classList.remove("nosample","negative","lowcopy", "mediumcopy", "positive");
+    subBtns[i].classList.remove("nosample", "negative", "doubt", "lowcopy", "mediumcopy", "positive");
     subBtns[i].classList.add(classifyColorFromText(mainBtns[i].textContent));
 
     const mainVal = mainBtns[i].textContent.trim();
@@ -147,12 +137,9 @@ function isIOS() {
 
 socket.on("download_ready", ({ filename, url }) => {
   console.log("Download ready:", filename);
-
   if (isIOS()) {
-    // iOS: mở tab mới để user Save to Files
     window.open(url, "_blank");
   } else {
-    // Desktop + Android: auto download
     const a = document.createElement("a");
     a.href = url;
     a.download = filename;
@@ -172,43 +159,35 @@ socket.on("sampleanalysis_done", async (data) => {
 
   const activeTab = document.querySelector(".tab-btn.active")?.dataset.tab;
   if (activeTab === "tab-image") updateImageTab();
-  else updateButtonsInDOM(activeTab);
+  else if (activeTab === "tab1") updateButtonsInDOM("tab1");
 
-  // Đổi tên tab theo sensitivity
+  // Đổi tên tab 1 theo sensitivity (tab 2 bỏ qua vì không hiển thị)
   const tab1Btn = document.querySelector('.tab-btn[data-tab="tab1"]');
-  const tab2Btn = document.querySelector('.tab-btn[data-tab="tab2"]');
-
   if (window.sensitivity_chose === "low") {
-    if(tab1Btn) tab1Btn.textContent = t("BUTTON_SENSITIVITY_LOW");
-    if(tab2Btn) tab2Btn.textContent = t("BUTTON_SENSITIVITY_HIGH");
+    if (tab1Btn) tab1Btn.textContent = t("BUTTON_SENSITIVITY_LOW");
   } else if (window.sensitivity_chose === "high") {
-    if(tab1Btn) tab1Btn.textContent = t("BUTTON_SENSITIVITY_HIGH");
-    if(tab2Btn) tab2Btn.textContent = t("BUTTON_SENSITIVITY_LOW");
+    if (tab1Btn) tab1Btn.textContent = t("BUTTON_SENSITIVITY_HIGH");
   } else {
-    // fallback
-    if(tab1Btn) tab1Btn.textContent = "Sensitivity 1";
-    if(tab2Btn) tab2Btn.textContent = "Sensitivity 2";
+    if (tab1Btn) tab1Btn.textContent = "Sensitivity 1";
   }
 
   showFooterButtons();
 
   try {
-        // Tạo 2 ảnh riêng tab1 và tab2
-        const imgDataTab1 = await generateTableImage("tab1");
-        const imgDataTab2 = await generateTableImage("tab2");
+    // Vẫn tạo 2 ảnh ngầm (tab1 và tab2) để gửi lên server 
+    // nhằm đảm bảo server có đủ dữ liệu tạo file báo cáo đầy đủ.
+    const imgDataTab1 = await generateTableImage("tab1");
+    const imgDataTab2 = await generateTableImage("tab2");
 
-        // Gửi 2 ảnh lên server
-        socket.emit("client_send_images", {
-            tab1: imgDataTab1,
-            tab2: imgDataTab2
-        });
+    socket.emit("client_send_images", {
+      tab1: imgDataTab1,
+      tab2: imgDataTab2
+    });
+  } catch (err) {
+    console.error("Error generating images:", err);
+    alert("🔴 Cannot generate images. Make sure data is ready.");
+  }
 
-      } catch (err) {
-        console.error("Error generating images:", err);
-        alert("🔴 Cannot generate images. Make sure data is ready.");
-      }
-
-  // socket.emit("request_download"); // Download ngay khi có kết quả
   if (confirm(t("ALERT_DOWNLOAD_RESULT"))) {
     socket.emit("request_download");
   }
@@ -237,18 +216,22 @@ document.addEventListener("DOMContentLoaded", () => {
       imgContainer.appendChild(img);
       content.appendChild(imgContainer);
       updateImageTab();
-    } else {
+    } else if (tabName === "tab1") {
       const table = createTable(ROWS, COLS);
-      table.id = tabName === "tab1" ? "wellTable-tab1" : "wellTable-tab2";
+      table.id = "wellTable-tab1";
       content.appendChild(table);
-      updateButtonsInDOM(tabName);
+      updateButtonsInDOM("tab1");
     }
   }
 
   tabs.forEach(tab => {
-    tab.addEventListener("click", () => activateTab(tab.dataset.tab));
+    // Chỉ kích hoạt sự kiện click cho tab-image và tab1
+    if (tab.dataset.tab !== "tab2") {
+      tab.addEventListener("click", () => activateTab(tab.dataset.tab));
+    }
   });
 
+  // Mặc định khởi động vào Tab 1
   activateTab("tab1");
   socket.emit('sample_analysis');
 });
@@ -261,20 +244,19 @@ async function generateTableImage(tabName) {
   const table = createTable(ROWS, COLS);
   updateButtonsInDOMForTable(table, tabName);
 
-  // === STYLE HEADER NHỎ LẠI ===
+  // Style cho ảnh xuất ra
   const headers = table.querySelectorAll(".col-header, .row-header");
   headers.forEach(h => {
-      h.style.fontSize = "11px";   
-      h.style.fontWeight = "500";
-      h.style.padding = "2px 4px";
-      h.style.whiteSpace = "nowrap";
-      h.style.color = "#2f2f2fff";   // <<< MÀU HEADER
+    h.style.fontSize = "11px";
+    h.style.fontWeight = "500";
+    h.style.padding = "2px 4px";
+    h.style.whiteSpace = "nowrap";
+    h.style.color = "#2f2f2fff";
   });
 
-  // === STYLE WELL RỘNG HƠN ===
   const wells = table.querySelectorAll(".well-container");
   wells.forEach(w => {
-    w.style.margin = "1px";        
+    w.style.margin = "1px";
     w.style.padding = "0px";
     w.style.overflow = "hidden";
     w.style.minWidth = "100px";
@@ -313,13 +295,11 @@ async function generateTableImage(tabName) {
   container.appendChild(table);
 
   document.body.appendChild(container);
-
-  const canvas = await html2canvas(container, { scale: 3});
+  const canvas = await html2canvas(container, { scale: 3 });
   document.body.removeChild(container);
 
   return canvas.toDataURL("image/jpeg", 0.95);
 }
-
 
 function updateButtonsInDOMForTable(table, current_tab) {
   const results = Array.isArray(window.analysisResult) ? window.analysisResult : [];
@@ -331,17 +311,17 @@ function updateButtonsInDOMForTable(table, current_tab) {
 
   for (let i = 0; i < mainBtns.length; i++) {
     let val = current_tab === "tab1" ? results[i] : subresults[i];
-    if(val === undefined || val===null || val==="") val = "...";
+    if (val === undefined || val === null || val === "") val = "...";
 
     mainBtns[i].textContent = String(val).trim();
-    mainBtns[i].classList.remove("nosample","negative","lowcopy", "mediumcopy", "positive");
+    mainBtns[i].classList.remove("nosample", "negative", "doubt", "lowcopy", "mediumcopy", "positive");
     mainBtns[i].classList.add(classifyColorFromText(mainBtns[i].textContent));
 
-    subBtns[i].classList.remove("nosample","negative","lowcopy", "mediumcopy", "positive");
+    subBtns[i].classList.remove("nosample", "negative", "doubt", "lowcopy", "mediumcopy", "positive");
     subBtns[i].classList.add(classifyColorFromText(mainBtns[i].textContent));
 
     const mainVal = mainBtns[i].textContent.trim();
     const screenVal = screenings[i];
-    subBtns[i].textContent = mainVal==="N/A" ? "-" : (screenVal ?? "-");
+    subBtns[i].textContent = mainVal === "N/A" ? "-" : (screenVal ?? "-");
   }
 }

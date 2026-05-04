@@ -144,6 +144,10 @@
   background-color: #10cc10;
 }
 
+.note-cell.doubt {
+  background-color: #069fd2;
+}
+
 .note-cell.mediumcopy {
   background-color: #ff9226;
 }
@@ -263,6 +267,12 @@
 .well-main-btn.negative,
 .well-sub-btn.negative {
   background-color: #10cc10 !important;
+  color: #ffffff !important;
+}
+
+.well-main-btn.doubt,
+.well-sub-btn.doubt {
+  background-color: #069fd2 !important;
   color: #ffffff !important;
 }
 

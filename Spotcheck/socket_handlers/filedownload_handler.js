@@ -70,18 +70,19 @@ function registerFileDownloadSocket(io, socket) {
     const targetFolder = path.join(RESULTS_PATH, resultFolder);
     fs.mkdirSync(targetFolder, { recursive: true });
 
-    const imgName = sensitivity === "low" ? "low_sensitivity.jpg" : "high_sensitivity.jpg";
-    const subimageName = sensitivity === "low" ? "high_sensitivity.jpg" : "low_sensitivity.jpg";
+    // const imgName = sensitivity === "low" ? "low_sensitivity.jpg" : "high_sensitivity.jpg";
+    // const subimageName = sensitivity === "low" ? "high_sensitivity.jpg" : "low_sensitivity.jpg";
+    const imgName = sensitivity === "low" ? "low_sensitivity.jpg" : "result.jpg";
 
     if (latestTab1Image) {
       const base64Tab1 = latestTab1Image.replace(/^data:image\/jpeg;base64,/, "");
       saveImageIfNotExists(targetFolder, imgName, base64Tab1);
     }
 
-    if (latestTab2Image) {
-      const base64Tab2 = latestTab2Image.replace(/^data:image\/jpeg;base64,/, "");
-      saveImageIfNotExists(targetFolder, subimageName, base64Tab2);
-    }
+    // if (latestTab2Image) {
+    //   const base64Tab2 = latestTab2Image.replace(/^data:image\/jpeg;base64,/, "");
+    //   saveImageIfNotExists(targetFolder, subimageName, base64Tab2);
+    // }
   });
 
   /* ------------------- DOWNLOAD → ZIP FOLDER ------------------- */

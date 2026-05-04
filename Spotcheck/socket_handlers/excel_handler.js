@@ -11,6 +11,8 @@ const COORD_PATH = "/home/pi/Spotcheck/Global/coordinates.json";
 const COORD0_PATH = "/home/pi/Spotcheck/Global/coordinates0.json";
 const FAM_PATH = "/home/pi/Spotcheck/Global/fam.json";
 const WIFI_PATH = "/home/pi/FPS16_B/information.json";
+// Đã sửa tên file thành analysis_threshold.json theo yêu cầu
+const ANALYSIS_PATH = "/home/pi/Spotcheck/Global/analysis_threshold.json"; 
 
 /* =========================================================
    Hàm đăng ký các socket event liên quan Excel/Admin
@@ -112,14 +114,12 @@ function registerExcelSocket(io, socket) {
       const sheet = wb.Sheets[wb.SheetNames[0]];
       const get = (cell) => sheet[cell]?.v ?? "";
 
-      /* ===== FIXED CELLS ===== */
       const info = {
         B9: get("B9"),
         B10: get("B10"),
         B11: get("B11")
       };
 
-      /* ===== TABLE B13:E29 ===== */
       const table = [];
       for (let row = 13; row <= 29; row++) {
         const b = get(`B${row}`);
@@ -192,24 +192,20 @@ function registerExcelSocket(io, socket) {
   
       if (!fs.existsSync(COEFFICIENT_PATH)) {
         wb = XLSX.utils.book_new();
-  
-        // T?O SHEET C� K�CH THU?C
         const empty = Array.from({ length: 20 }, () => Array(10).fill(""));
         ws = XLSX.utils.aoa_to_sheet(empty);
-  
         XLSX.utils.book_append_sheet(wb, ws, "Coefficient");
-        console.log("?? Excel created");
+        console.log("Excel created");
       } else {
         wb = XLSX.readFile(COEFFICIENT_PATH);
         ws = wb.Sheets[wb.SheetNames[0]];
       }
   
-      // ghi d? li?u
       writeRange(ws, 1, 1, coeff);
       writeRange(ws, 10, 1, base);
   
       XLSX.writeFile(wb, COEFFICIENT_PATH);
-      socket.emit("admin_write_done");
+      // socket.emit("admin_write_done");
   
     } catch (err) {
       console.error("Excel write error:", err);
@@ -222,21 +218,26 @@ function registerExcelSocket(io, socket) {
     let coord = { x1: 0, y1: 0, x2: 0, y2: 0 };
     let coord0 = { x1: 0, y1: 0, x2: 0, y2: 0 };
     let fam = { threshold_1: 0, threshold_2: 0, threshold_3: 0, minus_value: 0 };
-    let device_info = {host_name: "FPS", seri_number: "xxxxx", version: "..."};
+    let device_info = { host_name: "FPS", seri_number: "xxxxx", version: "..." };
+    // Khởi tạo mặc định cho Analysis Thresholds
+    let analysis_thresholds = { "Doubt": 0.95, "Low copy": 1.06, "Medium copy": 1.26, "High copy 1": 1.41, "High copy 2": 1.5 };
 
-    try { threshold = JSON.parse(fs.readFileSync(THRESHOLD_PATH, "utf8")); } catch {}
-    try { coord = JSON.parse(fs.readFileSync(COORD_PATH, "utf8")); } catch {}
-    try { coord0 = JSON.parse(fs.readFileSync(COORD0_PATH, "utf8")); } catch {}
-    try { fam = JSON.parse(fs.readFileSync(FAM_PATH, "utf8")); } catch {}
+    try { if (fs.existsSync(THRESHOLD_PATH)) threshold = JSON.parse(fs.readFileSync(THRESHOLD_PATH, "utf8")); } catch {}
+    try { if (fs.existsSync(COORD_PATH)) coord = JSON.parse(fs.readFileSync(COORD_PATH, "utf8")); } catch {}
+    try { if (fs.existsSync(COORD0_PATH)) coord0 = JSON.parse(fs.readFileSync(COORD0_PATH, "utf8")); } catch {}
+    try { if (fs.existsSync(FAM_PATH)) fam = JSON.parse(fs.readFileSync(FAM_PATH, "utf8")); } catch {}
+    try { if (fs.existsSync(ANALYSIS_PATH)) analysis_thresholds = JSON.parse(fs.readFileSync(ANALYSIS_PATH, "utf8")); } catch {}
     try { 
-      const info = JSON.parse(fs.readFileSync(WIFI_PATH, "utf8"));
-      device_info.host_name = info.host_name ?? "FPS";
-      device_info.seri_number = info.seri_number ?? "xxxxx"; 
-      device_info.version = info.version ?? "..."; } 
-    catch {}
+      if (fs.existsSync(WIFI_PATH)) {
+        const info = JSON.parse(fs.readFileSync(WIFI_PATH, "utf8"));
+        device_info.host_name = info.host_name ?? "FPS";
+        device_info.seri_number = info.seri_number ?? "xxxxx"; 
+        device_info.version = info.version ?? "..."; 
+      }
+    } catch {}
 
-    console.log("Sending admin_extra_data:", { threshold, coord, coord0, fam, device_info});
-    socket.emit("admin_extra_data", { threshold, coord, coord0, fam, device_info});
+    console.log("Sending admin_extra_data including analysis thresholds");
+    socket.emit("admin_extra_data", { threshold, coord, coord0, fam, device_info, analysis_thresholds });
   });
 
   /* ------------------- ADMIN WRITE EXTRA JSON ------------------- */
@@ -247,21 +248,16 @@ function registerExcelSocket(io, socket) {
   }
 
   function updateHostname(host_name, seri_number) {
-  const host = `${host_name}${seri_number}`;
-
-  const cmd = `
-  sudo hostnamectl set-hostname ${host} &&
-  sudo sed -i 's/^127\\.0\\.1\\.1.*/127.0.1.1 ${host}/' /etc/hosts &&
-  sudo sed -i 's/^host-name=.*/host-name=${host}/' /etc/avahi/avahi-daemon.conf &&
-  sudo systemctl restart avahi-daemon
-  `;
-
-  exec(cmd, (error, stdout, stderr) => {
-    if (error) {
-      console.error("Hostname update error:", error);
-      return;
-    }
-    console.log("Hostname updated:", host);
+    const host = `${host_name}${seri_number}`;
+    const cmd = `
+      sudo hostnamectl set-hostname ${host} &&
+      sudo sed -i 's/^127\\.0\\.1\\.1.*/127.0.1.1 ${host}/' /etc/hosts &&
+      sudo sed -i 's/^host-name=.*/host-name=${host}/' /etc/avahi/avahi-daemon.conf &&
+      sudo systemctl restart avahi-daemon
+    `;
+    exec(cmd, (error) => {
+      if (error) { console.error("Hostname update error:", error); return; }
+      console.log("Hostname updated:", host);
     });
   }
 
@@ -292,46 +288,34 @@ function registerExcelSocket(io, socket) {
         });
       }
 
+      // --- PHẦN GHI ANALYSIS THRESHOLDS ---
+      if (data.analysis_thresholds) {
+        ensureDirAndWrite(ANALYSIS_PATH, {
+          "Doubt": Number(data.analysis_thresholds.Doubt) || 0.95,
+          "Low copy": Number(data.analysis_thresholds["Low copy"]) || 1.06,
+          "Medium copy": Number(data.analysis_thresholds["Medium copy"]) || 1.26,
+          "High copy 1": Number(data.analysis_thresholds["High copy 1"]) || 1.41,
+          "High copy 2": Number(data.analysis_thresholds["High copy 2"]) || 1.5
+        });
+      }
+
       if (data.device_info) {
         try {
           const dir = path.dirname(WIFI_PATH);
           if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-
           let wifiRaw = {};
-
-          // đọc file cũ nếu tồn tại
           if (fs.existsSync(WIFI_PATH)) {
-            try {
-              wifiRaw = JSON.parse(fs.readFileSync(WIFI_PATH, "utf8"));
-            } catch {
-              console.warn("wifi.json corrupted, recreating");
-              wifiRaw = {};
-            }
+            try { wifiRaw = JSON.parse(fs.readFileSync(WIFI_PATH, "utf8")); } catch { wifiRaw = {}; }
           }
-
-          // chỉ update 2 key
-          if (data.device_info.host_name !== undefined) {
-            wifiRaw.host_name = data.device_info.host_name;
-          }
-
-          if (data.device_info.seri_number !== undefined) {
-            wifiRaw.seri_number = data.device_info.seri_number;
-          }
-
-
-          // ghi lại toàn bộ (đã merge)
+          if (data.device_info.host_name !== undefined) wifiRaw.host_name = data.device_info.host_name;
+          if (data.device_info.seri_number !== undefined) wifiRaw.seri_number = data.device_info.seri_number;
           fs.writeFileSync(WIFI_PATH, JSON.stringify(wifiRaw, null, 2));
-
           updateHostname(wifiRaw.host_name, wifiRaw.seri_number);
-        } 
-        catch (err) 
-        {
-          console.error("Error writing wifi.json:", err);
-        }
+        } catch (err) { console.error("Error writing wifi.json:", err); }
       }
 
       console.log("admin_write_extra done");
-      // socket.emit("admin_write_done");
+      socket.emit("admin_write_done");
 
     } catch (err) {
       console.error("Error writing admin extra:", err);

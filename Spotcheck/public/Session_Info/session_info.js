@@ -78,7 +78,8 @@ window.addEventListener("DOMContentLoaded", () => {
                 }
             });
             
-            goToPage("./Kit_Selection/kit_selection.html");
+            // goToPage("./Kit_Selection/kit_selection.html");
+            goToPage("./Sample_Selection/sample_selection.html");
 
         }
     });

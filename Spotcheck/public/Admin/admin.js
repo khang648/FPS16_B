@@ -25,6 +25,13 @@ const minusValue = document.getElementById("minus_value");
 
 const btnApply = document.getElementById("btnApply");
 
+
+const doubt = document.getElementById("doubt");
+const low_copy = document.getElementById("low_copy");
+const medium_copy = document.getElementById("medium_copy");
+const high_copy_1 = document.getElementById("high_copy_1");
+const high_copy_2 = document.getElementById("high_copy_2");
+
 /* ================= CREATE 4x4 TABLE ================= */
 function createTable(tableId) {
   const table = document.getElementById(tableId);
@@ -155,45 +162,65 @@ socket.on("admin_extra_data", (data) => {
   seri_number.value = data.device_info.seri_number; 
   version.value = data.device_info.version;
 
+  // Thêm gán dữ liệu cho Analysis Thresholds
+  doubt.value = data?.analysis_thresholds?.Doubt ?? 0;
+  low_copy.value = data?.analysis_thresholds?.["Low copy"] ?? 0;
+  medium_copy.value = data?.analysis_thresholds?.["Medium copy"] ?? 0;
+  high_copy_1.value = data?.analysis_thresholds?.["High copy 1"] ?? 0;
+  high_copy_2.value = data?.analysis_thresholds?.["High copy 2"] ?? 0;
+
 });
 
 /* ================= APPLY BUTTON ================= */
 btnApply.addEventListener("click", () => {
-  const coeffData = readTable("coeffTable");
-  const baseData = readTable("baseTable");
+    // 1. Đọc dữ liệu từ 2 bảng (Coefficients và Base Value)
+    const coeffData = readTable("coeffTable");
+    const baseData = readTable("baseTable");
 
-  const extraData = {
-    threshold: {
-      a: parseFloat(aValue.value) || 0,
-      b: parseFloat(bValue.value) || 0
-    },
-    coordinates: {
-      x1: parseFloat(x1.value) || 0,
-      y1: parseFloat(y1.value) || 0,
-      x2: parseFloat(x2.value) || 0,
-      y2: parseFloat(y2.value) || 0
-    },
-    fam: {
-      threshold_1: parseFloat(threshold1.value) || 0,
-      threshold_2: parseFloat(threshold2.value) || 0,
-      threshold_3: parseFloat(threshold3.value) || 0,
-      minus_value: parseFloat(minusValue.value) || 0
-    },
-    device_info: {
-      host_name: host_name.value,
-      seri_number: seri_number.value
-    }
-  };
+    // 2. Thu thập tất cả dữ liệu từ các input còn lại
+    const extraData = {
+        threshold: {
+            a: parseFloat(aValue.value) || 0,
+            b: parseFloat(bValue.value) || 0
+        },
+        coordinates: {
+            x1: parseFloat(x1.value) || 0,
+            y1: parseFloat(y1.value) || 0,
+            x2: parseFloat(x2.value) || 0,
+            y2: parseFloat(y2.value) || 0
+        },
+        fam: {
+            threshold_1: parseFloat(threshold1.value) || 0,
+            threshold_2: parseFloat(threshold2.value) || 0,
+            threshold_3: parseFloat(threshold3.value) || 0,
+            minus_value: parseFloat(minusValue.value) || 0
+        },
+        // 5 giá trị cho Analysis Thresholds
+        analysis_thresholds: {
+            "Doubt": parseFloat(doubt.value) || 0.95,
+            "Low copy": parseFloat(low_copy.value) || 1.06,
+            "Medium copy": parseFloat(medium_copy.value) || 1.26,
+            "High copy 1": parseFloat(high_copy_1.value) || 1.41,
+            "High copy 2": parseFloat(high_copy_2.value) || 1.5
+        },
+        device_info: {
+            host_name: host_name.value,
+            seri_number: seri_number.value
+        }
+    };
 
-  console.log("Emitting admin_write_excel:", coeffData, baseData);
-  console.log("Emitting admin_write_extra:", extraData);
+    // 3. Log để kiểm tra dữ liệu trước khi gửi 
+    console.log("Emitting admin_write_excel:", { coeff: coeffData, base: baseData });
+    console.log("Emitting admin_write_extra:", extraData);
 
-  socket.emit("admin_write_excel", {
-    coeff: coeffData,
-    base: baseData
-  });
+    // 4. Gửi tín hiệu ghi file qua Socket.io
+    // Lưu ý: Đảm bảo Server xử lý việc lưu vào /home/pi/Spotcheck/Global/threshold.js
+    socket.emit("admin_write_excel", {
+        coeff: coeffData,
+        base: baseData
+    });
 
-  socket.emit("admin_write_extra", extraData);
+    socket.emit("admin_write_extra", extraData);
 });
 
 /* ================= BACK BUTTON ================= */

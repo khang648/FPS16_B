@@ -91,7 +91,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // ANALYSIS
     document.getElementById("btnAnalysis")?.addEventListener("click", () => {
-        document.getElementById("overlay").style.display = "flex";
+        // document.getElementById("overlay").style.display = "flex";
+        goToPage("./Session_Info/session_info.html");
     });
 
     // FAM
