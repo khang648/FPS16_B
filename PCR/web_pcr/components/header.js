@@ -29,7 +29,7 @@ function initHeaderLogic() {
 
     holdTimer = setTimeout(() => {
       goToPage("PCR/PCR_Config/pcr_config.html", "none");
-    }, 100);
+    }, 4000);
   }
 
   function cancelHold() {
