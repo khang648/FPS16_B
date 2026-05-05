@@ -156,21 +156,6 @@ function Show_Notification(message, type = "Yes_No") {
         document.head.appendChild(style);
       }
     } 
-    // else if (type === "Save_Protocol") {
-    //   contentHTML = `
-    //     <p style="font-size:18px; font-family:'Noto Serif', serif; margin-bottom:10px;">${message}</p>
-    //     <input id="protocol-name" type="text" placeholder="Protocol Name"
-    //       style="width:90%; padding:6px; border:1px solid #ccc; border-radius:6px;
-    //              margin-bottom:15px; font-size:18px; font-family:'Noto Serif', serif; outline:none; -webkit-text-size-adjust:100%;" 
-    //              maxlength="27"
-    //              oninput="limitUTF8Bytes(this, 27)" 
-    //              />
-    //     <div style="display:flex; gap:10px; width:90%; margin:0 auto;">
-    //       <button id="notify-save" style="${buttonStyle}; background:#28a745;">Save</button>
-    //       <button id="notify-cancel" style="${buttonStyle}; background:#dc3545;">Cancel</button>
-    //     </div>
-    //   `;
-    // }
 
     else if (type === "Save_Protocol") {
   contentHTML = `
@@ -1050,7 +1035,6 @@ function createStepBox(widthPercent, index) {
   return stepBox;
 }
 
-
 function Render_Chart_Temp() {
     const container = document.getElementById("Temp-Chart");
     if (!container) return;
@@ -1091,28 +1075,6 @@ function Render_Chart_Temp() {
             pinchZoomX: true
         })
     );
-
-    // ================= X AXIS =================
-    // const xAxis = chart.xAxes.push(
-    //     am5xy.ValueAxis.new(root, {
-    //         min: 0,
-    //         max: 8000,
-    //         strictMinMax: true,
-    //         renderer: am5xy.AxisRendererX.new(root, {
-    //             minGridDistance: 80
-    //         })
-    //     })
-    // );
-
-    // xAxis.get("renderer").labels.template.setAll({
-    //     fontFamily: "'Noto Serif', serif",
-    //     fontSize: 14
-    // });
-
-    // xAxis.get("renderer").labels.template.adapters.add("text", (text, target) => {
-    //     const v = target.dataItem?.get("value");
-    //     return v != null ? v + " s" : text;
-    // });
 
     // ================= X AXIS =================
     const xAxis = chart.xAxes.push(
@@ -1171,7 +1133,7 @@ function Render_Chart_Temp() {
             xAxis,
             yAxis,
             valueXField: "x",
-            valueYField: "value",
+            valueYField: "sample",
             stroke: am5.color(0xff0000),
             tooltip: am5.Tooltip.new(root, {
                 //labelText: "{valueY.formatNumber('#.0')} °C\n{valueX.formatNumber('0')} s",
@@ -1181,6 +1143,23 @@ function Render_Chart_Temp() {
             })
         })
     );
+
+    const estimateSeries = chart.series.push(
+          am5xy.LineSeries.new(root, {
+              xAxis,
+              yAxis,
+              valueXField: "x",
+              valueYField: "estimate", // khác field
+              stroke: am5.color(0x0000ff), // màu xanh cho dễ phân biệt
+              tooltip: am5.Tooltip.new(root, {
+                //labelText: "{valueY.formatNumber('#.0')} °C\n{valueX.formatNumber('0')} s",
+                getFillFromSprite: false,   
+                getStrokeFromSprite: false,
+                autoTextColor: false       
+            })
+        })
+      );
+      window.Temp_Estimate_Series = estimateSeries;
 
     const Tooltip = series.get("tooltip");
     Tooltip.label.adapters.add("text", (text, target) => {
@@ -1204,6 +1183,13 @@ function Render_Chart_Temp() {
         fillOpacity: 0.3,
      });
 
+
+    estimateSeries.strokes.template.set("strokeWidth", 2);
+    estimateSeries.fills.template.setAll({
+        visible: true,
+        fillOpacity: 0.3,
+     });
+
     const tooltip = series.get("tooltip");
     tooltip.set("background", am5.RoundedRectangle.new(root, {
         fill: am5.color(0xD1D1D1),   // nền xám
@@ -1222,14 +1208,20 @@ function Render_Chart_Temp() {
         fontSize: 14
     });
 
-    // ================= Mảng nhiệt độ=================
-    window.Temp_Buf = new Array(Chart_Buf_Size).fill(0);
-    const initialData = window.Temp_Buf.map((v, i) => 
-    ({
-        x: -((Chart_Buf_Size - 1 - i) * 2), 
-        value: v
-    }));
-    series.data.setAll(initialData);
+  window.Temp_Buf = new Array(Chart_Buf_Size).fill(0);
+  window.Chart_Estimate_Buf = new Array(Chart_Buf_Size).fill(0);
+
+  // CHỈ 1 initialData duy nhất
+  const initialData = window.Temp_Buf.map((v, i) => ({
+      x: -((Chart_Buf_Size - 1 - i) * 2),
+      value: v,
+      estimate: window.Chart_Estimate_Buf[i]
+  }));
+
+  // set cho cả 2 series
+  series.data.setAll(initialData);
+  estimateSeries.data.setAll(initialData);
+    
 
     // ================= TAP HIỂN THỊ NHIỆT ĐỘ =================
 
@@ -1287,6 +1279,81 @@ function Render_Chart_Temp() {
   // ================= ANIMATION =================
   chart.appear(600, 100);
 
+
+const container_object = document.getElementById("pcr-chart");
+container_object.style.position = "relative";
+
+// xóa control cũ nếu có
+const oldControl = container.querySelector(".chart-control");
+if (oldControl) oldControl.remove();
+
+const controlDiv = document.createElement("div");
+controlDiv.className = "chart-control";
+
+controlDiv.style.position = "absolute";
+controlDiv.style.right  = "5px";
+controlDiv.style.top = "5px";
+controlDiv.style.background = "rgba(255, 255, 255, 0.3)";
+controlDiv.style.border = "1px solid rgba(0,0,0,0.6)";
+controlDiv.style.backdropFilter = "blur(4px)";   
+controlDiv.style.padding = "6px 10px";
+controlDiv.style.borderRadius = "6px";
+controlDiv.style.fontFamily = "serif";
+controlDiv.style.fontSize = "14px";
+controlDiv.style.zIndex = "100";
+
+
+controlDiv.style.display = "flex";
+controlDiv.style.flexDirection = "column"; 
+controlDiv.style.alignItems = "flex-start"; 
+controlDiv.style.gap = "5px";
+
+// ===== SYSTEM =====
+const sysLabel = document.createElement("label");
+sysLabel.style.cursor = "pointer";
+
+const sysCheckbox = document.createElement("input");
+sysCheckbox.type = "checkbox";
+sysCheckbox.checked = true;
+
+const sysIcon = document.createElement("span");
+sysIcon.innerHTML = " ● ";
+sysIcon.style.color = "red";
+
+sysLabel.appendChild(sysCheckbox);
+sysLabel.appendChild(sysIcon);
+sysLabel.appendChild(document.createTextNode("Sample"));
+
+// ===== ESTIMATE =====
+const estLabel = document.createElement("label");
+estLabel.style.cursor = "pointer";
+
+const estCheckbox = document.createElement("input");
+estCheckbox.type = "checkbox";
+estCheckbox.checked = true;
+
+const estIcon = document.createElement("span");
+estIcon.innerHTML = " ● ";
+estIcon.style.color = "blue";
+
+estLabel.appendChild(estCheckbox);
+estLabel.appendChild(estIcon);
+estLabel.appendChild(document.createTextNode("Estimate"));
+
+// ===== ADD =====
+controlDiv.appendChild(sysLabel);
+controlDiv.appendChild(estLabel);
+
+container.appendChild(controlDiv);
+
+// ===== EVENT =====
+sysCheckbox.addEventListener("change", () => {
+    sysCheckbox.checked ? series.show() : series.hide();
+});
+
+estCheckbox.addEventListener("change", () => {
+    estCheckbox.checked ? estimateSeries.show() : estimateSeries.hide();
+});
 
 
   // ================== NÚT ZOOM IN/OUT NGOÀI CHART ==================
@@ -1359,7 +1426,6 @@ function Render_Chart_Temp() {
     }
 }
 
-
 function Render_Tool(Panel_ID, option = "new") {
     const container = document.getElementById(Panel_ID)
 
@@ -1370,7 +1436,9 @@ function Render_Tool(Panel_ID, option = "new") {
     container.style.gap = "5px"; // khoảng cách giữa 2 hàng
     container.style.backgroundColor = "#ffffffff"; // khoảng cách giữa 2 hàng
 
-    const Two_Row = ["new", "saved", "history", "temp_calib"].includes(option); // Nếu 1 trong 3 thì tạo chiều cao 20% còn nếu là admin thì chiều cao 10%
+    // const Two_Row = ["new", "saved", "history", "temp_calib"].includes(option); // Nếu 1 trong 5 thì tạo chiều cao 20% còn nếu là admin thì chiều cao 10%
+    
+    const Two_Row = ["new", "saved", "history"].includes(option); // Nếu 1 trong 5 thì tạo chiều cao 20% còn nếu là admin thì chiều cao 10%
     container.style.height = Two_Row ? "20%" : "10%";
 
     
@@ -1453,7 +1521,7 @@ function Render_Tool(Panel_ID, option = "new") {
           if(Position_Click != null)
           {
             Tab_prev = ui_LBSavedTitle.textContent;
-            Click_Btn_Open(Position_Click , option);
+            Click_Btn_Open(Position_Click , option , "new"); // click open thì hiện new binhg thường
           }
         });
         topRow.appendChild(ui_BtnOpen);
@@ -1481,34 +1549,34 @@ function Render_Tool(Panel_ID, option = "new") {
           if(Position_Click != null)
           {
             Tab_prev = ui_LBSavedTitle.textContent;
-            Click_Btn_Open(Position_Click, option);
+            Click_Btn_Open(Position_Click, option, "view");
           }
         });
         topRow.appendChild(ui_BtnOpen);
       }
-      else if( option === "temp_calib")
-      {
-        // Nút Reload
-        ui_BtnReload = document.createElement("button");
-        ui_BtnReload.className = "ctrl-btn";
-        ui_BtnReload.innerHTML = `<img src="../../assets/PCR_RELOAD_TOOL.png" style="width:16px; height:16px;"> RELOAD`;        
-        ui_BtnReload.addEventListener("click", function() 
-        {
-          Click_Btn_Reload();               // Truyền tên vào hàm
-        });
+      // else if( option === "temp_calib")
+      // {
+      //   // Nút Reload
+      //   ui_BtnReload = document.createElement("button");
+      //   ui_BtnReload.className = "ctrl-btn";
+      //   ui_BtnReload.innerHTML = `<img src="../../assets/PCR_RELOAD_TOOL.png" style="width:16px; height:16px;"> RELOAD`;        
+      //   ui_BtnReload.addEventListener("click", function() 
+      //   {
+      //     Click_Btn_Reload();               // Truyền tên vào hàm
+      //   });
 
-        topRow.appendChild(ui_BtnReload);
+      //   topRow.appendChild(ui_BtnReload);
 
-        // Nút Upload
-        ui_BtnUpload = document.createElement("button");
-        ui_BtnUpload.className = "ctrl-btn";
-        ui_BtnUpload.innerHTML = `<img src="../../assets/PCR_UPLOAD_TOOL.png" style="width:16px; height:16px;"> UPLOAD`;        
-        ui_BtnUpload.addEventListener("click", function() 
-        {
-          Click_Btn_Upload();          
-        });
-        topRow.appendChild(ui_BtnUpload);
-      }
+      //   // Nút Upload
+      //   ui_BtnUpload = document.createElement("button");
+      //   ui_BtnUpload.className = "ctrl-btn";
+      //   ui_BtnUpload.innerHTML = `<img src="../../assets/PCR_UPLOAD_TOOL.png" style="width:16px; height:16px;"> UPLOAD`;        
+      //   ui_BtnUpload.addEventListener("click", function() 
+      //   {
+      //     Click_Btn_Upload();          
+      //   });
+      //   topRow.appendChild(ui_BtnUpload);
+      // }
       // else if( option === "wifi_config")
       // {
       //   // Nút Submit
@@ -1533,7 +1601,7 @@ function Render_Tool(Panel_ID, option = "new") {
       // }
       container.appendChild(topRow);
     }
-
+  
     // --- Hàng 2: BACK + TIME RUN (nếu option === "new") ---
 const bottomRow = document.createElement("div");
 Object.assign(bottomRow.style, 
@@ -1547,6 +1615,56 @@ Object.assign(bottomRow.style,
 
 
 if (option === "new") // nếu là new thì render Time run
+{
+    bottomRow.style.flexDirection = "row";
+
+    // ---- Cột trái: BACK ----
+    const backBox = document.createElement("div");
+    Object.assign(backBox.style, {
+        width: "50%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "top",
+        background: "#ffffffff",
+        paddingLeft: "2%",   // <-- camelCase
+        paddingRight: "1%",  // <-- camelCase
+    });
+    ui_BtnBack = document.createElement("button");
+    ui_BtnBack.className = "back-btn";
+    ui_BtnBack.innerHTML = `<img src="../../assets/PCR_BACK_TOOL.png" style="width:16px; height:16px;"> BACK`; 
+    ui_BtnBack.addEventListener("click", function()  
+    { 
+        Click_Btn_Back(option, System.Tab_Prev); 
+    });
+
+    backBox.appendChild(ui_BtnBack);
+
+    // ---- Cột phải: TIME RUN ----
+    const timeBox = document.createElement("div");
+    Object.assign(timeBox.style, {
+        width: "50%",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "top",
+        fontSize: "20px",
+        backgroundColor: "#ffffffff",
+        paddingLeft: "1%",   // <-- camelCase
+        paddingRight: "2%",  // <-- camelCase
+    });
+        
+    const timeDisplay = document.createElement("div");
+    timeDisplay.className = "time-display"; 
+
+    ui_TimeProgram = document.createElement("span");
+    ui_TimeProgram.id = "time";
+    ui_TimeProgram.textContent = "00 : 00 : 00";
+    timeDisplay.appendChild(ui_TimeProgram);
+    timeBox.appendChild(timeDisplay);
+
+    bottomRow.appendChild(backBox);
+    bottomRow.appendChild(timeBox);
+}
+else if (option === "view") // nếu là new thì render Time run
 {
     bottomRow.style.flexDirection = "row";
 

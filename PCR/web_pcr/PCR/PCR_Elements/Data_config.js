@@ -25,6 +25,7 @@ let System = {
     BlockTemp: 30,
     Tab_Prev: "",
     Request_Data: "",
+    History_Position: Number(localStorage.getItem("History_Position")) || 0,
 };
 
 //*================================ lẤY DỮ LIỆU BIỂU ĐỒ NHIỆT ========================================*//
@@ -50,6 +51,7 @@ let Calib_Val_Saved = Array.from(
 );
 
 let Chart_Buf = new Array(Chart_Buf_Size).fill(0);
+let Chart_Estimate_Buf = new Array(Chart_Buf_Size).fill(0);
 
 // Các biến nhận điều khiển
 let saved_calib_total = { value: 0 };  // Biến đếm tổng protocol đã lưu
@@ -63,6 +65,9 @@ let history_cnt   =  { value: 0};
 
 let chart_buf_total =  { value: 0};
 let chart_buf_cnt   =  { value: 0};
+
+let chart_estimate_buf_total =  { value: 0};
+let chart_estimate_buf_cnt   =  { value: 0};
 
 const save_new = 1;
 const save_old = 2;
@@ -160,4 +165,5 @@ const SystemState = {
     System_Stop: 0,
     System_Start: 1,
     System_Pause: 2,
+    System_Auto: 3
 };

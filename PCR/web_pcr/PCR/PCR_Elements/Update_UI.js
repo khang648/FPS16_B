@@ -1,27 +1,35 @@
-function Update_Chart_Temp(newValue) {
+function Update_Chart_Temp(newValue, estimateValue) {
+    const series = window.Temp_Series;
+    const estimateSeries = window.Temp_Estimate_Series;
 
-    const series = window.Temp_Series;      // series toàn cục
-    const BUFFER_SIZE = Chart_Buf.length;
+    const BUFFER_SIZE = Chart_Buf_Size; // dùng size cố định
 
-    // ===== CẬP NHẬT BUFFER =====
+    // ===== UPDATE BUFFER =====
     Chart_Buf.push(newValue);
-    if (Chart_Buf.length > BUFFER_SIZE) 
-    {
-        Chart_Buf.shift(); 
+    Chart_Estimate_Buf.push(estimateValue);
+
+    if (Chart_Buf.length > BUFFER_SIZE) {
+        Chart_Buf.shift();
     }
 
-    // ===== CHUYỂN BUFFER THÀNH DỮ LIỆU CHO SERIES =====
-    const chartData = Chart_Buf.map((v, i) => 
-    ({
-        // x: (i + 1) * 2,
-        x: -((Chart_Buf_Size - 1 - i) * 2), 
-        value: v
+    if (Chart_Estimate_Buf.length > BUFFER_SIZE) {
+        Chart_Estimate_Buf.shift();
+    }
+
+    // ===== BUILD DATA RIÊNG =====
+    const historyData = Chart_Buf.map((v, i) => ({
+        x: -((BUFFER_SIZE - 1 - i) * 2),
+        sample: v
     }));
 
-    if(series)
-    {
-     series.data.setAll(chartData); 
-    }
+    const estimateData = Chart_Estimate_Buf.map((v, i) => ({
+        x: -((BUFFER_SIZE - 1 - i) * 2),
+        estimate: v
+    }));
+
+    // ===== UPDATE RIÊNG =====
+    series?.data.setAll(historyData);
+    estimateSeries?.data.setAll(estimateData);
 }
 
 function Update_Chart(data) {
@@ -31,9 +39,21 @@ function Update_Chart(data) {
 
     const chartData = data.map((v, i) => 
     ({
-        // x: (i + 1) * 2,  
         x: -((Chart_Buf_Size - 1 - i) * 2), 
-        value: v
+        sample: v
+    }));
+
+    series.data.setAll(chartData);
+}
+
+function Update_Chart_Estimate(data) {
+
+    const series = window.Temp_Estimate_Series;
+    if (!series) return;
+
+    const chartData = data.map((v, i) => ({
+        x: -((Chart_Buf_Size - 1 - i) * 2),
+        estimate: v
     }));
 
     series.data.setAll(chartData);
@@ -82,6 +102,7 @@ function Update_Start_Protocol(data)
 {
     let idx = 0;
     let block_temp      = data[idx++]; // lấy nhiệt độ block
+    let Estimate_temp   = data[idx++]; // lấy nhiệt độ dự đoán
     let time_count_low  = data[idx++]; // lấy byte low
     let time_count_high = data[idx++]; // lấy byet high
     let Time_count = (time_count_high << 8) | time_count_low;  // Lấy time
@@ -106,6 +127,24 @@ function Update_Start_Protocol(data)
     let time_run       = (time_run_high << 8) | time_run_low;  // Lấy time
     state_system       = data[idx++]; // trạng thái máy
 
+    if (state_system === SystemState.System_Auto)
+    {
+        // 🕒 update time trên notification
+        if (time_run != time_run_prev)
+        {
+            Show_Notification( `Auto calibrating...\nTime:[${Format_time_setpoint(time_run)}]`,"Loading");
+            time_run_prev = time_run;
+        }
+
+        // 🔔 đảm bảo state chỉ set 1 lần
+        if (state_system !== state_system_prev)
+        {
+            state_system_prev = state_system;
+        }
+
+        return;
+    }
+
     if(block_temp != block_temp_prev) 
     { 
         let label = document.querySelector(".label-Sample-Temp");
@@ -121,7 +160,7 @@ function Update_Start_Protocol(data)
     if(++Update_Chart_Cnt >= Time_Update_Char * 2) // Cập nhật dữ liệu mỗi 1s
     {
       Update_Chart_Cnt = 0;
-      Update_Chart_Temp(block_temp); // Cập nhật biểu đồ nhiệt
+      Update_Chart_Temp(block_temp, Estimate_temp); // Cập nhật biểu đồ nhiệt
     }
 
     if(step_setpoint != step_setpoint_prev) // chuyển màu step và reset time
@@ -162,7 +201,7 @@ function Update_Start_Protocol(data)
           cycles_pcr_prev[pcr_loop_index] = cycles_pcr[pcr_loop_index];
         }
     }
-    console.log(cycles_pcr);
+    //console.log(cycles_pcr);
     
     if(time_run != time_run_prev) { ui_TimeProgram.textContent = Format_time_setpoint(time_run, ' '); time_run_prev = time_run; }              // Cập nhật thời gian chạy chương trình
 
@@ -242,7 +281,8 @@ function Update_Stop_Protocol(data)
     block_temp_prev = 0;       // Nhiệt độ lóc trên trước đó
     Time_count_prev = 0;       // Thời gian giữ trước đó
     lid_temp_prev = 0;         // Nhiệt độ lóc trên trước đó
-    cycles_pcr_prev = new Array(PCR_LOOP).fill(1);   // reset số cycles trong pcr
+    cycles_pcr_prev = new Array(PCR_LOOP).fill(100);   // reset số cycles trong pcr
+    Fist_Reload_Page = true;
     pcr_loop_index_prev = 100; // Nhiệt độ lóc trên trước đó
     step_setpoint_prev = 100;  // Nhiệt độ lóc trên trước đó
     time_run_prev = 0;         // Nhiệt độ lóc trên trước đó
@@ -253,7 +293,10 @@ function Update_Wait_Screen(data)
 {
     let idx = 0;
     let block_temp = data[idx]; // lấy nhiệt độ block
+    idx++;
+    let Estimate_Temp = data[idx]; // lấy nhiệt độ dự đoán
 
+    
     if(block_temp != block_temp_prev) 
     { 
         let label = document.querySelector(".label-Sample-Temp");
@@ -264,10 +307,12 @@ function Update_Wait_Screen(data)
         block_temp_prev = block_temp;
     }
 
-    if(++Update_Chart_Cnt >= Time_Update_Char * 2) // Cập nhật dữ liệu mỗi 1s
+    // console.log(System.Option_Prev);
+    
+    if(++Update_Chart_Cnt >= Time_Update_Char * 2 && System.Option_Prev == "new") // Cập nhật dữ liệu mỗi 2s nếu đang ở giao diện new
     {
       Update_Chart_Cnt = 0;
-      Update_Chart_Temp(block_temp); // Cập nhật biểu đồ nhiệt
+      Update_Chart_Temp(block_temp, Estimate_Temp); // Cập nhật biểu đồ nhiệt
     }
 }
 function Get_Saved_Protocol(data, Save_cnt, Save_total, infor, Setpoint) {
@@ -367,6 +412,8 @@ function Update_System_log(Calib_Buf, saved_total) {
   document.getElementById("Pel2_Lo").value          = (Math.round(calib[7] * 10) / 10);
   document.getElementById("HeatBlock_Lo").value     = (Math.round(calib[8] * 10) / 10)
 
+  document.getElementById("Heating_Speed").value = (Math.round(calib[9] * 10) / 10);
+  document.getElementById("Cooling_Speed").value = (Math.round(calib[10] * 10) / 10);
 
   // --- Cập nhật lịch sử calibration vào label
     const historyLabel = document.getElementById("system-content");
@@ -388,12 +435,15 @@ function Update_System_log(Calib_Buf, saved_total) {
                       "Peltier1                 : " + entry[3].toFixed(1) + "°C ---- " + entry[6].toFixed(1) + "°C\n" +
                       "Peltier2                 : " + entry[4].toFixed(1) + "°C ---- " + entry[7].toFixed(1) + "°C\n" +
                       "Heat block            : " + entry[5].toFixed(1) + "°C ---- " + entry[8].toFixed(1) + "°C\n" +
-                      "Heating process    : " + entry[0].toFixed(1) + "\n" +
-                      "Cooling process    : " + entry[1].toFixed(1) + "\n" +
-                      "Time out               : " + entry[2].toFixed(1) + "s\n";
+                      "OverHeating         : " + entry[0].toFixed(1) + "\n" +
+                      "Over Cooling        : " + entry[1].toFixed(1) + "\n" +
+                      "Time out               : " + entry[2].toFixed(1) + "s\n" +
+                      "Heating speed       : " + entry[9].toFixed(1) + "°C/s\n" +
+                      "Cooling speed       : " + entry[10].toFixed(1) + "°C/s\n";
       }
     }
   historyLabel.textContent = historyText;
+  
   Rule_Input_Calib(); // Gọi hàm này để người dùng nhập số không bị sai
 }
 function Get_Saved_Calib(data, Save_cnt, Save_total, Calib_Buf) {
@@ -448,6 +498,18 @@ function Lock_Panel(panel, lock)
     panel.style.pointerEvents = lock ? "none" : "auto";
 }
 
+
+function Update_Time_Done(data)
+{
+    let idx = 0;
+    let time_count_low  = data[idx++]; // lấy byte low
+    let time_count_high = data[idx++]; // lấy byet high
+    let time_run = (time_count_high << 8) | time_count_low;  // Lấy time
+
+    ui_TimeProgram.textContent = Format_time_setpoint(time_run, ' '); 
+                // console.log(time_run);
+}
+
 // Export tất cả chỉ với 1 dòng
 export default {
   Update_Chart_Temp,
@@ -462,6 +524,8 @@ export default {
   Update_Save_Calib,
   Get_Chart_Buf,
   Update_Chart,
+  Update_Chart_Estimate,
+  Update_Time_Done,
 
   Get_Saved_Protocol,
   Get_Saved_Calib,

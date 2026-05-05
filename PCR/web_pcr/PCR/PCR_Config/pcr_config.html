@@ -8,46 +8,151 @@
   
   <link rel="stylesheet" href="../PCR_Elements/style.css">
   <link rel="stylesheet" href="pcr_config.css">
-  <link rel="stylesheet" href="../PCR_Elements/Create_UI.css">
 </head>
-
 
 <body>
 
+<!-- ===== CONFIG ===== -->
+  <div class="form-card">
+    <h2>Device Config</h2>
 
-<div class="container">
+    <div class="form-row">
+      <label>Host name</label>
+      <input type="text" id="host_name">
+    </div>
+
+    <div class="form-row">
+      <label>Seri number</label>
+      <input type="text" id="seri_number">
+    </div>
+
+    <div class="button-area">
+      <button class="back btn-back">Back</button>
+      <button class="apply" id="deviceApplyBtn">Apply</button>
+    </div>
+  </div>
+
+
+<!-- ===== CALIB ===== -->
+<div class="form-card">
+  <h2>Calibration parameters</h2>
+
+  <!-- Peltier -->
+  <h3 class="section-title">Peltier</h3>
+
+  <div class="row-inline">
+    <label>Pel 1</label>
+    <div class="inline-inputs">
+      <span>95°C --- </span>
+      <input type="text" id="Pel1_Hi" class="value-input">
+      <span>50°C --- </span>
+      <input type="text" id="Pel1_Lo" class="value-input">
+    </div>
+  </div>
+
+  <div class="row-inline">
+    <label>Pel 2</label>
+    <div class="inline-inputs">
+      <span>95°C --- </span>
+      <input type="text" id="Pel2_Hi" class="value-input">
+      <span>50°C --- </span>
+      <input type="text" id="Pel2_Lo" class="value-input">
+    </div>
+  </div>
+
+  <!-- Heat Block -->
+  <h3 class="section-title">Heat Block</h3>
+
+  <div class="row-inline">
+    <div class="inline-inputs">
+      <span>100°C -- </span>
+      <input type="text" id="HeatBlock_Hi" class="value-input">
+      <span>50°C --- </span>
+      <input type="text" id="HeatBlock_Lo" class="value-input">
+    </div>
+  </div>
+
+  <!-- Process -->
+  <h3 class="section-title">Process</h3>
 
   <div class="form-row">
-    <label>Host name</label>
-    <input type="text" id="host_name">
+    <label>Over heating (10 → 100°C)</label>
+    <input type="text" id="Heating_Val" class="value-input">
   </div>
 
   <div class="form-row">
-    <label>Seri number</label>
-    <input type="text" id="seri_number">
+    <label>Over cooling (100 → 10°C)</label>
+    <input type="text" id="Cooling_Val" class="value-input">
+  </div>
+
+  <div class="form-row">
+    <label>Time out (s)</label>
+    <input type="text" id="Time_out_Val" class="value-input">
+  </div>
+
+  <!-- CALIB BUTTON -->
+  <div class="button-area">
+    <button class="back btn-back">Back</button>
+    <button class="apply btn-calib-apply">Apply</button>
+  </div>
+</div>
+
+<!-- ===== SYSTEM LOG ===== -->
+<div class="form-card">
+  <h2>Calibration history</h2>
+
+  <div class="system-content" id="system-content"></div>
+
+  <div class="button-area">
+    <button class="reload" id="reloadBtn">Reload</button>
+  </div>
+</div>
+
+<!-- ===== CALIB ===== -->
+<div class="form-card">
+  <h2>Predictive temperature calibration</h2>
+
+  <div class="row-inline">
+    <label>Heating Speed</label>
+    <div class="inline-inputs speed-mode">
+      <input type="text" id="Heating_Speed" class="value-input">
+      <span>°C/s</span>
+    </div>
+  </div>
+
+  <div class="row-inline">
+    <label>Cooling Speed</label>
+    <div class="inline-inputs speed-mode">
+      <input type="text" id="Cooling_Speed" class="value-input">
+      <span>°C/s</span>
+    </div>
   </div>
 
   <div class="button-area">
-    <button class="back" id="backBtn">Back</button>
-    <button class="apply" id="applyBtn">Apply</button>
+    <button class="back btn-back">Back</button>
+    <button class="apply btn-auto-speed">Auto</button>
+    <button class="apply btn-calib-apply">Apply</button>
   </div>
-
 </div>
 
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/components/header.js"></script> 
-  <script src="/components/program.js"></script> 
-  
-  <script src="../../Websocket/Websocket_ID.js"></script>
-  <script type="module" src="../../Websocket/Websocket.js"></script>
-  <script src="../PCR_Elements/Package.js"></script>
-  <script src="../PCR_Elements/Convert.js"></script>
-  <script src="../PCR_Elements/Handle.js"></script>
-  <script src="../PCR_Elements/Data_config.js"></script>
-  <script src="../PCR_Elements/Create_UI.js"></script>
 
-  <script src="pcr_config.js"></script>
+
+<!-- ===== SCRIPT ===== -->
+<script src="/socket.io/socket.io.js"></script>
+<script src="/components/header.js"></script> 
+<script src="/components/program.js"></script> 
+
+<script src="../../Websocket/Websocket_ID.js"></script>
+<script type="module" src="../../Websocket/Websocket.js"></script>
+
+<script src="../PCR_Elements/Package.js"></script>
+<script src="../PCR_Elements/Convert.js"></script>
+<script src="../PCR_Elements/Handle.js"></script>
+<script src="../PCR_Elements/Data_config.js"></script>
+<script src="../PCR_Elements/Create_UI.js"></script>
+
+<script src="pcr_config.js"></script>
 
 </body>
 </html>

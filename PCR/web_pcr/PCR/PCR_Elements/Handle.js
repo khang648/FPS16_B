@@ -1,35 +1,35 @@
 
 async function Click_Btn_Back(option, Tab_prev) {
-  if(option === "new")
+  if(option === "new" | option === "view" )
   {
     if (PROTOCOL_NAME === "none" && Tab_prev === "none") // Kiểm tra tên và trang trước đó 
     {
-      goToPage("PCR/PCR_Base/pcr_base.html", "none"); // Về trang chính
+      goToPage("PCR/PCR_Base/pcr_base.html", "none", "base"); // Về trang chính
     }   
     else if(Tab_prev === "history")
     {
-      goToPage("PCR/PCR_History/pcr_history.html", "none"); // quay về trang history
+      goToPage("PCR/PCR_History/pcr_history.html", "none", "history"); // quay về trang history
     }
     else  
     {
-      goToPage("PCR/PCR_Saved/pcr_saved.html", "none"); // quay về trang saved
+      goToPage("PCR/PCR_Saved/pcr_saved.html", "none", "saved"); // quay về trang saved
     }
   }
   
   if (["saved", "history", "admin"].includes(option)) 
   {
-    goToPage("PCR/PCR_Base/pcr_base.html", "none"); // quay về trang base
+    goToPage("PCR/PCR_Base/pcr_base.html", "none", "base"); // quay về trang base
   }
 
   else if(option === "set_time")
   {
     Pack_Data(DEVICE.PCR_ID, PCR_REG.SET_TIME_DONE, null, 0, "Web_PCR");  // Gửi lệnh thoát khỏi settime
-    goToPage("PCR/PCR_Admin/pcr_admin.html", "none"); // quay về trang base
+    goToPage("PCR/PCR_Admin/pcr_admin.html", "none", "admin"); // quay về trang base
   }
 
   else if (["temp_calib", "wifi_config"].includes(option)) 
   {
-    goToPage("PCR/PCR_Admin/pcr_admin.html", "none"); // quay về trang base
+    goToPage("PCR/PCR_Admin/pcr_admin.html", "none", "admin"); // quay về trang ADMIN
   }
 }
 
@@ -196,17 +196,27 @@ function Modify_Step(mode, index, count = 1, temp = 60, time = 60) {
 
 }
 
-async function Click_Btn_Open(index, option) // Người dùng nhấn nút Open
+async function Click_Btn_Open(index, tab ,option) // Người dùng nhấn nút Open
 {
   const info = Info_Saved[index];
   const setpoint = Setpoint_Saved[index];
   const name = Extract_Name_From_Info(info);
 
+  if(tab === "history")  // Nếu đang là tab history   
+  {  
+    System.History_Position = index; // gán vị trí click của history 
+    localStorage.setItem("History_Position", System.History_Position);
+  }
+  else
+  {
+    System.History_Position = 100; // gán số không giá trị
+    localStorage.setItem("History_Position", System.History_Position);
+  }
+
   Create_Data_Saved_Protocol(info, setpoint, name); // Tạo data theo weblocal
   DATA_TX_LENGHT = Pack_Protocol(DATA_TX);
   Pack_Data(DEVICE.PCR_ID, PCR_REG.SAVED_UI, DATA_TX, DATA_TX_LENGHT, "Web_PCR");   // Lưu Thông tin vào máy PCR
-
-  goToPage("PCR/PCR_New/pcr_new.html", option);
+  goToPage("PCR/PCR_New/pcr_new.html", tab, option);
 }
 
 async function Click_Btn_Delete(index) // Người dùng nhấn nút Stop
@@ -238,7 +248,6 @@ async function Click_Btn_Save(name_protocol) // Người dùng nhấn nút Stop
   }
 }
 
-
 async function Click_Btn_Reload() {
   Pack_Data(DEVICE.PCR_ID, PCR_REG.REQUEST_CALIB_HISTORY, null, 0, "Web_PCR");     // Gửi lệnh yêu cầu đọc lại thông số đã được calib
   Show_Loading();
@@ -261,6 +270,10 @@ async function Click_Btn_Upload() {
         parseFloat(document.getElementById("Pel2_Lo").value) || 0.0,
         parseFloat(document.getElementById("HeatBlock_Lo").value) || 0.0
     ];
+
+    const Heating_Speed = parseFloat(document.getElementById("Heating_Speed").value) || 0.0;
+    const Cooling_Speed = parseFloat(document.getElementById("Cooling_Speed").value) || 0.0;
+
 
     // --- Kiểm tra hợp lệ ---
     if (Heating_Val < 0 || Heating_Val > 10) 
@@ -293,28 +306,57 @@ async function Click_Btn_Upload() {
         }
     }
 
+    if (Heating_Speed <= 0 || Heating_Speed > 20) 
+    {
+        alert("Heating speed must be 0 to 20 °C/s");
+        return;
+    }
 
+    if (Cooling_Speed <= 0 || Cooling_Speed > 20) 
+    {
+        alert("Cooling speed must be 0 to 20 °C/s");
+        return;
+    }
 
     // Nếu dữ liệu hợp lệ thì tiến hành kiểm tra có giống dữ liệu đang được lưu không
     const calib = Calib_Val_Saved[0];
 
     // So sánh tất cả các giá trị
-    const currentValues = [Heating_Val, Cooling_Val, Time_out, ...Temp_Hi, ...Temp_Lo];
+    const currentValues = [Heating_Val, Cooling_Val, Time_out, ...Temp_Hi, ...Temp_Lo, Heating_Speed, Cooling_Speed];
     const EPS = 0.05; // sai số 0.05
     const isSame = currentValues.every((val, idx) => Math.abs(val - calib[idx]) < EPS);
 
+
     if (isSame) 
     {
+      alert("Data has been saved before!");
       const historyLabel = document.getElementById("system-content");
-      historyLabel.textContent  = "-> Data has been saved before! ";
+      historyLabel.textContent  = "-> Data has been saved before!";
     }
     else // Nếu là số mới và dữ liệu hợp lệ thì gửi dữ liệu lưu lại
     {
-      DATA_TX_LENGHT = Pack_Calib_Val(DATA_TX, Heating_Val, Cooling_Val, Time_out, Temp_Hi, Temp_Lo);
+      alert("Calibration data saved successfully!");
+      DATA_TX_LENGHT = Pack_Calib_Val(DATA_TX, Heating_Val, Cooling_Val, Time_out, Temp_Hi, Temp_Lo, Heating_Speed, Cooling_Speed);
       Pack_Data(DEVICE.PCR_ID, PCR_REG.SAVE_CALIB_VAL, DATA_TX, DATA_TX_LENGHT, "Web_PCR"); 
     }
 }
 
-function goToPage(pagePath, Tab_Prev) {
-  socket.emit("Save_Page_To_Server", pagePath, Tab_Prev); // Gửi xuống server
+
+async function Click_Btn_Auto() 
+{
+    const confirmed = await Show_Notification(
+        "The system will start automatic heating/cooling speed calibration!",
+        "Yes_No"
+    );
+
+    if (!confirmed) return;
+
+    //Gửi lệnh yêu cầu tự động calib tốc độ nhiệt
+    Pack_Data(DEVICE.PCR_ID,PCR_REG.AUTO_CALIB_SPEED, null,  0, "Web_PCR");
+    console.log("Auto calibration command sent.");
+}
+
+
+function goToPage(pagePath, Tab_Prev, Option) {
+  socket.emit("Save_Page_To_Server", pagePath, Tab_Prev, Option); // Gửi xuống server
 }
