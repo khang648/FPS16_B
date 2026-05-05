@@ -107,7 +107,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // KIT MANAGEMENT
     document.getElementById("btnSetting")?.addEventListener("click", () => {
-        goToPage("./Kit_Management/kit_management.html");
+        goToPage("./Threshold_Setting/threshold_setting.html");
     });
 
     // SAMPLE FILE

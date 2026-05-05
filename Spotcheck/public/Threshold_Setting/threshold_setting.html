@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FPS16_B - Spotcheck</title>
+
+  <!-- Google Fonts hoặc CSS liên quan nếu có -->
+  <link rel="stylesheet" href="../assets/fontawesome-7.1.0/css/all.min.css">
+  <link rel="stylesheet" href="./threshold_setting.css">
+  <link rel="stylesheet" href="../general_style.css">
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+  <header>
+    <div class="titlebar-top">
+      <span class="titlebar-version">SPOTCHECK</span>
+    </div>
+
+    <div class="titlebar-bottom">
+      <span class="titlebar-page">
+        <i class="fa-solid fa-magnifying-glass-chart"></i> 
+        <span data-i18n="HEADER_THRESHOLD_SETTING"></span>
+      </span>
+    </div>
+  </header>
+
+  <!-- ================= MAIN ================= -->
+  <main>
+    <div class="container">
+      <div class="settings-panel">
+        <!-- Khu vực nhập liệu -->
+        <div class="setting-row">
+          <label data-i18n="NEGATIVE_THRESHOLD_LABEL"></label>
+          <select id="negativeThreshold">
+              <option value="0.85">0.85</option>
+              <option value="0.90">0.90</option>
+              <option value="0.95" selected>0.95</option>
+          </select>
+        </div>
+
+        <!-- Frame hiển thị thông báo kết quả (đã xóa inline style) -->
+        <div id="resultFrame" class="result-panel">
+          <p id="resultDisplay"></p>
+        </div>
+
+        <!-- Nút Apply -->
+        <button id="btnApply" type="button">
+          <span data-i18n="BUTTON_APPLY"></span>
+        </button>
+        
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <button id="btnBack" type="button" data-i18n="BUTTON_BACK"></button>
+    <button id="btnNext" type="button" data-i18n="BUTTON_NEXT"></button>
+  </footer>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../Navigation/nav.js"></script>
+  <script src="threshold_setting.js"></script>
+  <script src="../lang/i18n.js"></script>
+
+</body>
+</html>

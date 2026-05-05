@@ -111,6 +111,18 @@
   "BUTTON_DOWNLOAD": "Tải về",
   "ALERT_DELETEALL_FOLDER": "Bạn có chắc muốn xóa tất cả thư mục ?",
   "ALERT_DELETE_FOLDER": "Xóa thư mục đã chọn ?",
-  "ALERT_FOLDER_MISSING": "🟡 Bạn chưa chọn thư mục nào"
+  "ALERT_FOLDER_MISSING": "🟡 Bạn chưa chọn thư mục nào",
+
+
+  "HEADER_THRESHOLD_SETTING": "CÀI ĐẶT", 
+  "NEGATIVE_THRESHOLD_LABEL": "Ngướng âm tính",
+  "BUTTON_APPLY": "Áp dụng",
+  "ALERT_APPLY_DONE": "Giá trị đã được áp dụng",
+  "CONFIRM_THRESHOLD_CHANGE": "Bạn có chắc chắn muốn thay đổi giá trị ngưỡng không?",
+  "FPR_PREFIX": "Với Ngưỡng âm tính",
+  "FPR_MID": ", tỉ lệ dương tính giả là",
+  "FPR_NO": ", không có dương tính giả",
+  "CONFIRM_THRESHOLD_CHANGE": "Bạn có chắc chắn muốn thay đổi giá trị ngưỡng không?",
+  "ALERT_APPLY_DONE": "Giá trị đã được áp dụng!"
 
 }

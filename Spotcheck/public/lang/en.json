@@ -1,6 +1,6 @@
 {
   "BUTTON_NEXT": "Next",
-  "BUTTON BACK": "Back", 
+  "BUTTON_BACK": "Back", 
 
   "HEADER_HOME": "HOME",
   "BUTTON_ANALYSIS": "ANALYSIS",
@@ -109,7 +109,18 @@
   "BUTTON_DOWNLOAD": "Download",
   "ALERT_DELETEALL_FOLDER": "Are you sure to delete ALL folders ?",
   "ALERT_DELETE_FOLDER": "Delete selected folder(s) ?",
-  "ALERT_FOLDER_MISSING": "🟡 You have not selected any folder"
+  "ALERT_FOLDER_MISSING": "🟡 You have not selected any folder",
 
+
+  "HEADER_THRESHOLD_SETTING": "SETTING", 
+  "NEGATIVE_THRESHOLD_LABEL": "Negative Threshold",
+  "BUTTON_APPLY": "Apply",
+  "ALERT_APPLY_DONE": "Value applied",
+  "CONFIRM_THRESHOLD_CHANGE": "Are you sure you want to change the threshold value?",
+  "FPR_PREFIX": "With Negative Threshold",
+  "FPR_MID": ", false positive rate is",
+  "FPR_NO": ", no false positive",
+  "CONFIRM_THRESHOLD_CHANGE": "Are you sure you want to change the threshold value?",
+  "ALERT_APPLY_DONE": "Value applied successfully !"
 
 }

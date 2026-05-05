@@ -1,4 +1,4 @@
-window.socket = io();
+ window.socket = io();
 
 let a_value = null;
 let b_value = null;

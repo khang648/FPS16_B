@@ -183,9 +183,9 @@ function classifyColorFromText(text) {
 
   if (text === "N/A") return "nosample";
   if (text === "0") return "negative";
-  if (text === "1-50") return "lowcopy";
-  if (text === "51-500" || text === "501-1000") return "mediumcopy";
-  if (text === "1001-10000" || text === ">10000") return "positive";
-
+  if (text === "1-10") return "doubt";
+  if (text === "11-100") return "lowcopy";
+  if (text === "101-1000") return "mediumcopy";
+  if (text === "1001-10000" || text === "> 10000") return "positive";
   return "nosample";
 }
