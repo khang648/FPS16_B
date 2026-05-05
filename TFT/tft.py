@@ -231,6 +231,7 @@ def draw_initial_ui(device_id, wifi_name):
     # Hiển thị
     disp.image(image)
 
+
 # Mở file một lần duy nhất
 fifo = open(PIPE_PATH, 'r')
 
